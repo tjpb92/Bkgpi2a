@@ -1,6 +1,8 @@
-package pi2a;
+package bkgpi2a;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonGetter;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSetter;
 
 /**
@@ -14,11 +16,13 @@ public class CompanyUserQueryView {
     /**
      * Identifiant unique de l'utilisateur d'une société
      */
+    @JsonProperty("uid")
     private String uid;
 
     /**
      * Nom de l'utilisateur d'une société
      */
+    @JsonProperty("label")
     private String label;
 
     /**
@@ -27,7 +31,10 @@ public class CompanyUserQueryView {
      * @param uid Identifiant unique de l'utilisateur d'une société
      * @param label Nom de l'utilisateur d'une société
      */
-    public CompanyUserQueryView(String uid, String label) {
+    @JsonCreator
+    public CompanyUserQueryView(
+            @JsonProperty("uid") String uid, 
+            @JsonProperty("label") String label) {
         this.uid = uid;
         this.label = label;
     }

@@ -5,17 +5,23 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.annotation.JsonSetter;
-import com.fasterxml.jackson.annotation.JsonUnwrapped;
 import java.util.List;
 
 /**
- * Classe décrivant l'objet dans lequel est emballé un patrimoine dans un flux Json.
+ * Classe décrivant l'objet dans lequel est emballé une liste d'utilisateurs dans un flux Json.
  * @author Thierry Baribaud
  * @version Octobre 2016
  */
-@JsonPropertyOrder({"_links", "patrimony"})
-@JsonIgnoreProperties({"links"})
-public class PatrimonyWrapper {
+@JsonPropertyOrder({"result", "_links"})
+@JsonIgnoreProperties({"links", "usersWrapper"})
+public class UsersWrapper {
+
+    /**
+     * La liste des utilisateurs dans leur emballage Json
+     */
+//    @JsonUnwrapped
+    @JsonProperty("result")
+    private List<UserWrapper> result;
 
     /**
      * Liens entre entités
@@ -24,10 +30,20 @@ public class PatrimonyWrapper {
     private List<Link> _links;
     
     /**
-     * Le patrimoinre dans son emballage Json
+     * @return un utilisateur dans son emballage Json
      */
-    @JsonUnwrapped
-    private Patrimony patrimony;
+    @JsonGetter("result")
+    public List<UserWrapper> getUsersWrapper() {
+        return result;
+    }
+
+    /**
+     * @param usersWrapper définit un utilisateur dans son emballage Json
+     */
+    @JsonSetter("result")
+    public void setUsersWrapper(List<UserWrapper> usersWrapper) {
+        this.result = usersWrapper;
+    }
 
     /**
      * @return des liens
@@ -45,17 +61,4 @@ public class PatrimonyWrapper {
         this._links = _links;
     }
 
-    /**
-     * @return un patrimoine
-     */
-    public Patrimony getPatrimony() {
-        return patrimony;
-    }
-
-    /**
-     * @param patrimony définit un patrimoine
-     */
-    public void setPatrimony(Patrimony patrimony) {
-        this.patrimony = patrimony;
-    }
 }

@@ -1,71 +1,69 @@
 package bkgpi2a;
 
-import com.fasterxml.jackson.annotation.JsonGetter;
-import com.fasterxml.jackson.annotation.JsonSetter;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
- * Classe décrivant une vue réduite d'une Holding
+ * Classe décrivant le résumé d'une entité : son id et son nom.
  *
  * @author Thierry Baribaud
  * @version Octobre 2016
  */
-public class HoldingQueryView {
+public class EntityAbstract {
 
     /**
-     * Identifiant unique de la holding
+     * Identifiant unique de l'entité
      */
     private String uid;
 
     /**
-     * Nom de la holding
+     * Nom de l'entité
      */
     private String label;
 
     /**
      * Constructeur principal de la classe
-     *
-     * @param uid Identifiant unique de la holding
-     * @param label Nom de la holding
+     * @param uid Identifiant unique de l'entité
+     * @param label Nom de l'entité
      */
-    public HoldingQueryView(String uid, String label) {
+    @JsonCreator
+    public EntityAbstract(
+            @JsonProperty("uid") String uid, 
+            @JsonProperty("label") String label) {
         this.uid = uid;
         this.label = label;
     }
-
+    
     /**
-     * @return l'identifiant unique de la holding
+     * @return l'identifiant unique de l'entité
      */
-    @JsonGetter("uid")
     public String getUid() {
         return uid;
     }
 
     /**
-     * @param uid définit l'identifiant unique de la holding
+     * @param uid définit l'identifiant unique de l'entité
      */
-    @JsonSetter("uid")
     public void setUid(String uid) {
         this.uid = uid;
     }
 
     /**
-     * @return le nom de la holding
+     * @return le nom de l'entité
      */
-    @JsonGetter("label")
     public String getLabel() {
         return label;
     }
 
     /**
-     * @param label définit le nom de la holding
+     * @param label définit le nom de l'entité
      */
-    @JsonSetter("label")
     public void setLabel(String label) {
         this.label = label;
     }
 
     /**
-     * @return les informations sur la holding.
+     * @return Retourne l'objet sous forme textuelle
      */
     @Override
     public String toString() {

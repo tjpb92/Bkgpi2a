@@ -1,6 +1,8 @@
-package pi2a;
+package bkgpi2a;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonGetter;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSetter;
 
 /**
@@ -14,11 +16,13 @@ public class AgencyUserQueryView {
     /**
      * Identifiant unique de l'utillisateur d'une agence
      */
+    @JsonProperty("uid")
     private String uid;
 
     /**
      * Nom de l'utillisateur d'une agence
      */
+    @JsonProperty("label")
     private String label;
 
     /**
@@ -27,7 +31,10 @@ public class AgencyUserQueryView {
      * @param uid Identifiant unique de l'utillisateur d'une agence
      * @param label Nom de l'utillisateur d'une agence
      */
-    public AgencyUserQueryView(String uid, String label) {
+    @JsonCreator
+    public AgencyUserQueryView(
+            @JsonProperty("uid") String uid, 
+            @JsonProperty("label") String label) {
         this.uid = uid;
         this.label = label;
     }

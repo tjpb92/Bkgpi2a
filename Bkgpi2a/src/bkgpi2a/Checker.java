@@ -1,28 +1,32 @@
 package bkgpi2a;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSetter;
 
 /**
- * Classe dï¿½crivant l'objet Checker
+ * Classe décrivant l'objet Checker
  *
  * @author Thierry Baribaud
  * @version Octobre 2016
  */
 public class Checker {
 
+    @JsonProperty("googlePlaceId")
     private String googlePlaceId;
 
     /**
      * Constructeur principal
-     * @param googlePlaceId
+     *
+     * @param googlePlaceId identifiant du lieu par Google
      */
-    public Checker(String googlePlaceId) {
+    public Checker(
+            @JsonProperty("googlePlaceId") String googlePlaceId) {
         this.googlePlaceId = googlePlaceId;
     }
+
     /**
-     * @return the googlePlaceId
+     * @return l'identifiant du lieu par Google
      */
     @JsonGetter("googlePlaceId")
     public String getGooglePlaceId() {
@@ -30,7 +34,7 @@ public class Checker {
     }
 
     /**
-     * @param GooglePlaceId the googlePlaceId to set
+     * @param GooglePlaceId définit l'identifiant du lieu par Google
      */
     @JsonSetter("googlePlaceId")
     public void setGooglePlaceId(String GooglePlaceId) {

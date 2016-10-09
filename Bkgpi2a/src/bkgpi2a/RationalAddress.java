@@ -2,20 +2,20 @@ package bkgpi2a;
 
 /**
  * Classe décrivant une adresse 
- * -- AddressReference à terme, hérite de RationalAddress --
  * @author Thierry Baribaud
  * @version Octobre 2016
  */
-public class Address {
+public class RationalAddress {
     
     private String uid;
+    // private String quality; A IMPLEMENTER
     private String number;
     private String street;
+    private String complement;
     private String city;
     private String zipCode;
+    // private String state; A IMPLEMENTER
     private String country;
-    private GeoLocation geoLocation;
-    private Checker checker;
 
     /**
      * @return the uid
@@ -102,31 +102,17 @@ public class Address {
     }
 
     /**
-     * @return the geoLocation
+     * @return le complement d'adresse
      */
-    public GeoLocation getGeoLocation() {
-        return geoLocation;
+    public String getComplement() {
+        return complement;
     }
 
     /**
-     * @param geoLocation the geoLocation to set
+     * @param complement définit le complement d'adresse
      */
-    public void setGeoLocation(GeoLocation geoLocation) {
-        this.geoLocation = geoLocation;
-    }
-
-    /**
-     * @return the checker
-     */
-    public Checker getChecker() {
-        return checker;
-    }
-
-    /**
-     * @param checker the checker to set
-     */
-    public void setChecker(Checker checker) {
-        this.checker = checker;
+    public void setComplement(String complement) {
+        this.complement = complement;
     }
     
     /**
@@ -138,11 +124,11 @@ public class Address {
                 ":{uid:" + getUid() + 
                 ", number:" + getNumber() + 
                 ", street:" + getStreet() + 
+                ", complement:" + getComplement() + 
                 ", city:" + getCity() + 
                 ", zipCode:" + getZipCode() + 
                 ", country:" + getCountry() + 
-                ", geoLocation:" + getGeoLocation() + 
-                ", checker:" + getChecker() + 
                 "}");        
     }
+
 }

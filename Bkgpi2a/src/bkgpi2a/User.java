@@ -7,12 +7,13 @@ import com.fasterxml.jackson.annotation.JsonSetter;
 import java.util.List;
 
 /**
- * Classe décrivant un utilisateur d'une agence
+ * Classe décrivant un utilisateur générique
+ * Au 8 octobre 2016, c'est une copie de l'utilisateur Executive
  * @author Thierry Baribaud
  * @version Octobre 2016
  */
 @JsonPropertyOrder({"uid", "login", "company", "managedAgencies", "firstName", "lastName", "job", "phone", "userType"})
-public class Executive extends BasicUser {
+public class User extends BasicUser {
     
     /**
      * Société dont dépend l'utilisateur
@@ -26,9 +27,11 @@ public class Executive extends BasicUser {
     @JsonProperty("managedAgencies")
     private List<AgencyUserQueryView> managedAgencies;
     
+    /**
+     * Type d'utilisateur
+     */
     @JsonProperty("userType")
-    private final String userType = "executive";
-//    private final UserType userType = UserType.SUPER_USER;
+    private String userType;
 
     /**
      * @return la société dont dépend l'utilisateur
@@ -63,6 +66,22 @@ public class Executive extends BasicUser {
     }
     
     /**
+     * @return le type d'utilisateur
+     */
+    @JsonGetter("userType")
+    public String getUserType() {
+        return userType;
+    }
+
+    /**
+     * @param userType the userType to set
+     */
+    @JsonSetter("userType")
+    public void setUserType(String userType) {
+        this.userType = userType;
+    }
+
+    /**
      * @return Retourne l'objet sous forme textuelle
      */
     @Override
@@ -72,7 +91,9 @@ public class Executive extends BasicUser {
                 + super.toString()
                 + ", company:" + getCompany()
                 + ", managedAgencies:" + getManagedAgencies()
-                + ", userType:" + userType
+                + ", userType:" + getUserType()
                 + "}");
     }
+
+    
 }

@@ -9,30 +9,49 @@ import com.fasterxml.jackson.annotation.JsonUnwrapped;
 import java.util.List;
 
 /**
- * Classe décrivant l'objet dans lequel est emballé un patrimoine dans un flux Json.
+ * Classe décrivant l'objet dans lequel est emballé un utilisateur dans un flux
+ * Json.
+ *
  * @author Thierry Baribaud
  * @version Octobre 2016
  */
-@JsonPropertyOrder({"_links", "patrimony"})
+@JsonPropertyOrder({"user", "_links"})
 @JsonIgnoreProperties({"links"})
-public class PatrimonyWrapper {
+public class UserWrapper {
+
+    /**
+     * l'utilisateur
+     */
+    @JsonUnwrapped
+    @JsonProperty("user")
+    private User user;
 
     /**
      * Liens entre entités
      */
     @JsonProperty("_links")
     private List<Link> _links;
-    
+
     /**
-     * Le patrimoinre dans son emballage Json
+     * @return un utilisateur
      */
-    @JsonUnwrapped
-    private Patrimony patrimony;
+    @JsonGetter("user")
+    public User getUser() {
+        return user;
+    }
+
+    /**
+     * @param user définit un utilisateur
+     */
+    @JsonSetter("user")
+    public void setUser(User user) {
+        this.user = user;
+    }
 
     /**
      * @return des liens
      */
-    @JsonGetter
+    @JsonGetter("_links")
     public List<Link> getLinks() {
         return _links;
     }
@@ -40,22 +59,20 @@ public class PatrimonyWrapper {
     /**
      * @param _links définit des liens
      */
-    @JsonSetter
+    @JsonSetter("_links")
     public void setLinks(List<Link> _links) {
         this._links = _links;
     }
 
     /**
-     * @return un patrimoine
+     * @return Retourne l'objet sous forme textuelle
      */
-    public Patrimony getPatrimony() {
-        return patrimony;
-    }
-
-    /**
-     * @param patrimony définit un patrimoine
-     */
-    public void setPatrimony(Patrimony patrimony) {
-        this.patrimony = patrimony;
+    @Override
+    public String toString() {
+        return (this.getClass().getName()
+                + ":{"
+                + "user:" + getUser()
+                + ", _links:" + getLinks()
+                + "}");
     }
 }

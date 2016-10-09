@@ -1,4 +1,4 @@
-package pi2a;
+package bkgpi2a;
 
 /**
  * Enumération sur les types d'utilisateur

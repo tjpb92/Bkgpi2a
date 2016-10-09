@@ -8,13 +8,13 @@ import com.fasterxml.jackson.annotation.JsonSetter;
 import java.util.List;
 
 /**
- * Classe décrivant l'objet dans lequel est emballé une liste de patrimoines dans un flux Json.
+ * Classe décrivant l'objet dans lequel est emballé une liste d'agences dans un flux Json.
  * @author Thierry Baribaud
  * @version Octobre 2016
  */
 @JsonPropertyOrder({"_links", "result"})
-@JsonIgnoreProperties({"links", "patrimoniesWrapper"})
-public class PatrimoniesWrapper {
+@JsonIgnoreProperties({"links", "AgencyWrapperList"})
+public class AgencyWrapperListWrapper {
 
     /**
      * Liens entre entités
@@ -23,11 +23,11 @@ public class PatrimoniesWrapper {
     private List<Link> _links;
     
     /**
-     * La liste des patrimoines dans leur emballage Json
+     * La liste des agences dans leur emballage Json
      */
 //    @JsonUnwrapped
     @JsonProperty("result")
-    private List<PatrimonyWrapper> result;
+    private List<AgencyWrapper> AgencyWrapperList;
 
     /**
      * @return des liens
@@ -46,18 +46,18 @@ public class PatrimoniesWrapper {
     }
 
     /**
-     * @return un patrimoine dans son emballage Json
+     * @return une liste d'agences dans son emballage Json
      */
     @JsonGetter("result")
-    public List<PatrimonyWrapper> getPatrimoniesWrapper() {
-        return result;
+    public List<AgencyWrapper> getAgencyWrapperList() {
+        return AgencyWrapperList;
     }
 
     /**
-     * @param patrimoniesWrapper définit un patrimoine dans son emballage Json
+     * @param AgencyWrapperList définit une liste d'agences dans son emballage Json
      */
     @JsonSetter("result")
-    public void setPatrimoniesWrapper(List<PatrimonyWrapper> patrimoniesWrapper) {
-        this.result = patrimoniesWrapper;
+    public void setAgencyWrapperList(List<AgencyWrapper> AgencyWrapperList) {
+        this.AgencyWrapperList = AgencyWrapperList;
     }
 }

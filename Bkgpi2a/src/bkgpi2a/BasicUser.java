@@ -1,8 +1,9 @@
-package pi2a;
+package bkgpi2a;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSetter;
 
 /**
@@ -15,34 +16,46 @@ public class BasicUser {
     /**
      * Identifiant unique de l'utilisateur basique
      */
+    @JsonProperty("uid")
     private String uid;
 
     /**
      * Login de l'utilisateur basique
      */
+    @JsonProperty("login")
     private String login;
 
     /**
      * Prénom de l'utilisateur basique
      */
+    @JsonProperty("firstName")
     private String firstName;
 
     /**
      * Nom de l'utilisateur basique
      */
+    @JsonProperty("lastName")
     private String lastName;
 
     /**
      * Rôle de l'utilisateur basique
      */
     @JsonInclude(Include.NON_NULL)
+    @JsonProperty("job")
     private String job;
 
     /**
      * Téléphone de l'utilisateur basique
      */
     @JsonInclude(Include.NON_NULL)
+    @JsonProperty("phone")
     private String phone;
+
+    /**
+     * Constructeur principal de la classe BasicUser
+     */
+    public BasicUser() {
+    }
 
     /**
      * @return l'identifiant unique de l'utilisateur basique
@@ -138,5 +151,20 @@ public class BasicUser {
     @JsonSetter("phone")
     public void setPhone(String phone) {
         this.phone = phone;
+    }
+
+    /**
+     * @return Retourne l'objet sous forme textuelle
+     */
+    @Override
+    public String toString() {
+        return (this.getClass().getName()
+                + ":{uid:" + getUid()
+                + ", login:" + getLogin()
+                + ", firstName:" + getFirstName()
+                + ", lastName:" + getLastName()
+                + ", job:" + getJob()
+                + ", phone:" + getPhone()
+                + "}");
     }
 }
