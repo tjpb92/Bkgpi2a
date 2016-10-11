@@ -5,23 +5,17 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.annotation.JsonSetter;
+import com.fasterxml.jackson.annotation.JsonUnwrapped;
 import java.util.List;
 
 /**
- * Classe décrivant l'objet dans lequel est emballé une liste d'utilisateurs dans un flux Json.
+ * Classe décrivant l'objet dans lequel est emballé un intervenant dans un flux Json.
  * @author Thierry Baribaud
  * @version Octobre 2016
  */
-@JsonPropertyOrder({"result", "_links"})
-@JsonIgnoreProperties({"links", "usersWrapper"})
-public class UsersWrapper {
-
-    /**
-     * La liste des utilisateurs dans leur emballage Json
-     */
-//    @JsonUnwrapped
-    @JsonProperty("result")
-    private List<UserWrapper> result;
+@JsonPropertyOrder({"_links", "providerContact"})
+@JsonIgnoreProperties({"links"})
+public class ProviderContactWrapper {
 
     /**
      * Liens entre entités
@@ -30,20 +24,10 @@ public class UsersWrapper {
     private List<Link> _links;
     
     /**
-     * @return un utilisateur dans son emballage Json
+     * Le contact dans son emballage Json
      */
-    @JsonGetter("result")
-    public List<UserWrapper> getUsersWrapper() {
-        return result;
-    }
-
-    /**
-     * @param usersWrapper définit un utilisateur dans son emballage Json
-     */
-    @JsonSetter("result")
-    public void setUsersWrapper(List<UserWrapper> usersWrapper) {
-        this.result = usersWrapper;
-    }
+    @JsonUnwrapped
+    private ProviderContact providerContact;
 
     /**
      * @return des liens
@@ -61,4 +45,17 @@ public class UsersWrapper {
         this._links = _links;
     }
 
+    /**
+     * @return un contact
+     */
+    public ProviderContact getProviderContact() {
+        return providerContact;
+    }
+
+    /**
+     * @param providerContact définit un contact
+     */
+    public void setProviderContact(ProviderContact providerContact) {
+        this.providerContact = providerContact;
+    }
 }

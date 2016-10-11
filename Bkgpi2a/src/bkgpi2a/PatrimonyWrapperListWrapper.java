@@ -14,7 +14,7 @@ import java.util.List;
  */
 @JsonPropertyOrder({"_links", "result"})
 @JsonIgnoreProperties({"links", "patrimoniesWrapper"})
-public class PatrimoniesWrapper {
+public class PatrimonyWrapperListWrapper {
 
     /**
      * Liens entre entités

@@ -4,36 +4,37 @@ import java.util.List;
 
 /**
  * Classe décrivant un patrimoine.
+ *
  * @author Thierry Baribaud
  * @version Octobre 2016
  */
 public class Patrimony {
-    
+
     /**
      * Identifiant unique du patrimoine
      */
     private String uid;
-    
+
     /**
      * Référence du patrimoine
      */
     private String ref;
-    
+
     /**
      * Nom du patrimoine (label)
      */
     private String label;
-    
+
     /**
      * Agences dont dépend le patrimoine
      */
     private List<String> agencies;
-    
+
     /**
      * Adresses du patrimoine
      */
     private List<Address> complementaryAddress;
-    
+
     /**
      * Adresses complémentaires du patrimoire
      */
@@ -68,56 +69,56 @@ public class Patrimony {
     }
 
     /**
-     * @return the label
+     * @return le nom du patrimoine
      */
     public String getLabel() {
         return label;
     }
 
     /**
-     * @param label the label to set
+     * @param label définit le nom du patrimoine
      */
     public void setLabel(String label) {
         this.label = label;
     }
 
     /**
-     * @return the agencies
+     * @return les agences dont dépend le patrimoine
      */
     public List<String> getAgencies() {
         return agencies;
     }
 
     /**
-     * @param agencies the agencies to set
+     * @param agencies définit les agences dont dépend le patrimoine
      */
     public void setAgencies(List<String> agencies) {
         this.agencies = agencies;
     }
 
     /**
-     * @return the complementaryAddress
+     * @return les adresses complémentaires
      */
     public List<Address> getComplementaryAddress() {
         return complementaryAddress;
     }
 
     /**
-     * @param complementaryAddress the complementaryAddress to set
+     * @param complementaryAddress définit les adresses complémentaires
      */
     public void setComplementaryAddress(List<Address> complementaryAddress) {
         this.complementaryAddress = complementaryAddress;
     }
 
     /**
-     * @return the addresses
+     * @return les adresses
      */
     public List<Address> getAddresses() {
         return addresses;
     }
 
     /**
-     * @param addresses the addresses to set
+     * @param addresses définit les adresses
      */
     public void setAddresses(List<Address> addresses) {
         this.addresses = addresses;
@@ -136,4 +137,5 @@ public class Patrimony {
                 + ", addresses:" + getAddresses()
                 + ", complementaryAddress:" + getComplementaryAddress()
                 + "}");
-    }}
+    }
+}
