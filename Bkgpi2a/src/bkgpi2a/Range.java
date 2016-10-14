@@ -45,7 +45,14 @@ public class Range {
         setPage(acceptRange);
     }
 
-    /**
+     /**
+     * Constructeur secondaire
+     */
+    public Range() {
+      
+    }
+    
+   /**
      * Extrait les valeurs : offset, limit et count de contentRange
      *
      * @param contentRange lut dans le header HTTP
@@ -184,7 +191,7 @@ public class Range {
 
         setOffset(min((getLimit()+1), getCount()));
         setLimit(min((getLimit() + getPage()), getCount()));
-        return getLimit() < getCount();
+        return getOffset() < getCount();
     }
     
     /**

@@ -16,6 +16,7 @@ public class Address {
     private String country;
     private GeoLocation geoLocation;
     private Checker checker;
+    private EntityAbstract building;
 
     /**
      * @return the uid
@@ -129,12 +130,26 @@ public class Address {
         this.checker = checker;
     }
     
+
+    /**
+     * @return la référence à un building
+     */
+    public EntityAbstract getBuilding() {
+        return building;
+    }
+
+    /**
+     * @param building définit la référence à un building
+     */
+    public void setBuilding(EntityAbstract building) {
+        this.building = building;
+    }
     /**
      * @return Retourne l'adresse sous forme textuelle
      */
     @Override
     public String toString() {
-        return(this.getClass().getName() + 
+        return(this.getClass().getSimpleName() + 
                 ":{uid:" + getUid() + 
                 ", number:" + getNumber() + 
                 ", street:" + getStreet() + 
@@ -143,6 +158,7 @@ public class Address {
                 ", country:" + getCountry() + 
                 ", geoLocation:" + getGeoLocation() + 
                 ", checker:" + getChecker() + 
+                ", building:" + getBuilding() + 
                 "}");        
     }
 }
