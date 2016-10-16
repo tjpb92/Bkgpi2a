@@ -1,10 +1,9 @@
 package bkgpi2a;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.annotation.JsonSetter;
+import com.fasterxml.jackson.annotation.JsonTypeName;
 
 /**
  * Classe décrivant un utilisateur de centre d'appel
@@ -12,8 +11,8 @@ import com.fasterxml.jackson.annotation.JsonSetter;
  * @author Thierry Baribaud
  * @version Octobre 2016
  */
-//@JsonPropertyOrder({"uid", "login", "company", "firstName", "lastName", "job", "phone", "userType"})
-public class CallCenterUser extends BasicUser {
+@JsonTypeName("callCenterUser")
+public class CallCenterUser extends User {
 
     /**
      * Call center dont dépend l'utilisateur
@@ -21,21 +20,6 @@ public class CallCenterUser extends BasicUser {
     @JsonProperty("company")
     private CompanyUserQueryView company;
 
-    @JsonProperty("userType")
-    private final String userType = "callCenterUser";
-
-// Pas satisfaisant, oblige à créer getter/setter.    
-//    private final static String userType = "callCenterUser";
-//    private final UserType userType = UserType.SUPER_USER;
-    
-    /**
-     * Contructeur principal de la classe
-     * C'est nécessaire pour bien sérialiser/desérialiser la classe avec Jackson
-     */
-//    @JsonCreator
-//    public CallCenterUser() {
-//    }
-    
     /**
      * @return le call center dont dépend l'utilisateur
      */
@@ -52,33 +36,16 @@ public class CallCenterUser extends BasicUser {
         this.company = company;
     }
 
-//    /**
-//     * @return le type d'utilisateur
-//     */
-//    @JsonGetter("userType")
-//    public String getUserType() {
-//        return userType;
-//    }
-//
-//    /**
-//     * @param userType définit le type d'utilisateur
-//     */
-//    @JsonSetter("userType")
-//    public void setUserType(String userType) {
-//        this.userType = userType;
-//    }
-
     /**
      * @return Retourne l'objet sous forme textuelle
      */
     @Override
     public String toString() {
-        return (this.getClass().getName()
+        return this.getClass().getSimpleName()
                 + ":{"
                 + super.toString()
                 + ", company:" + getCompany()
-                + ", userType:" + userType
-                + "}");
+                + "}";
     }
 
 }

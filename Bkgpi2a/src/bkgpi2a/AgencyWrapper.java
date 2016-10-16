@@ -32,7 +32,7 @@ public class AgencyWrapper {
     /**
      * @return des liens
      */
-    @JsonGetter
+    @JsonGetter("_links")
     public List<Link> getLinks() {
         return _links;
     }
@@ -40,7 +40,7 @@ public class AgencyWrapper {
     /**
      * @param _links définit des liens
      */
-    @JsonSetter
+    @JsonSetter("_links")
     public void setLinks(List<Link> _links) {
         this._links = _links;
     }
@@ -48,6 +48,7 @@ public class AgencyWrapper {
     /**
      * @return une agence
      */
+    @JsonGetter("agency")
     public Agency getAgency() {
         return agency;
     }
@@ -55,6 +56,7 @@ public class AgencyWrapper {
     /**
      * @param agency définit une agence
      */
+    @JsonSetter("agency")
     public void setAgency(Agency agency) {
         this.agency = agency;
     }

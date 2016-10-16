@@ -8,8 +8,8 @@ import com.fasterxml.jackson.annotation.JsonTypeName;
  * @author Thierry Baribaud
  * @version Octobre 2016
  */
-@JsonTypeName("superUser")
-public class SuperUser extends User {
+@JsonTypeName("otherUser")
+public class OtherUser extends User {
 
     /**
      * @return Retourne l'objet sous forme textuelle

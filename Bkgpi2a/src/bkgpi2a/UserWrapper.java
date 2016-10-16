@@ -9,44 +9,25 @@ import com.fasterxml.jackson.annotation.JsonUnwrapped;
 import java.util.List;
 
 /**
- * Classe décrivant l'objet dans lequel est emballé un utilisateur dans un flux
- * Json.
- *
+ * Classe décrivant l'objet dans lequel est emballé un utilisateur dans un flux Json.
  * @author Thierry Baribaud
  * @version Octobre 2016
  */
-@JsonPropertyOrder({"user", "_links"})
+@JsonPropertyOrder({"_links", "user"})
 @JsonIgnoreProperties({"links"})
 public class UserWrapper {
-
-    /**
-     * l'utilisateur
-     */
-    @JsonUnwrapped
-    @JsonProperty("user")
-    private User user;
 
     /**
      * Liens entre entités
      */
     @JsonProperty("_links")
     private List<Link> _links;
-
+    
     /**
-     * @return un utilisateur
+     * L'utilisateur dans son emballage Json
      */
-    @JsonGetter("user")
-    public User getUser() {
-        return user;
-    }
-
-    /**
-     * @param user définit un utilisateur
-     */
-    @JsonSetter("user")
-    public void setUser(User user) {
-        this.user = user;
-    }
+    @JsonUnwrapped
+    private GenericUser user;
 
     /**
      * @return des liens
@@ -65,14 +46,18 @@ public class UserWrapper {
     }
 
     /**
-     * @return Retourne l'objet sous forme textuelle
+     * @return un utilisateur
      */
-    @Override
-    public String toString() {
-        return (this.getClass().getName()
-                + ":{"
-                + "user:" + getUser()
-                + ", _links:" + getLinks()
-                + "}");
+    @JsonGetter("user")
+    public GenericUser getUser() {
+        return user;
+    }
+
+    /**
+     * @param user définit un utilisateur
+     */
+    @JsonSetter("user")
+    public void setUser(GenericUser user) {
+        this.user = user;
     }
 }

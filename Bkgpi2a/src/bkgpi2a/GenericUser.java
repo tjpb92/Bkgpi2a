@@ -1,37 +1,21 @@
 package bkgpi2a;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.annotation.JsonSetter;
-import com.fasterxml.jackson.annotation.JsonSubTypes;
-import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import java.util.List;
 
 /**
- * Classe décrivant un utilisateur simple
- *
+ * Classe décrivant un utilisateur générique
+ * Alternative à User
  * @author Thierry Baribaud
+ * @version Octobre 2016
  */
-@JsonIgnoreProperties(ignoreUnknown = true)
-@JsonTypeInfo(use=JsonTypeInfo.Id.NAME,
-        include=JsonTypeInfo.As.PROPERTY,
-        property="userType")
-@JsonSubTypes({
-        @Type(value=SuperUser.class, name="superUser"),
-        @Type(value=CallCenterUser.class, name="callCenterUser"),
-        @Type(value=ClientAccountManager.class, name="clientAccountManager"),
-        @Type(value=Executive.class, name="executive")
-})
-//        @JsonSubTypes.Type(value=SuperUser.class, name="superUser"),
-//        @JsonSubTypes.Type(value=CallCenterUser.class, name="callCenterUser"),
-//        @JsonSubTypes.Type(value=ClientAccountManager.class, name="clientAccountManager"),
-//        @JsonSubTypes.Type(value=Executive.class, name="executive")
-public abstract class User {
-//public class User {
-
+@JsonPropertyOrder({"uid", "login", "company", "managedAgencies", "firstName", "lastName", "job", "phone", "isActive", "userType"})
+public class GenericUser {
+    
     /**
      * Identifiant unique de l'utilisateur
      */
@@ -59,28 +43,48 @@ public abstract class User {
     /**
      * Rôle de l'utilisateur
      */
-    @JsonInclude(Include.NON_NULL)
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     @JsonProperty("job")
     private String job;
 
     /**
      * Téléphone de l'utilisateur
      */
-    @JsonInclude(Include.NON_NULL)
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     @JsonProperty("phone")
     private String phone;
 
     /**
      * Etat d'activité de l'utilisateur
      */
-    @JsonInclude(Include.NON_NULL)
+//    @JsonInclude(JsonInclude.Include.NON_NULL)
     @JsonProperty("isActive")
     private boolean isActive;
 
     /**
-     * Constructeur principal de la classe User
+     * Société dont dépend l'utilisateur
      */
-    public User() {
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    @JsonProperty("company")
+    private CompanyUserQueryView company;
+    
+    /**
+     * Agences supervisées par l'utilisateur
+     */
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    @JsonProperty("managedAgencies")
+    private List<AgencyUserQueryView> managedAgencies;
+    
+    /**
+     * Type d'utilisateur
+     */
+    @JsonProperty("userType")
+    private String userType;
+
+    /**
+     * Constructeur principal de la classe GenericUser
+     */
+    public GenericUser() {
     }
 
     /**
@@ -194,6 +198,53 @@ public abstract class User {
     public void setisActive(boolean isActive) {
         this.isActive = isActive;
     }
+    /**
+     * @return la société dont dépend l'utilisateur
+     */
+    @JsonGetter("company")
+    public CompanyUserQueryView getCompany() {
+        return company;
+    }
+
+    /**
+     * @param company définit la société dont dépend l'utilisateur
+     */
+    @JsonSetter("company")
+    public void setCompany(CompanyUserQueryView company) {
+        this.company = company;
+    }
+
+    /**
+     * @return les agences supervisées par l'utilisateur
+     */
+    @JsonGetter("managedAgencies")
+    public List<AgencyUserQueryView> getManagedAgencies() {
+        return managedAgencies;
+    }
+
+    /**
+     * @param managedAgencies définit les agences supervisées par l'utilisateur
+     */
+    @JsonSetter("managedAgencies")
+    public void setManagedAgencies(List<AgencyUserQueryView> managedAgencies) {
+        this.managedAgencies = managedAgencies;
+    }
+    
+    /**
+     * @return le type d'utilisateur
+     */
+    @JsonGetter("userType")
+    public String getUserType() {
+        return userType;
+    }
+
+    /**
+     * @param userType the userType to set
+     */
+    @JsonSetter("userType")
+    public void setUserType(String userType) {
+        this.userType = userType;
+    }
 
     /**
      * @return Retourne l'objet sous forme textuelle
@@ -201,13 +252,19 @@ public abstract class User {
     @Override
     public String toString() {
         return this.getClass().getSimpleName()
-                + ":{uid:" + getUid()
+                + ":{"
+                + "uid:" + getUid()
                 + ", login:" + getLogin()
                 + ", firstName:" + getFirstName()
                 + ", lastName:" + getLastName()
                 + ", job:" + getJob()
                 + ", phone:" + getPhone()
                 + ", isActive:" + getIsActive()
+                + ", company:" + getCompany()
+                + ", managedAgencies:" + getManagedAgencies()
+                + ", userType:" + getUserType()
                 + "}";
     }
+
+    
 }

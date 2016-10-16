@@ -2,33 +2,30 @@ package bkgpi2a;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.annotation.JsonSetter;
+import com.fasterxml.jackson.annotation.JsonTypeName;
 import java.util.List;
 
 /**
  * Classe décrivant un utilisateur d'une agence
+ *
  * @author Thierry Baribaud
  * @version Octobre 2016
  */
-@JsonPropertyOrder({"uid", "login", "company", "managedAgencies", "firstName", "lastName", "job", "phone", "userType"})
-public class Executive extends BasicUser {
-    
+@JsonTypeName("executive")
+public class Executive extends User {
+
     /**
      * Société dont dépend l'utilisateur
      */
     @JsonProperty("company")
     private CompanyUserQueryView company;
-    
+
     /**
      * Agences supervisées par l'utilisateur
      */
     @JsonProperty("managedAgencies")
     private List<AgencyUserQueryView> managedAgencies;
-    
-    @JsonProperty("userType")
-    private final String userType = "executive";
-//    private final UserType userType = UserType.SUPER_USER;
 
     /**
      * @return la société dont dépend l'utilisateur
@@ -61,18 +58,17 @@ public class Executive extends BasicUser {
     public void setManagedAgencies(List<AgencyUserQueryView> managedAgencies) {
         this.managedAgencies = managedAgencies;
     }
-    
+
     /**
      * @return Retourne l'objet sous forme textuelle
      */
     @Override
     public String toString() {
-        return (this.getClass().getName()
+        return this.getClass().getSimpleName()
                 + ":{"
                 + super.toString()
                 + ", company:" + getCompany()
                 + ", managedAgencies:" + getManagedAgencies()
-                + ", userType:" + userType
-                + "}");
+                + "}";
     }
 }
