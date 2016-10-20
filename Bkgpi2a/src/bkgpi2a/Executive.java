@@ -64,8 +64,7 @@ public class Executive extends User {
      */
     @Override
     public String toString() {
-        return this.getClass().getSimpleName()
-                + ":{"
+        return "Executive:{"
                 + super.toString()
                 + ", company:" + getCompany()
                 + ", managedAgencies:" + getManagedAgencies()

@@ -4,23 +4,24 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
- * Classe dï¿½finissant un lien entre entitï¿½s.
+ * Classe définissant un lien entre entités.
+ *
  * @version Octobre 2016
  * @author Thierry Baribaud
  */
 //@JsonPropertyOrder({"href", "method", "rel"})
 public class Link {
-    
+
     /**
-     * Rï¿½fï¿½rence du lien
+     * Référence du lien
      */
     private String Href;
-    
+
     /**
-     * Mï¿½thode d'interrogation
+     * Méthode d'interrogation
      */
     private String Method;
-    
+
     /**
      * Lien relatif
      */
@@ -28,44 +29,44 @@ public class Link {
 
     /**
      * Constructeur principal de la classe Link.
-     * 
-     * @param MyHref Rï¿½fï¿½rence du lien
-     * @param MyMethod Mï¿½thode d'interrogation
+     *
+     * @param MyHref Référence du lien
+     * @param MyMethod Méthode d'interrogation
      * @param MyRel Lien relatif
      */
     @JsonCreator
     public Link(
-            @JsonProperty("href") String MyHref, 
-            @JsonProperty("method") String MyMethod, 
+            @JsonProperty("href") String MyHref,
+            @JsonProperty("method") String MyMethod,
             @JsonProperty("rel") String MyRel) {
         this.Href = MyHref;
         this.Method = MyMethod;
         this.Rel = MyRel;
     }
-    
+
     /**
-     * @return la rï¿½fï¿½rence au lien
+     * @return la référence au lien
      */
     public String getHref() {
         return Href;
     }
 
     /**
-     * @param href dï¿½finit la rï¿½fï¿½rence au lien
+     * @param href définit la référence au lien
      */
     public void setHref(String href) {
         this.Href = href;
     }
 
     /**
-     * @return la mï¿½thode d'interrogation
+     * @return la méthode d'interrogation
      */
     public String getMethod() {
         return Method;
     }
 
     /**
-     * @param method dï¿½finit la mï¿½thode d'interrogation
+     * @param method définit la méthode d'interrogation
      */
     public void setMethod(String method) {
         this.Method = method;
@@ -79,7 +80,7 @@ public class Link {
     }
 
     /**
-     * @param rel dï¿½finit le lien relatif
+     * @param rel définit le lien relatif
      */
     public void setRel(String rel) {
         this.Rel = rel;
@@ -90,10 +91,9 @@ public class Link {
      */
     @Override
     public String toString() {
-        return(this.getClass().getName() + 
-                ":{href:" + getHref() + 
-                ", method:" + getMethod() + 
-                ", rel:"+ getRel() + 
-                "}");
+        return "Link:{href:" + getHref()
+                + ", method:" + getMethod()
+                + ", rel:" + getRel()
+                + "}";
     }
 }

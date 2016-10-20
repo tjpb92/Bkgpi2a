@@ -41,8 +41,7 @@ public class ClientAccountManager extends User {
      */
     @Override
     public String toString() {
-        return this.getClass().getSimpleName()
-                + ":{"
+        return "ClientAccountManager:{"
                 + super.toString()
                 + ", company:" + getCompany()
                 + "}";

@@ -41,8 +41,7 @@ public class CallCenterUser extends User {
      */
     @Override
     public String toString() {
-        return this.getClass().getSimpleName()
-                + ":{"
+        return "CallCenterUser:{"
                 + super.toString()
                 + ", company:" + getCompany()
                 + "}";
