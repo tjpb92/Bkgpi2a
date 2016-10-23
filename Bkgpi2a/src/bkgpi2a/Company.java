@@ -1,155 +1,151 @@
 package bkgpi2a;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonGetter;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-import java.util.List;
+import com.fasterxml.jackson.annotation.JsonSetter;
 
 /**
- * Classe décrivant une compagnie
+ * Classe décrivant une société (company)
+ *
  * @author Thierry Baribaud
- * @version Octobre 2016
  */
-@JsonPropertyOrder({"_links", "companyType", "isActive", "label", "uid"})
-@JsonIgnoreProperties({"linksList", "active"})
 public class Company {
-    
+
     /**
-     * Liens vers d'autres entités.
+     * Liens entre entités
      */
     @JsonProperty("_links")
-    private List<Link> LinksList;
-    
-    /**
-     * Définit le type de compagnie (utiliser une enum plus tard) :
-     * <UL>
-     * <LI>CallCenter</LI>
-     * <LI>ClientAccount</LI>
-     * <LI>ClientAccountHolding</LI>
-     * </UL>
-     */
-    private String CompanyType;
-    
-    /**
-     * Indique si la compagnie est active ou pas.
-     */
-    @JsonProperty("isActive")
-    private boolean Active;
-    
-    /**
-     * Nom de la compagnie.
-     */
-    private String Label;
-    
-    /**
-     * Identifiant unique de la compagnie.
-     */
-    private String Uid;
+    private Links _links;
 
     /**
-     * Constructeur principal de la classe Company.
-     * @param MyLinks liens vers d'autres entités.
-     * @param MyCompanyType le type de compagnie.
-     * @param MyActive l'état d'activité de la compagnie.
-     * @param MyLabel le nom de la compagnie.
-     * @param MyUid l'indentifiant unique de la comapgnie.
+     * Identifiant unique de la société
      */
-    @JsonCreator
-    public Company(
-            @JsonProperty("_links") List<Link> MyLinks, 
-            @JsonProperty("companyType") String MyCompanyType, 
-            @JsonProperty("isActive") boolean MyActive, 
-            @JsonProperty("label") String MyLabel, 
-            @JsonProperty("uid") String MyUid) {
-        this.LinksList = MyLinks;
-        this.CompanyType = MyCompanyType;
-        this.Active = MyActive;
-        this.Label = MyLabel;
-        this.Uid = MyUid;
-    }
-    
+    @JsonProperty("uid")
+    private String uid;
+
     /**
-     * @return les liens vers les autres entités.
+     * Nom de la société
      */
-    public List<Link> getLinksList() {
-        return LinksList;
-    }
-    
+    @JsonProperty("label")
+    private String label;
+
     /**
-     * @param MyLinks définit les liens vers les autres entités.
+     * Type de société
      */
-    public void setLinksList(List<Link> MyLinks) {
-        this.LinksList = MyLinks;
-    }
-    
+    private String companyType;
+
     /**
-     * @return le type de la compagnie.
+     * Etat d'activité de la société
+     */
+    @JsonInclude(Include.NON_NULL)
+    @JsonProperty("isActive")
+    private boolean isActive;
+
+    /**
+     * Constructeur principal de la classe Company
+     */
+    public Company() {
+    }
+
+    /**
+     * @return l'identifiant unique de la société
+     */
+    @JsonGetter("uid")
+    public String getUid() {
+        return uid;
+    }
+
+    /**
+     * @param uid définit l'identifiant unique de la société
+     */
+    @JsonSetter("uid")
+    public void setUid(String uid) {
+        this.uid = uid;
+    }
+
+    /**
+     * @return le label de la société
+     */
+    @JsonGetter("login")
+    public String getLabel() {
+        return label;
+    }
+
+    /**
+     * @param label définit le nom de la société
+     */
+    @JsonSetter("login")
+    public void setLabel(String label) {
+        this.label = label;
+    }
+
+    /**
+     * @return l'état d'activité de la société
+     */
+    @JsonGetter("isActive")
+    public boolean getIsActive() {
+        return isActive;
+    }
+
+    /**
+     * @param isActive définit l'état d'activité de la société
+     */
+    @JsonSetter("isActive")
+    public void setisActive(boolean isActive) {
+        this.isActive = isActive;
+    }
+
+    /**
+     * @return le type de société
      */
     public String getCompanyType() {
-        return CompanyType;
+        return companyType;
     }
 
     /**
-     * @param MyCompanyType définit le type de la compagnie.
+     * @param companyType définit le type de société
      */
-    public void setCompanyType(String MyCompanyType) {
-        this.CompanyType = MyCompanyType;
+    public void setCompanyType(String companyType) {
+        this.companyType = companyType;
     }
 
     /**
-     * @return l'état d'activité de la compagnie.
+     * @return la liste de liens entre entités
      */
-    public boolean getActive() {
-        return Active;
+    @JsonGetter("_links")
+    public Links getLinks() {
+        return _links;
     }
 
     /**
-     * @param MyActive définit l'état d'activité de la compagnie.
+     * @param _links définit une liste de liens entre entités
      */
-    public void setActive(boolean MyActive) {
-        this.Active = MyActive;
+    @JsonSetter("_links")
+    public void setLinks(Links _links) {
+        this._links = _links;
     }
 
     /**
-     * @return le nom de la compagnie.
+     * Ajoute un lien à la liste
+     *
+     * @param link lien à ajouter
      */
-    public String getLabel() {
-        return Label;
+    public void add(Link link) {
+        _links.add(link);
     }
 
     /**
-     * @param MyLabel définit le nom de la compagnie.
-     */
-    public void setLabel(String MyLabel) {
-        this.Label = MyLabel;
-    }
-
-    /**
-     * @return l'identifiant unique de la compagnie.
-     */
-    public String getUid() {
-        return Uid;
-    }
-
-    /**
-     * @param MyUid définit l'identifiant unique de la compagnie.
-     */
-    public void setUid(String MyUid) {
-        this.Uid = MyUid;
-    }
-    
-    /**
-     * @return les informations sur la compagnie.
+     * @return Retourne l'objet sous forme textuelle
      */
     @Override
     public String toString() {
-        return(this.getClass().getName() + 
-                ":{_link:" + getLinksList() + 
-                ", companyType:" + getCompanyType() + 
-                ", isActive:" + getActive() + 
-                ", label:"+ getLabel() + 
-                ", uid:"+ getUid() + 
-                "}");
+        return "Company:{_links:" + getLinks()
+                + ", uid:" + getUid()
+                + ", label:" + getLabel()
+                + ", isActive:" + getIsActive()
+                + ", companyType:" + getCompanyType()
+                + "}";
     }
 }

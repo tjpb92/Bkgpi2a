@@ -113,7 +113,7 @@ public class Bkgpi2a {
 
         System.out.println("Connexion à la base de données : " + dbServer.getDbName());
         mongoDatabase = mongoClient.getDatabase(dbServer.getDbName());
-        
+
         System.out.println("Ouverture de la connexion au site Web : " + webServer.getName());
         httpsClient = new HttpsClient(webServer.getIpAddress(), getWebId());
 
@@ -121,10 +121,10 @@ public class Bkgpi2a {
         httpsClient.sendPost(HttpsClient.LOGIN_CMDE);
 
         System.out.println("Récupération des compagnies ...");
-//        processCompanies(httpsClient, null, mongoDatabase);
+        processCompanies(httpsClient, null, mongoDatabase);
 
         System.out.println("Récupération des patrimoines ...");
-        processPatrimonies(httpsClient, mongoDatabase);
+//        processPatrimonies(httpsClient, mongoDatabase);
 
         System.out.println("Récupération des intervenants ...");
 //        processProviderContacts(httpsClient, mongoDatabase);
@@ -229,7 +229,6 @@ public class Bkgpi2a {
         } else {
             throw new WebServerException("Mot de passe pour l'accès Web non défini");
         }
-
         setWebId(identifiants);
     }
 
@@ -270,7 +269,6 @@ public class Bkgpi2a {
         } else {
             throw new WebServerException("Mot de passe pour l'accès base de données non défini");
         }
-
         setDbId(identifiants);
     }
 
@@ -282,17 +280,15 @@ public class Bkgpi2a {
      * @param mongoDatabase connexion à la base de données locale
      */
     private void processCompanies(HttpsClient httpsClient, String uid, MongoDatabase mongoDatabase) {
-        Companies companies;
+        CompanyContainer companyContainer;
         ObjectMapper objectMapper;
         int nbCompanies;
         int i;
-        int n;
         String command;
         Range range;
+        CompanyDAO companyDAO;
 
-        SubsidiaryWrapperListWrapper subsidiaryWrapperListWrapper;
-        int nbSubsidiaries;
-        Subsidiary subsidiary;
+        companyDAO = new CompanyDAO(mongoDatabase);
 
         if (uid != null) {
             command = HttpsClient.COMPANIES_CMDE + "/" + uid + "/" + HttpsClient.AGENCIES_CMDE;
@@ -302,27 +298,27 @@ public class Bkgpi2a {
         System.out.println("Sending command to get companies : " + command);
         objectMapper = new ObjectMapper();
         range = new Range();
-        n = 0;
+        i = 0;
         try {
             do {
                 httpsClient.sendGet(command + "?range=" + range.getRange());
                 range.contentRange(httpsClient.getContentRange());
                 range.setPage(httpsClient.getAcceptRange());
                 System.out.println(range);
-                companies = objectMapper.readValue(httpsClient.getResponse(), Companies.class);
+                companyContainer = objectMapper.readValue(httpsClient.getResponse(), CompanyContainer.class);
 
-                nbCompanies = companies.getCompaniesList().size();
+                nbCompanies = companyContainer.getCompanyList().size();
                 System.out.println(nbCompanies + " compagnie(s) récupérée(s)");
-                for (i = 0; i < nbCompanies; i++) {
-                    n++;
-                    System.out.println(n + " " + companies.getCompaniesList().get(i).getCompanyType()
-                            + ":" + companies.getCompaniesList().get(i).getLabel());
-                    processUsers(httpsClient, companies.getCompaniesList().get(i).getUid(), mongoDatabase);
-//                    if ("ClientAccount".equals(companies.getCompaniesList().get(i).getCompanyType())) {
-//                        processAgencies(companies.getCompaniesList().get(i).getUid());
-//                    } else if ("ClientAccountHolding".equals(companies.getCompaniesList().get(i).getCompanyType())) {
-//                        processSubsidiaries(companies.getCompaniesList().get(i).getUid());
-//                    }
+                for (Company company : companyContainer.getCompanyList()) {
+                    i++;
+                    System.out.println("  " + i + " Company:" + company.getLabel() + " " + company.getCompanyType());
+                    companyDAO.insert(company);
+                    processUsers(httpsClient, company.getUid(), mongoDatabase);
+                    if ("ClientAccountHolding".equals(company.getCompanyType())) {
+                        processSubsidiaries(httpsClient, company.getUid(), mongoDatabase);
+                    } else if ("ClientAccount".equals(company.getCompanyType())) {
+                        processAgencies(httpsClient, company.getUid(), mongoDatabase);
+                    }
                 }
             } while (range.hasNext());
         } catch (IOException ex) {
@@ -330,7 +326,6 @@ public class Bkgpi2a {
         } catch (Exception ex) {
             Logger.getLogger(HttpsClient.class.getName()).log(Level.SEVERE, null, ex);
         }
-
     }
 
     /**
@@ -349,9 +344,9 @@ public class Bkgpi2a {
         Range range;
         UserContainer userContainer;
         UsersDAO usersDAO;
-        
+
         usersDAO = new UsersDAO(mongoDatabase);
-        
+
         command = HttpsClient.COMPANIES_CMDE + "/" + uid + "/" + HttpsClient.USERS_CMDE;
         System.out.println("  Sending command to get users : " + command);
         objectMapper = new ObjectMapper();
@@ -387,12 +382,14 @@ public class Bkgpi2a {
      */
     private void processAgencies(HttpsClient httpsClient, String uid, MongoDatabase mongoDatabase) {
         ObjectMapper objectMapper;
-        AgencyWrapperListWrapper agencyWrapperListWrapper;
+        AgencyContainer agencyContainer;
         int nbAgencies;
-        Agency agency;
         int i;
         String command;
         Range range;
+        AgencyDAO agencyDAO;
+
+        agencyDAO = new AgencyDAO(mongoDatabase);
 
         command = HttpsClient.COMPANIES_CMDE + "/" + uid + "/" + HttpsClient.AGENCIES_CMDE;
         System.out.println("  Sending command to get agencies : " + command);
@@ -405,13 +402,13 @@ public class Bkgpi2a {
                 range.contentRange(httpsClient.getContentRange());
                 range.setPage(httpsClient.getAcceptRange());
                 System.out.println(range);
-                agencyWrapperListWrapper = objectMapper.readValue(httpsClient.getResponse(), AgencyWrapperListWrapper.class);
-                nbAgencies = agencyWrapperListWrapper.getAgencyWrapperList().size();
+                agencyContainer = objectMapper.readValue(httpsClient.getResponse(), AgencyContainer.class);
+                nbAgencies = agencyContainer.getAgencyList().size();
                 System.out.println(nbAgencies + " agence(s) récupérée(s)");
-                for (AgencyWrapper agencyWrapper : agencyWrapperListWrapper.getAgencyWrapperList()) {
+                for (Agency agency : agencyContainer.getAgencyList()) {
                     i++;
-                    agency = agencyWrapper.getAgency();
                     System.out.println("  " + i + " Agency:" + agency.getLabel());
+                    agencyDAO.insert(agency);
                     processUsers(httpsClient, agency.getUid(), mongoDatabase);
                 }
             } while (range.hasNext());
@@ -428,13 +425,15 @@ public class Bkgpi2a {
      * @param mongoDatabase connexion à la base de données locale
      */
     private void processSubsidiaries(HttpsClient httpsClient, String uid, MongoDatabase mongoDatabase) {
+        CompanyContainer subsidiaryContainer;
         ObjectMapper objectMapper;
-        SubsidiaryWrapperListWrapper subsidiaryWrapperListWrapper;
         int nbSubsidiaries;
-        Subsidiary subsidiary;
         int i;
         String command;
         Range range;
+        CompanyDAO subsidiaryDAO;
+
+        subsidiaryDAO = new CompanyDAO(mongoDatabase);
 
         command = HttpsClient.COMPANIES_CMDE + "/" + uid + "/" + HttpsClient.SUBSIDIARIES_CMDE;
         System.out.println("  Sending command to get subsidiaries : " + command);
@@ -447,13 +446,13 @@ public class Bkgpi2a {
                 range.contentRange(httpsClient.getContentRange());
                 range.setPage(httpsClient.getAcceptRange());
                 System.out.println(range);
-                subsidiaryWrapperListWrapper = objectMapper.readValue(httpsClient.getResponse(), SubsidiaryWrapperListWrapper.class);
-                nbSubsidiaries = subsidiaryWrapperListWrapper.getSubsidiaryWrapperList().size();
+                subsidiaryContainer = objectMapper.readValue(httpsClient.getResponse(), CompanyContainer.class);
+                nbSubsidiaries = subsidiaryContainer.getCompanyList().size();
                 System.out.println(nbSubsidiaries + " filiale(s) récupérée(s)");
-                for (SubsidiaryWrapper subsidiaryWrapper : subsidiaryWrapperListWrapper.getSubsidiaryWrapperList()) {
+                for (Company subsidiary : subsidiaryContainer.getCompanyList()) {
                     i++;
-                    subsidiary = subsidiaryWrapper.getSubsidiary();
-                    System.out.println("  " + i + " " + subsidiary.getCompanyType() + ":" + subsidiary.getLabel());
+                    System.out.println("    " + i + " Subsidiary:" + subsidiary.getLabel() + ":" + subsidiary.getCompanyType());
+                    subsidiaryDAO.insert(subsidiary);
                     processUsers(httpsClient, subsidiary.getUid(), mongoDatabase);
                     processAgencies(httpsClient, subsidiary.getUid(), mongoDatabase);
                 }
@@ -480,7 +479,7 @@ public class Bkgpi2a {
         PatrimonyDAO patrimonyDAO;
 
         patrimonyDAO = new PatrimonyDAO(mongoDatabase);
-        
+
         command = HttpsClient.PATRIMONIES_CMDE;
         System.out.println("  Sending command to get patrimonies : " + command);
         objectMapper = new ObjectMapper();
@@ -525,9 +524,9 @@ public class Bkgpi2a {
         String command;
         Range range;
         ProviderContactDAO providerContactDAO;
-        
+
         providerContactDAO = new ProviderContactDAO(mongoDatabase);
-        
+
         command = HttpsClient.PROVIDER_CONTACTS_CMDE;
         System.out.println("  Sending command to get provider contacts : " + command);
         objectMapper = new ObjectMapper();
@@ -553,5 +552,4 @@ public class Bkgpi2a {
             Logger.getLogger(HttpsClient.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-
 }
