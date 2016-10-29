@@ -1,5 +1,5 @@
-# My .gitgnore file
-
+# My .gitignore file
+.gitignore
 MyDatabases.prop
 
 

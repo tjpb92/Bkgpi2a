@@ -1,10 +1,22 @@
 package bkgpi2a;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+
 /**
  * Classe abstraite décrivant un événément.
  *
  * @author Thierry Baribaud
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME,
+        include = JsonTypeInfo.As.EXISTING_PROPERTY,
+        property = "eventType")
+@JsonSubTypes({
+    //    @JsonSubTypes.Type(value = ReferencedOperator.class, name = "ReferencedOperator"),
+    //    @JsonSubTypes.Type(value = AnonymousOperator.class, name = "AnonymousOperator"),
+    @JsonSubTypes.Type(value = MessageAdded.class, name = "MessageAdded"),})
 public abstract class Event {
 
     /**
@@ -124,14 +136,13 @@ public abstract class Event {
 
     @Override
     public String toString() {
-        return this.getClass().getSimpleName()
-                + ":{"
+        return "Event:{"
                 + "processUid:" + getProcessUid()
                 + ", aggregateUid:" + getAggregateUid()
+                + ", date:" + getDate()
                 + ", sentDate:" + getSentDate()
                 + ", eventType:" + getEventType()
                 + ", eventTypeUid:" + getEventTypeUid()
                 + "}";
     }
-
 }

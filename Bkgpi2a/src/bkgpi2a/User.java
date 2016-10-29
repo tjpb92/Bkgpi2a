@@ -14,6 +14,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
  * Classe décrivant un utilisateur simple
  *
  * @author Thierry Baribaud
+ * @version Octobre 2016
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME,
