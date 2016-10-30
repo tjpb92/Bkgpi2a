@@ -14,8 +14,12 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
         include = JsonTypeInfo.As.EXISTING_PROPERTY,
         property = "eventType")
 @JsonSubTypes({
-    //    @JsonSubTypes.Type(value = ReferencedOperator.class, name = "ReferencedOperator"),
+    @JsonSubTypes.Type(value = ProviderAssigned.class, name = "ProviderAssigned"),
     @JsonSubTypes.Type(value = LogTrialAdded.class, name = "LogTrialAdded"),
+    @JsonSubTypes.Type(value = PermanentlyFixed.class, name = "PermanentlyFixed"),
+    @JsonSubTypes.Type(value = PartiallyFixed.class, name = "PartiallyFixed"),
+    @JsonSubTypes.Type(value = TicketClosedImpossibleRepair.class, name = "TicketClosedImpossibleRepair"),
+    @JsonSubTypes.Type(value = PostponedFix.class, name = "PostponedFix"),
     @JsonSubTypes.Type(value = MessageAdded.class, name = "MessageAdded")})
 public abstract class Event {
 

@@ -9,14 +9,8 @@ package bkgpi2a;
 public enum EventType {
 
     /* todo ...
-     535 = PermanentlyFixed
-     540 = PartialyFixed
-     545 = ImpossibleRepair
-     550 = PostponedFix
-     555 = ClosedBeyondScope
      560 = ClosedUnsuccessfulRecalls
      561 = TicketClosed
-     565 = LogTrialAdded
      575 = TicketReopened
      580 = CallEmittedToUser
      585 = TicketCanceled
@@ -33,6 +27,11 @@ public enum EventType {
     GONE_FROM_SITE("GoneFromSite", 530),
     INTERVENTION_STARTED("InterventionStarted", 532),
     INTERVENTION_FINISHED("InterventionFinished", 534),
+    PERMANENTLY_FIXED("PermanentlyFixed", 535),
+    PARTIALLY_FIXED("PartiallyFixed", 540),
+    TICKET_CLOSED_IMPOSSIBLE_REPAIR("TicketClosedImpossibleRepair", 545),
+    POSTPONED_FIX("PostponedFix", 550),
+    CLOSED_BEYOND_SCOPE("ClosedBeyondScope", 555),
     
     LOG_TRIAL_ADDED("LogTrialAdded", 565),
     MESSAGE_ADDED("MessageAdded", 570);
