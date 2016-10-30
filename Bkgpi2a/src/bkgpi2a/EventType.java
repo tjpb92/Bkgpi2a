@@ -9,11 +9,6 @@ package bkgpi2a;
 public enum EventType {
 
     /* todo ...
-     520 = MissionRefused
-     525 = ArrivedOnSite
-     530 = GoneFromSite
-     532 = InterventionStarted
-     534 = InterventionFinished
      535 = PermanentlyFixed
      540 = PartialyFixed
      545 = ImpossibleRepair
@@ -33,6 +28,13 @@ public enum EventType {
     MISSION_ACCEPTED("MissionAccepted", 505),
     TICKET_UPDATED("TicketUpdated", 510),
     PROVIDER_ASSIGNED("ProviderAssigned", 515),
+    MISSION_REFUSED("MissionRefused", 520),
+    ARRIVED_ON_SITE("ArrivedOnSite", 525),
+    GONE_FROM_SITE("GoneFromSite", 530),
+    INTERVENTION_STARTED("InterventionStarted", 532),
+    INTERVENTION_FINISHED("InterventionFinished", 534),
+    
+    LOG_TRIAL_ADDED("LogTrialAdded", 565),
     MESSAGE_ADDED("MessageAdded", 570);
 
     /**

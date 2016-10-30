@@ -1,5 +1,6 @@
 package bkgpi2a;
 
+import static bkgpi2a.OperatorType.REFERENCED_OPERATOR;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 
 /**
@@ -7,6 +8,7 @@ import com.fasterxml.jackson.annotation.JsonTypeName;
  *
  * @author Thierry Baribaud
  * @version Octobre 2016
+ * @see http://performanceimmo.github.io/API/#operator
  */
 @JsonTypeName("ReferencedOperator")
 public class ReferencedOperator extends Operator {
@@ -20,7 +22,7 @@ public class ReferencedOperator extends Operator {
      * Constructeur principal de la classe ReferencedUser
      */
     public ReferencedOperator() {
-        setOperatorType("ReferencedOperator");
+        setOperatorType(REFERENCED_OPERATOR.getName());
     }
 
     /**

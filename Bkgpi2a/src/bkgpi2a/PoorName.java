@@ -1,39 +1,38 @@
 package bkgpi2a;
 
-import static bkgpi2a.OperatorType.ANONYMOUS_OPERATOR;
+import static bkgpi2a.NameType.POOR_NAME;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 
 /**
- * Classe décrivant un opérateur non référencé
+ * Classe décrivant un nom non qualifié (pauvre)
  *
  * @author Thierry Baribaud
  * @version Octobre 2016
- * @see http://performanceimmo.github.io/API/#operator
  */
-@JsonTypeName("AnonymousOperator")
-public class AnonymousOperator extends Operator {
+@JsonTypeName("PoorName")
+public class PoorName extends Name {
 
     /**
-     * Nom de l'opérateur
+     * Nom
      */
     private String name;
 
     /**
-     * Constructeur principal de la classe AnonymousOperator
+     * Constructeur principal de la classe PoorName
      */
-    public AnonymousOperator() {
-        setOperatorType(ANONYMOUS_OPERATOR.getName());
+    public PoorName() {
+        setNameType(POOR_NAME.getName());
     }
 
     /**
-     * @return le nom de l'opérateur
+     * @return le nom
      */
     public String getName() {
         return name;
     }
 
     /**
-     * @param name définit le nom de l'opérateur
+     * @param name définit le nom
      */
     public void setName(String name) {
         this.name = name;
@@ -44,7 +43,7 @@ public class AnonymousOperator extends Operator {
      */
     @Override
     public String toString() {
-        return "AnonymousOperator:{"
+        return "PoorName:{"
                 + super.toString()
                 + ", name:" + getName()
                 + "}";

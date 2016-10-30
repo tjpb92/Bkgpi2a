@@ -90,9 +90,9 @@ public class CompanyContainer {
      */
     @Override
     public String toString() {
-        return "UserContainer:{"
+        return "CompanyContainer:{"
                 + "_links:" + getLinks()
-                + ", userList:" + getCompanyList()
+                + ", companyList:" + getCompanyList()
                 + "}";
     }
 }

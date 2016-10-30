@@ -11,13 +11,13 @@ import org.bson.Document;
  * @author Thierry Baribaud
  * @version Octobre 2016
  */
-public class UsersDAO extends MongoPatternDAO {
+public class UserDAO extends MongoPatternDAO {
 
     /**
      * Contructeur principal
      * @param mongoDatabase connexion à la base MongoDB
      */
-    public UsersDAO(MongoDatabase mongoDatabase) {
+    public UserDAO(MongoDatabase mongoDatabase) {
         this.mongoDatabase = mongoDatabase;
         this.collection = mongoDatabase.getCollection("users");
     }
@@ -45,7 +45,7 @@ public class UsersDAO extends MongoPatternDAO {
         try {
             this.collection.insertOne(Document.parse(objectMapper.writeValueAsString(user)));
         } catch (JsonProcessingException ex) {
-            Logger.getLogger(UsersDAO.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(UserDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     

@@ -15,8 +15,8 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
         property = "eventType")
 @JsonSubTypes({
     //    @JsonSubTypes.Type(value = ReferencedOperator.class, name = "ReferencedOperator"),
-    //    @JsonSubTypes.Type(value = AnonymousOperator.class, name = "AnonymousOperator"),
-    @JsonSubTypes.Type(value = MessageAdded.class, name = "MessageAdded"),})
+    @JsonSubTypes.Type(value = LogTrialAdded.class, name = "LogTrialAdded"),
+    @JsonSubTypes.Type(value = MessageAdded.class, name = "MessageAdded")})
 public abstract class Event {
 
     /**

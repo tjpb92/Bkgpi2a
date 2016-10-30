@@ -123,7 +123,7 @@ public class GetArgs {
     /**
      *
      * @param args arguments de la ligne de commande.
-     * @throws pi2a.GetArgsException en cas d'erreur sur les paramètres
+     * @throws GetArgsException en cas d'erreur sur les paramètres
      */
     public GetArgs(String args[]) throws GetArgsException {
 

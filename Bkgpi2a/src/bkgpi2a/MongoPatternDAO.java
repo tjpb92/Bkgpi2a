@@ -74,4 +74,11 @@ public abstract class MongoPatternDAO {
      * @param fieldList liste de champs servant à trier les résultats
      */
     abstract public void orderBy(String fieldList);
+    
+    /**
+     * Supprime la collection courante
+     */
+    public void drop() {
+        this.collection.drop();
+    }
 }

@@ -9,6 +9,7 @@ import static bkgpi2a.EventType.MESSAGE_ADDED;
  *
  * @author Thierry Baribaud
  * @version Octobre 2016
+ * @see http://performanceimmo.github.io/API/#ticketevent
  */
 @JsonIgnoreProperties({"date", "eventTypeUid"})
 @JsonTypeName("MessageAdded")

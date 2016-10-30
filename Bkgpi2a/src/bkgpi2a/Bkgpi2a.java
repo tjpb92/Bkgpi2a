@@ -69,10 +69,10 @@ public class Bkgpi2a {
      *
      * @param args arguments de la ligne de commande.
      * @throws java.io.IOException en cas d'erreur d'entrée/sortie.
-     * @throws pi2a.WebServerException en cas d'erreur avec le serveur Web.
+     * @throws WebServerException en cas d'erreur avec le serveur Web.
      * @throws utils.DBServerException en cas d'erreur avec le serveur de base
      * de données.
-     * @throws pi2a.GetArgsException en cas d'erreur avec les paramètres en
+     * @throws GetArgsException en cas d'erreur avec les paramètres en
      * ligne de commande
      */
     public Bkgpi2a(String[] args) throws IOException,
@@ -209,7 +209,7 @@ public class Bkgpi2a {
     /**
      * @param applicationProperties définit les identifiants pour accéder au
      * serveur Web
-     * @throws pi2a.WebServerException en cas d'erreur sur la lecteur des
+     * @throws WebServerException en cas d'erreur sur la lecteur des
      * identifiants
      */
     public void setWebId(ApplicationProperties applicationProperties) throws WebServerException {
@@ -249,7 +249,7 @@ public class Bkgpi2a {
     /**
      * @param applicationProperties définit les identifiants pour accéder au
      * serveur Web
-     * @throws pi2a.WebServerException en cas d'erreur sur la lecteur des
+     * @throws WebServerException en cas d'erreur sur la lecteur des
      * identifiants
      */
     public void setDbId(ApplicationProperties applicationProperties) throws WebServerException {
@@ -287,13 +287,23 @@ public class Bkgpi2a {
         String command;
         Range range;
         CompanyDAO companyDAO;
+        UserDAO userDAO;
+        AgencyDAO agencyDAO;
 
         companyDAO = new CompanyDAO(mongoDatabase);
-
+        userDAO = new UserDAO(mongoDatabase);
+        agencyDAO = new AgencyDAO(mongoDatabase);
+        
         if (uid != null) {
             command = HttpsClient.COMPANIES_CMDE + "/" + uid + "/" + HttpsClient.AGENCIES_CMDE;
         } else {
             command = HttpsClient.COMPANIES_CMDE;
+            System.out.println("Suppression des compagnies ...");
+            companyDAO.drop();
+            System.out.println("Suppression des agences ...");
+            agencyDAO.drop();
+            System.out.println("Suppression des utilisateurs ...");
+            userDAO.drop();
         }
         System.out.println("Sending command to get companies : " + command);
         objectMapper = new ObjectMapper();
@@ -343,9 +353,9 @@ public class Bkgpi2a {
         String command;
         Range range;
         UserContainer userContainer;
-        UsersDAO usersDAO;
+        UserDAO usersDAO;
 
-        usersDAO = new UsersDAO(mongoDatabase);
+        usersDAO = new UserDAO(mongoDatabase);
 
         command = HttpsClient.COMPANIES_CMDE + "/" + uid + "/" + HttpsClient.USERS_CMDE;
         System.out.println("  Sending command to get users : " + command);
