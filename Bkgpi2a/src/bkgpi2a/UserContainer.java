@@ -9,7 +9,7 @@ import com.fasterxml.jackson.annotation.JsonSetter;
  * Classe décrivant un container permettant le transfert des utilisateurs.
  *
  * @author Thierry Baribaud
- * @version Octobre 2016
+ * @version 0.18
  */
 @JsonPropertyOrder({"_links", "result"})
 public class UserContainer {
@@ -30,6 +30,7 @@ public class UserContainer {
      * Constructeur de la classe UserContainer
      */
     public UserContainer() {
+        setLinks(new Links());
         setUserList(new UserList());
     }
 

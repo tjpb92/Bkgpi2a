@@ -9,7 +9,7 @@ import com.fasterxml.jackson.annotation.JsonSetter;
  * Classe décrivant un container permettant le transfert des sociétés.
  *
  * @author Thierry Baribaud
- * @version Octobre 2016
+ * @version 0.18
  */
 @JsonPropertyOrder({"_links", "result"})
 public class CompanyContainer {
@@ -30,6 +30,7 @@ public class CompanyContainer {
      * Constructeur de la classe CompanyContainer
      */
     public CompanyContainer() {
+        setLinks(new Links());
         setCompanyList(new CompanyList());
     }
 

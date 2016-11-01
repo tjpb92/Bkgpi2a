@@ -1,134 +1,184 @@
 package bkgpi2a;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
 /**
- * Classe décrivant une adresse 
+ * Classe décrivant une adresse rationnelle
+ *
  * @author Thierry Baribaud
- * @version Octobre 2016
+ * @version 0.18
+ * @see http://performanceimmo.github.io/API/#addressforcommand
  */
 public class RationalAddress {
+
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private String quality;
     
-    private String uid;
-    // private String quality; A IMPLEMENTER
+    /**
+     * Le numéro de voie
+     */
     private String number;
+    
+    /**
+     * La voie
+     */
     private String street;
+    
+    /**
+     * Le complément d'adresse
+     */
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private String complement;
+    
+    /**
+     * La ville
+     */
     private String city;
+    
+    /**
+     * Le code postal
+     */
     private String zipCode;
-    // private String state; A IMPLEMENTER
+    
+    /**
+     * L'état
+     */
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private String state;
+    
+    /** 
+     * Le pays
+     */
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private String country;
 
     /**
-     * @return the uid
+     * @return the quality
      */
-    public String getUid() {
-        return uid;
+    public String getQuality() {
+        return quality;
     }
 
     /**
-     * @param uid the uid to set
+     * @param quality the quality to set
      */
-    public void setUid(String uid) {
-        this.uid = uid;
+    public void setQuality(String quality) {
+        this.quality = quality;
     }
 
     /**
-     * @return the number
+     * @return le numéro de voie
      */
     public String getNumber() {
         return number;
     }
 
     /**
-     * @param number the number to set
+     * @param number définit le numéro de voie
      */
     public void setNumber(String number) {
         this.number = number;
     }
 
     /**
-     * @return the street
+     * @return la voie
      */
     public String getStreet() {
         return street;
     }
 
     /**
-     * @param street the street to set
+     * @param street définit la voie
      */
     public void setStreet(String street) {
         this.street = street;
     }
 
     /**
-     * @return the city
+     * @return la ville
      */
     public String getCity() {
         return city;
     }
 
     /**
-     * @param city the city to set
+     * @param city définit la ville
      */
     public void setCity(String city) {
         this.city = city;
     }
 
     /**
-     * @return the zipCode
+     * @return le code postal
      */
     public String getZipCode() {
         return zipCode;
     }
 
     /**
-     * @param zipCode the zipCode to set
+     * @param zipCode définit le code postal
      */
     public void setZipCode(String zipCode) {
         this.zipCode = zipCode;
     }
 
     /**
-     * @return the country
+     * @return le pays
      */
     public String getCountry() {
         return country;
     }
 
     /**
-     * @param country the country to set
+     * @param country définit le pays
      */
     public void setCountry(String country) {
         this.country = country;
     }
 
     /**
-     * @return le complement d'adresse
+     * @return le complément d'adresse
      */
     public String getComplement() {
         return complement;
     }
 
     /**
-     * @param complement définit le complement d'adresse
+     * @param complement définit le complément d'adresse
      */
     public void setComplement(String complement) {
         this.complement = complement;
     }
-    
+
+    /**
+     * @return l'état
+     */
+    public String getState() {
+        return state;
+    }
+
+    /**
+     * @param state définit l'état
+     */
+    public void setState(String state) {
+        this.state = state;
+    }
+
     /**
      * @return Retourne l'adresse sous forme textuelle
      */
     @Override
     public String toString() {
-        return(this.getClass().getName() + 
-                ":{uid:" + getUid() + 
-                ", number:" + getNumber() + 
-                ", street:" + getStreet() + 
-                ", complement:" + getComplement() + 
-                ", city:" + getCity() + 
-                ", zipCode:" + getZipCode() + 
-                ", country:" + getCountry() + 
-                "}");        
+        return "RationalAddress:{"
+                + "quality:" + getQuality()
+                + ", number:" + getNumber()
+                + ", street:" + getStreet()
+                + ", complement:" + getComplement()
+                + ", zipCode:" + getZipCode()
+                + ", city:" + getCity()
+                + ", state:" + getState()
+                + ", country:" + getCountry()
+                + "}";
     }
 
 }

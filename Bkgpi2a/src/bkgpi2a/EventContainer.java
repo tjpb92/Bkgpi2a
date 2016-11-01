@@ -6,13 +6,13 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.annotation.JsonSetter;
 
 /**
- * Classe décrivant un container permettant le transfert des agences.
+ * Classe décrivant un container permettant le transfert des événements.
  *
  * @author Thierry Baribaud
  * @version 0.18
  */
 @JsonPropertyOrder({"_links", "result"})
-public class AgencyContainer {
+public class EventContainer {
 
     /**
      * Liste de liens entre entités
@@ -21,17 +21,17 @@ public class AgencyContainer {
     private Links _links;
 
     /**
-     * Liste des sociétés
+     * Liste des événements
      */
     @JsonProperty("result")
-    private AgencyList agencyList;
+    private EventList eventList;
 
     /**
-     * Constructeur de la classe CompanyContainer
+     * Constructeur de la classe EventContainer
      */
-    public AgencyContainer() {
+    public EventContainer() {
         setLinks(new Links());
-        setAgencyList(new AgencyList());
+        setEventList(new EventList());
     }
 
     /**
@@ -51,28 +51,28 @@ public class AgencyContainer {
     }
 
     /**
-     * @return la liste des agences
+     * @return la liste des événements
      */
     @JsonGetter("result")
-    public AgencyList getAgencyList() {
-        return agencyList;
+    public EventList getEventList() {
+        return eventList;
     }
 
     /**
-     * @param agencyList définit la liste des compagnies
+     * @param eventList définit la liste des compagnies
      */
     @JsonSetter("result")
-    public void setAgencyList(AgencyList agencyList) {
-        this.agencyList = agencyList;
+    public void setEventList(EventList eventList) {
+        this.eventList = eventList;
     }
 
     /**
-     * Ajoute une agence à la liste
+     * Ajoute un événement à la liste
      *
-     * @param agency agence à ajouter
+     * @param event événement à ajouter
      */
-    public void add(Agency agency) {
-        agencyList.add(agency);
+    public void add(Event event) {
+        eventList.add(event);
     }
 
     /**
@@ -91,9 +91,9 @@ public class AgencyContainer {
      */
     @Override
     public String toString() {
-        return "AgencyContainer:{"
+        return "EventContainer:{"
                 + "_links:" + getLinks()
-                + ", agencyList:" + getAgencyList()
+                + ", eventList:" + getEventList()
                 + "}";
     }
 }
