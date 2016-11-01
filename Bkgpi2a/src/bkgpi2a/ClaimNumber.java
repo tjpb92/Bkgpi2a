@@ -1,10 +1,12 @@
 package bkgpi2a;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
 /**
  * Classe décrivant deux représentations possibles de numéros d'appel
  *
  * @author Thierry Baribaud
- * @version 0.18
+ * @version 0.19
  * @see http://performanceimmo.github.io/API/#claimnumber
  */
 public class ClaimNumber {
@@ -12,11 +14,13 @@ public class ClaimNumber {
     /**
      * Numéro de ticket du centre d'appel (optionnel)
      */
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private String callCenterClaimNumber;
 
     /**
      * Numéro de ticket du client (optionnel)
      */
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private String clientClaimNumber;
 
     /**

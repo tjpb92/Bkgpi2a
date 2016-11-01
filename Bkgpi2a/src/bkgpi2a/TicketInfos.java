@@ -1,12 +1,14 @@
 package bkgpi2a;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Classe définissant les informations d'un ticket
  *
  * @author Thierry Baribaud
- * @version 0.18
+ * @version 0.19
  * @see http://performanceimmo.github.io/API/#ticketinfos
  */
 public class TicketInfos {
@@ -14,7 +16,7 @@ public class TicketInfos {
     /**
      * Appelant
      */
-    private CallerType caller;
+    private Caller caller;
     
     /**
      * Personne à rappeler
@@ -56,21 +58,27 @@ public class TicketInfos {
 
     /**
      * Données additionnelles
-     * ATTENTION : à implémenter sous forme de Map[String, Array[String]]
      */
-    private String additionalData;
+    private Map <String, String> additionalData;
 
+    
+    /**
+     * Constructeur de la classe TicketInfos
+     */
+    public TicketInfos() {
+        additionalData = new HashMap <>();
+    }
     /**
      * @return the caller
      */
-    public CallerType getCaller() {
+    public Caller getCaller() {
         return caller;
     }
 
     /**
      * @param caller the caller to set
      */
-    public void setCaller(CallerType caller) {
+    public void setCaller(Caller caller) {
         this.caller = caller;
     }
 
@@ -175,17 +183,25 @@ public class TicketInfos {
     /**
      * @return the additionalData
      */
-    public String getAdditionalData() {
+    public Map <String, String> getAdditionalData() {
         return additionalData;
     }
 
     /**
      * @param additionalData the additionalData to set
      */
-    public void setAdditionalData(String additionalData) {
+    public void setAdditionalData(Map <String, String> additionalData) {
         this.additionalData = additionalData;
     }
-    
+
+    /**
+     * Ajoute une donnée complémentaire à la liste
+     * @param key clef pour indexer la valeur
+     * @param value valeur à indexer
+     */
+    public void put(String key, String value) {
+        this.additionalData.put(key, value);
+    }
     /**
      * @return Retourne l'adresse sous forme textuelle
      */
