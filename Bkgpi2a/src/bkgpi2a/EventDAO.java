@@ -7,19 +7,19 @@ import java.util.logging.Logger;
 import org.bson.Document;
 
 /**
- * Classe qui implémente le pattern DAO pour la classe Patrimony
+ * Classe qui implémente le pattern DAO pour la classe Event
  * @author Thierry Baribaud
- * @version Octobre 0.20
+ * @version Octobre 2016
  */
-public class PatrimonyDAO extends MongoPatternDAO {
+public class EventDAO extends MongoPatternDAO {
 
     /**
      * Contructeur principal
      * @param mongoDatabase connexion à la base MongoDB
      */
-    public PatrimonyDAO(MongoDatabase mongoDatabase) {
+    public EventDAO(MongoDatabase mongoDatabase) {
         this.mongoDatabase = mongoDatabase;
-        this.collection = mongoDatabase.getCollection("patrimonies");
+        this.collection = mongoDatabase.getCollection("events");
     }
     
     @Override
@@ -39,13 +39,13 @@ public class PatrimonyDAO extends MongoPatternDAO {
 
     /**
      * Ajoute un patrimoine à la collection 
-     * @param patrimony patrimoine à ajouter à la collection
+     * @param event événéments à ajouter à la collection
      */
-    public void insert(Patrimony patrimony) {
+    public void insert(Event event) {
         try {
-            this.collection.insertOne(Document.parse(objectMapper.writeValueAsString(patrimony)));
+            this.collection.insertOne(Document.parse(objectMapper.writeValueAsString(event)));
         } catch (JsonProcessingException ex) {
-            Logger.getLogger(PatrimonyDAO.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(EventDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     

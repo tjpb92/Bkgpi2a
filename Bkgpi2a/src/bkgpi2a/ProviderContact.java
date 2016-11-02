@@ -1,21 +1,39 @@
 package bkgpi2a;
 
+import com.fasterxml.jackson.annotation.JsonGetter;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.fasterxml.jackson.annotation.JsonSetter;
 import com.fasterxml.jackson.annotation.JsonUnwrapped;
 
 /**
  * Classe décrivant un intervenant
  *
  * @author Thierry Baribaud
- * @version Octobre 2016
+ * @version 0.20
+ * @see http://performanceimmo.github.io/API/#providercontacts
  */
 @JsonPropertyOrder({"uid", "label", "phones", "fax", "emails", "active",})
 public class ProviderContact {
 
     /**
+     * Liens entre entités
+     */
+    @JsonProperty("_links")
+    private Links _links;
+
+    /**
      * Identifiant unique du contact.
      */
     private String uid;
+
+    /**
+     * Identifiant unique de la société dans la base de données Anstel
+     */
+    @JsonIgnore
+    private int id;
 
     /**
      * Nom du contact.
@@ -44,6 +62,22 @@ public class ProviderContact {
      * Indique si le contact est actif ou pas.
      */
     private boolean active;
+
+    /**
+     * @return la liste de liens entre entités
+     */
+    @JsonGetter("_links")
+    public Links getLinks() {
+        return _links;
+    }
+
+    /**
+     * @param _links définit une liste de liens entre entités
+     */
+    @JsonSetter("_links")
+    public void setLinks(Links _links) {
+        this._links = _links;
+    }
 
     /**
      * @return le nom du contact.
@@ -130,18 +164,46 @@ public class ProviderContact {
     }
 
     /**
+     * Ajoute un lien à la liste
+     *
+     * @param link lien à ajouter
+     */
+    public void add(Link link) {
+        _links.add(link);
+    }
+
+    /**
+     * @return l'identifiant unique de la base de données Anstel
+     */
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    @JsonProperty("id")
+    public int getId() {
+        return id;
+    }
+
+    /**
+     * @param id définit l'identifiant unique de la base de données Anstel
+     */
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    @JsonProperty("id")
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    /**
      * @return les informations sur la filiale.
      */
     @Override
     public String toString() {
-        return (this.getClass().getName()
-                + ":{"
-                + "uid:" + getUid()
+        return "ProviderContact:{"
+                + "id:" + getId()
+                + ", _links:" + getLinks()
+                + ", uid:" + getUid()
                 + ", label:" + getLabel()
                 + ", phones:" + getPhones()
                 + ", fax:" + getFax()
                 + ", emails:" + getEmails()
                 + ", active:" + getActive()
-                + "}");
+                + "}";
     }
 }

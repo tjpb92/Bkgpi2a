@@ -8,7 +8,7 @@ import java.util.Map;
  * Classe définissant les informations d'un ticket
  *
  * @author Thierry Baribaud
- * @version 0.19
+ * @version 0.20
  * @see http://performanceimmo.github.io/API/#ticketinfos
  */
 public class TicketInfos {
@@ -54,7 +54,7 @@ public class TicketInfos {
      * Raisons d'appel alternatives
      * ATTENTION : à implémenter sous forme de Map[String, Array[String]]
      */
-    private String altCallPurpose;
+    private Map<String, String[]> altCallPurpose;
 
     /**
      * Données additionnelles
@@ -67,6 +67,7 @@ public class TicketInfos {
      */
     public TicketInfos() {
         additionalData = new HashMap <>();
+        altCallPurpose = new HashMap <>();
     }
     /**
      * @return the caller
@@ -169,14 +170,14 @@ public class TicketInfos {
     /**
      * @return the altCallPurpose
      */
-    public String getAltCallPurpose() {
+    public Map<String, String[]> getAltCallPurpose() {
         return altCallPurpose;
     }
 
     /**
      * @param altCallPurpose the altCallPurpose to set
      */
-    public void setAltCallPurpose(String altCallPurpose) {
+    public void setAltCallPurpose(Map<String, String[]> altCallPurpose) {
         this.altCallPurpose = altCallPurpose;
     }
 
@@ -202,6 +203,16 @@ public class TicketInfos {
     public void put(String key, String value) {
         this.additionalData.put(key, value);
     }
+
+    /**
+     * Ajoute une donnée complémentaire à la liste
+     * @param key clef pour indexer la valeur
+     * @param value tableau de valeurs à indexer
+     */
+    public void put(String key, String[] value) {
+        this.altCallPurpose.put(key, value);
+    }
+
     /**
      * @return Retourne l'adresse sous forme textuelle
      */

@@ -12,7 +12,7 @@ import com.fasterxml.jackson.annotation.JsonSetter;
  * Classe décrivant une société (company)
  *
  * @author Thierry Baribaud
- * @version Octobre 2016
+ * @version 0.20
  * @see http://performanceimmo.github.io/API/#companies
  */
 @JsonIgnoreProperties({"_id"})
@@ -170,8 +170,9 @@ public class Company {
      */
     @Override
     public String toString() {
-        return "Company:{_links:" + getLinks()
-                + ", id:" + getId()
+        return "Company:{"
+                + "id:" + getId()
+                + ", _links:" + getLinks()
                 + ", uid:" + getUid()
                 + ", label:" + getLabel()
                 + ", isActive:" + getIsActive()

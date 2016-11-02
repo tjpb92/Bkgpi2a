@@ -1,7 +1,9 @@
 package bkgpi2a;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSetter;
 import com.fasterxml.jackson.annotation.JsonUnwrapped;
@@ -10,7 +12,7 @@ import com.fasterxml.jackson.annotation.JsonUnwrapped;
  * Classe décrivant une agence.
  *
  * @author Thierry Baribaud
- * @version Octobre 2016
+ * @version 0.20
  */
 public class Agency {
 
@@ -24,6 +26,12 @@ public class Agency {
      * Identifiant unique de l'agence
      */
     private String uid;
+
+    /**
+     * Identifiant unique de la société dans la base de données Anstel
+     */
+    @JsonIgnore
+    private int id;
 
     /**
      * Nom de l'agence
@@ -221,13 +229,31 @@ public class Agency {
     }
 
     /**
+     * @return l'identifiant unique de la base de données Anstel
+     */
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    @JsonProperty("id")
+    public int getId() {
+        return id;
+    }
+
+    /**
+     * @param id définit l'identifiant unique de la base de données Anstel
+     */
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    @JsonProperty("id")
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    /**
      * @return Retourne l'objet sous forme textuelle
      */
     @Override
     public String toString() {
-        return (this.getClass().getName()
-                + ":{"
-                + "_links:" + getLinks()
+        return "Agency:{"
+                + "id:" + getId()
+                + ", _links:" + getLinks()
                 + ", active:" + getActive()
                 + ", address:" + getAddress()
                 + ", company:" + getCompany()
@@ -235,6 +261,6 @@ public class Agency {
                 + ", fax:" + getFax()
                 + ", phones:" + getPhones()
                 + ", uid:" + getUid()
-                + "}");
+                + "}";
     }
 }

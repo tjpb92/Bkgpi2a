@@ -16,7 +16,7 @@ import java.util.logging.Logger;
  * https://www.mkyong.com/java/how-to-send-http-request-getpost-in-java/
  *
  * @author Thierry Baribaud
- * @version Octobre 2016
+ * @version 0.20
  */
 public class HttpsClient {
 
@@ -41,6 +41,7 @@ public class HttpsClient {
     static final String USERS_CMDE = "users";
     static final String PATRIMONIES_CMDE = "patrimonies";
     static final String PROVIDER_CONTACTS_CMDE = "providercontacts";
+    static final String EVENTS_CMDE = "events";
 
     private String cookies = null;
     private int responseCode = 0;

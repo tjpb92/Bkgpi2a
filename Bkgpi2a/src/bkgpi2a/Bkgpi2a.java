@@ -15,7 +15,7 @@ import utils.DBServerException;
  * Web et les importe dans une base de données MongoDb locale.
  *
  * @author Thierry Baribaud.
- * @version Octobre 2016
+ * @version 0.20
  */
 public class Bkgpi2a {
 
@@ -72,8 +72,8 @@ public class Bkgpi2a {
      * @throws WebServerException en cas d'erreur avec le serveur Web.
      * @throws utils.DBServerException en cas d'erreur avec le serveur de base
      * de données.
-     * @throws GetArgsException en cas d'erreur avec les paramètres en
-     * ligne de commande
+     * @throws GetArgsException en cas d'erreur avec les paramètres en ligne de
+     * commande
      */
     public Bkgpi2a(String[] args) throws IOException,
             WebServerException, DBServerException, GetArgsException, Exception {
@@ -121,13 +121,16 @@ public class Bkgpi2a {
         httpsClient.sendPost(HttpsClient.LOGIN_CMDE);
 
         System.out.println("Récupération des compagnies ...");
-        processCompanies(httpsClient, null, mongoDatabase);
+//        processCompanies(httpsClient, null, mongoDatabase);
 
         System.out.println("Récupération des patrimoines ...");
 //        processPatrimonies(httpsClient, mongoDatabase);
 
         System.out.println("Récupération des intervenants ...");
-//        processProviderContacts(httpsClient, mongoDatabase);
+        processProviderContacts(httpsClient, mongoDatabase);
+
+        System.out.println("Récupération des événements ...");
+//        processEvents(httpsClient, mongoDatabase);
 
     }
 
@@ -293,7 +296,7 @@ public class Bkgpi2a {
         companyDAO = new CompanyDAO(mongoDatabase);
         userDAO = new UserDAO(mongoDatabase);
         agencyDAO = new AgencyDAO(mongoDatabase);
-        
+
         if (uid != null) {
             command = HttpsClient.COMPANIES_CMDE + "/" + uid + "/" + HttpsClient.AGENCIES_CMDE;
         } else {
@@ -305,7 +308,7 @@ public class Bkgpi2a {
             System.out.println("Suppression des utilisateurs ...");
             userDAO.drop();
         }
-        System.out.println("Sending command to get companies : " + command);
+        System.out.println("Commande pour récupérer les clients : " + command);
         objectMapper = new ObjectMapper();
         range = new Range();
         i = 0;
@@ -358,7 +361,7 @@ public class Bkgpi2a {
         usersDAO = new UserDAO(mongoDatabase);
 
         command = HttpsClient.COMPANIES_CMDE + "/" + uid + "/" + HttpsClient.USERS_CMDE;
-        System.out.println("  Sending command to get users : " + command);
+        System.out.println("  Commande pour récupérer les utilisateurs : " + command);
         objectMapper = new ObjectMapper();
         range = new Range();
         i = 0;
@@ -402,7 +405,7 @@ public class Bkgpi2a {
         agencyDAO = new AgencyDAO(mongoDatabase);
 
         command = HttpsClient.COMPANIES_CMDE + "/" + uid + "/" + HttpsClient.AGENCIES_CMDE;
-        System.out.println("  Sending command to get agencies : " + command);
+        System.out.println("  Commande pour récupérer les agences : " + command);
         objectMapper = new ObjectMapper();
         range = new Range();
         i = 0;
@@ -446,7 +449,7 @@ public class Bkgpi2a {
         subsidiaryDAO = new CompanyDAO(mongoDatabase);
 
         command = HttpsClient.COMPANIES_CMDE + "/" + uid + "/" + HttpsClient.SUBSIDIARIES_CMDE;
-        System.out.println("  Sending command to get subsidiaries : " + command);
+        System.out.println("  Commande pour récupérer les filiales : " + command);
         objectMapper = new ObjectMapper();
         range = new Range();
         i = 0;
@@ -482,16 +485,17 @@ public class Bkgpi2a {
         ObjectMapper objectMapper;
         int nbPatrimonies;
         int i;
-        PatrimonyWrapperListWrapper patrimonieWrapperListWrapper;
-        Patrimony patrimony;
+        PatrimonyContainer patrimonyContainer;
         String command;
         Range range;
         PatrimonyDAO patrimonyDAO;
 
         patrimonyDAO = new PatrimonyDAO(mongoDatabase);
 
+        System.out.println("Suppression des patrimoines ...");
+        patrimonyDAO.drop();
         command = HttpsClient.PATRIMONIES_CMDE;
-        System.out.println("  Sending command to get patrimonies : " + command);
+        System.out.println("  Commande pour récupérer les patrimoines : " + command);
         objectMapper = new ObjectMapper();
         range = new Range();
         i = 0;
@@ -501,13 +505,12 @@ public class Bkgpi2a {
                 range.contentRange(httpsClient.getContentRange());
                 range.setPage(httpsClient.getAcceptRange());
                 System.out.println(range);
-                patrimonieWrapperListWrapper = objectMapper.readValue(httpsClient.getResponse(), PatrimonyWrapperListWrapper.class);
+                patrimonyContainer = objectMapper.readValue(httpsClient.getResponse(), PatrimonyContainer.class);
 
-                nbPatrimonies = patrimonieWrapperListWrapper.getPatrimoniesWrapper().size();
+                nbPatrimonies = patrimonyContainer.getPatrimonyList().size();
                 System.out.println(nbPatrimonies + " patrimoire(s) récupéré(s)");
-                for (PatrimonyWrapper patrimonyWrapper : patrimonieWrapperListWrapper.getPatrimoniesWrapper()) {
+                for (Patrimony patrimony : patrimonyContainer.getPatrimonyList()) {
                     i++;
-                    patrimony = patrimonyWrapper.getPatrimony();
                     System.out.println(i + ", ref:" + patrimony.getRef() + ", label:" + patrimony.getLabel() + ", uid:" + patrimony.getUid());
                     patrimonyDAO.insert(patrimony);
                 }
@@ -527,9 +530,8 @@ public class Bkgpi2a {
      */
     private void processProviderContacts(HttpsClient httpsClient, MongoDatabase mongoDatabase) {
         ObjectMapper objectMapper;
-        ProviderContactWrapperListWrapper providerContactWrapperListWrapper;
         int nbProviderContacts;
-        ProviderContact providerContact;
+        ProviderContactContainer providerContactContainer;
         int i;
         String command;
         Range range;
@@ -537,8 +539,10 @@ public class Bkgpi2a {
 
         providerContactDAO = new ProviderContactDAO(mongoDatabase);
 
+        System.out.println("Suppression des providerContacts ...");
+        providerContactDAO.drop();
         command = HttpsClient.PROVIDER_CONTACTS_CMDE;
-        System.out.println("  Sending command to get provider contacts : " + command);
+        System.out.println("  Commande pour récupérer les providerContacts : " + command);
         objectMapper = new ObjectMapper();
         range = new Range();
         i = 0;
@@ -548,16 +552,62 @@ public class Bkgpi2a {
                 range.contentRange(httpsClient.getContentRange());
                 range.setPage(httpsClient.getAcceptRange());
                 System.out.println(range);
-                providerContactWrapperListWrapper = objectMapper.readValue(httpsClient.getResponse(), ProviderContactWrapperListWrapper.class);
-                nbProviderContacts = providerContactWrapperListWrapper.getProviderContactWrapperList().size();
+                providerContactContainer = objectMapper.readValue(httpsClient.getResponse(), ProviderContactContainer.class);
+                nbProviderContacts = providerContactContainer.getProviderContactList().size();
                 System.out.println(nbProviderContacts + " contact(s) récupéréxe(s)");
-                for (ProviderContactWrapper providerContactWrapper : providerContactWrapperListWrapper.getProviderContactWrapperList()) {
+                for (ProviderContact providerContact : providerContactContainer.getProviderContactList()) {
                     i++;
-                    providerContact = providerContactWrapper.getProviderContact();
                     System.out.println(i + "  ProviderContact:" + providerContact.getLabel());
                     providerContactDAO.insert(providerContact);
                 }
             } while (range.hasNext());
+        } catch (Exception ex) {
+            Logger.getLogger(HttpsClient.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    /**
+     * Récupére les événéments enregistrés sur le site Web
+     *
+     * @param httpsClient connexion au site Web
+     * @param mongoDatabase connexion à la base de données locale
+     */
+    private void processEvents(HttpsClient httpsClient, MongoDatabase mongoDatabase) {
+        ObjectMapper objectMapper;
+        int nbEvents;
+        int i;
+        EventContainer eventContainer;
+        String command;
+        Range range;
+        EventDAO eventDAO;
+
+        eventDAO = new EventDAO(mongoDatabase);
+
+        System.out.println("Suppression des événements ...");
+        eventDAO.drop();
+        command = HttpsClient.EVENTS_CMDE;
+        System.out.println("  Commande pour récupérer les événements : " + command);
+        objectMapper = new ObjectMapper();
+        range = new Range();
+        i = 0;
+        try {
+            do {
+                httpsClient.sendGet(command + "?range=" + range.getRange());
+                range.contentRange(httpsClient.getContentRange());
+                range.setPage(httpsClient.getAcceptRange());
+                System.out.println(range);
+                eventContainer = objectMapper.readValue(httpsClient.getResponse(), EventContainer.class);
+
+                nbEvents = eventContainer.getEventList().size();
+                System.out.println(nbEvents + " événement(s) récupéré(s)");
+                for (Event event : eventContainer.getEventList()) {
+                    i++;
+                    System.out.println(i + ", event:" + event);
+                    eventDAO.insert(event);
+                }
+            } while (range.hasNext());
+        } catch (IOException ex) {
+            Logger.getLogger(HttpsClient.class.getName()).log(Level.SEVERE, null, ex);
         } catch (Exception ex) {
             Logger.getLogger(HttpsClient.class.getName()).log(Level.SEVERE, null, ex);
         }
