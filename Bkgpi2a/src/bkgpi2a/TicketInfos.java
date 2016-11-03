@@ -8,7 +8,7 @@ import java.util.Map;
  * Classe définissant les informations d'un ticket
  *
  * @author Thierry Baribaud
- * @version 0.20
+ * @version 0.21
  * @see http://performanceimmo.github.io/API/#ticketinfos
  */
 public class TicketInfos {
@@ -17,186 +17,187 @@ public class TicketInfos {
      * Appelant
      */
     private Caller caller;
-    
+
     /**
      * Personne à rappeler
      */
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private ContactToCallback contactToCallback;
-    
+
     /**
      * Numéro de ticket
      */
     private ClaimNumber claimNumber;
-    
-    /** 
-     * Adresse du lieu d'intervention 
+
+    /**
+     * Adresse du lieu d'intervention
      */
-    private RationalAddress address;
-    
+    private BasicAddress address;
+
     /**
      * Desciption du problème
      */
     private String request;
-    
+
     /**
      * Instruction sur l'incident
      */
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private String instructions;
-    
+
     /**
      * Raison de l'appel
      */
     private String callPurposeLabel;
-    
+
     /**
-     * Raisons d'appel alternatives
-     * ATTENTION : à implémenter sous forme de Map[String, Array[String]]
+     * Raisons d'appel alternatives ATTENTION : à implémenter sous forme de
+     * Map[String, Array[String]]
      */
     private Map<String, String[]> altCallPurpose;
 
     /**
      * Données additionnelles
      */
-    private Map <String, String> additionalData;
+    private Map<String, String> additionalData;
 
-    
     /**
      * Constructeur de la classe TicketInfos
      */
     public TicketInfos() {
-        additionalData = new HashMap <>();
-        altCallPurpose = new HashMap <>();
+        additionalData = new HashMap<>();
+        altCallPurpose = new HashMap<>();
     }
+
     /**
-     * @return the caller
+     * @return le nom de l'appelant
      */
     public Caller getCaller() {
         return caller;
     }
 
     /**
-     * @param caller the caller to set
+     * @param caller définit le nom de l'appelant
      */
     public void setCaller(Caller caller) {
         this.caller = caller;
     }
 
     /**
-     * @return the contactToCallback
+     * @return le nom du contact à rappeler
      */
     public ContactToCallback getContactToCallback() {
         return contactToCallback;
     }
 
     /**
-     * @param contactToCallback the contactToCallback to set
+     * @param contactToCallback définit le nom du contact à rappeler
      */
     public void setContactToCallback(ContactToCallback contactToCallback) {
         this.contactToCallback = contactToCallback;
     }
 
     /**
-     * @return the claimNumber
+     * @return le numéro de ticket
      */
     public ClaimNumber getClaimNumber() {
         return claimNumber;
     }
 
     /**
-     * @param claimNumber the claimNumber to set
+     * @param claimNumber définit le numéro de ticket
      */
     public void setClaimNumber(ClaimNumber claimNumber) {
         this.claimNumber = claimNumber;
     }
 
     /**
-     * @return the address
+     * @return l'adresse du lieu d'intervention
      */
-    public RationalAddress getAddress() {
+    public BasicAddress getAddress() {
         return address;
     }
 
     /**
-     * @param address the address to set
+     * @param address définit l'adresse du lieu d'intervention
      */
-    public void setAddress(RationalAddress address) {
+    public void setAddress(BasicAddress address) {
         this.address = address;
     }
 
     /**
-     * @return the request
+     * @return la requête de l'appelant
      */
     public String getRequest() {
         return request;
     }
 
     /**
-     * @param request the request to set
+     * @param request définit la requête de l'appelant
      */
     public void setRequest(String request) {
         this.request = request;
     }
 
     /**
-     * @return the instructions
+     * @return les instructions sur l'appel
      */
     public String getInstructions() {
         return instructions;
     }
 
     /**
-     * @param instructions the instructions to set
+     * @param instructions définit les instructions sur l'appel
      */
     public void setInstructions(String instructions) {
         this.instructions = instructions;
     }
 
     /**
-     * @return the callPurposeLabel
+     * @return la raison de l'appel
      */
     public String getCallPurposeLabel() {
         return callPurposeLabel;
     }
 
     /**
-     * @param callPurposeLabel the callPurposeLabel to set
+     * @param callPurposeLabel définit la raison de l'appel
      */
     public void setCallPurposeLabel(String callPurposeLabel) {
         this.callPurposeLabel = callPurposeLabel;
     }
 
     /**
-     * @return the altCallPurpose
+     * @return les raisons d'appel alternatives
      */
     public Map<String, String[]> getAltCallPurpose() {
         return altCallPurpose;
     }
 
     /**
-     * @param altCallPurpose the altCallPurpose to set
+     * @param altCallPurpose définit les raisons d'appel alternatives
      */
     public void setAltCallPurpose(Map<String, String[]> altCallPurpose) {
         this.altCallPurpose = altCallPurpose;
     }
 
     /**
-     * @return the additionalData
+     * @return les données additionnelles
      */
-    public Map <String, String> getAdditionalData() {
+    public Map<String, String> getAdditionalData() {
         return additionalData;
     }
 
     /**
-     * @param additionalData the additionalData to set
+     * @param additionalData définit les données additionnelles
      */
-    public void setAdditionalData(Map <String, String> additionalData) {
+    public void setAdditionalData(Map<String, String> additionalData) {
         this.additionalData = additionalData;
     }
 
     /**
      * Ajoute une donnée complémentaire à la liste
+     *
      * @param key clef pour indexer la valeur
      * @param value valeur à indexer
      */
@@ -205,7 +206,8 @@ public class TicketInfos {
     }
 
     /**
-     * Ajoute une donnée complémentaire à la liste
+     * Ajoute une raisons d'appel alternative à la liste
+     *
      * @param key clef pour indexer la valeur
      * @param value tableau de valeurs à indexer
      */

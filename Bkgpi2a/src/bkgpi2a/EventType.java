@@ -4,15 +4,10 @@ package bkgpi2a;
  * Enumération décrivant les identifiants et libellés des événements.
  *
  * @author Thierry Baribaud
- * @version 0.18
+ * @version 0.21
  */
 public enum EventType {
 
-    /* todo ...
-     590 = TicketArchived
-     600 = CallAnsweredByProvider
-     605 = CallNotAnsweredByProvider
-     */
     TICKET_OPENED("TicketOpened", 500),
     MISSION_ACCEPTED("MissionAccepted", 505),
     TICKET_UPDATED("TicketUpdated", 510),
@@ -29,12 +24,15 @@ public enum EventType {
     CLOSED_BEYOND_SCOPE("ClosedBeyondScope", 555),
     CLOSED_UNSUCCESSFUL_RECALLS("ClosedUnsuccessfulRecalls", 560),
     TICKET_CLOSED("TicketClosed", 561),
+    LOG_TRIAL_ADDED("LogTrialAdded", 565),
+    MESSAGE_ADDED("MessageAdded", 570),
     TICKET_REOPENED("TicketReopened", 575),
     CALL_EMITTED_TO_USER("CallEmittedToUser", 580),
     TICKET_CANCELED("TicketCanceled", 585),
-    
-    LOG_TRIAL_ADDED("LogTrialAdded", 565),
-    MESSAGE_ADDED("MessageAdded", 570);
+    TICKET_ARCHIVED("TicketArchived", 590),
+    CALL_ANSWERED_BY_PROVIDER("CallAnsweredByProvider", 600),
+    CALL_NOT_ANSWERED_BY_PROVIDER("CallNotAnsweredByProvider", 605),
+    INTERVENTION_SCHEDULED("InterventionScheduled", 610);
 
     /**
      * Type d'événement
