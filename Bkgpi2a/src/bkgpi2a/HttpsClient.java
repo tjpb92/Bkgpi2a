@@ -13,10 +13,10 @@ import java.util.logging.Logger;
 //import javax.net.ssl.HttpsURLConnection;
 /**
  * Classe réalisant des requetes GET/POST en HTTPS. Origine :
- * https://www.mkyong.com/java/how-to-send-http-request-getpost-in-java/
+ * @see https://www.mkyong.com/java/how-to-send-http-request-getpost-in-java/
  *
  * @author Thierry Baribaud
- * @version 0.20
+ * @version 0.22
  */
 public class HttpsClient {
 
@@ -32,21 +32,79 @@ public class HttpsClient {
      */
     private static Identifiants identifiants;
 
-    private final static String API_PATH = "/api/v1/";
+    /**
+     * Chemin vers l'API REST en lecture
+     */
+    private final static String REST_API_PATH = "/api/v1/";
 
-    static final String LOGIN_CMDE = "login";
-    static final String COMPANIES_CMDE = "companies";
-    static final String SUBSIDIARIES_CMDE = "subsidiaries";
-    static final String AGENCIES_CMDE = "agencies";
-    static final String USERS_CMDE = "users";
-    static final String PATRIMONIES_CMDE = "patrimonies";
-    static final String PROVIDER_CONTACTS_CMDE = "providercontacts";
-    static final String EVENTS_CMDE = "events";
+    /**
+     * Chemin vers l'API événementielle
+     */
+    private final static String EVENT_API_PATH = "/api/vEvent/";
 
+    /**
+     * Commande pour la connexion à l'API
+     */
+    static final String LOGIN_CMDE = REST_API_PATH + "login";
+
+    /**
+     * Commande pour accéder aux sociétés
+     */
+    static final String COMPANIES_CMDE = REST_API_PATH + "companies";
+
+    /**
+     * Commande pour accéder aux filiales
+     */
+    static final String SUBSIDIARIES_CMDE = REST_API_PATH + "subsidiaries";
+
+    /**
+     * Commande pour accéder aux agences
+     */
+    static final String AGENCIES_CMDE = REST_API_PATH + "agencies";
+
+    /**
+     * Commande pour accéder aux utilisateurs
+     */
+    static final String USERS_CMDE = REST_API_PATH + "users";
+
+    /**
+     * Commande pour accéder aux patrimonies
+     */
+    static final String PATRIMONIES_CMDE = REST_API_PATH + "patrimonies";
+
+    /**
+     * Commande pour accéder aux intervenants/fournisseurs
+     */
+    static final String PROVIDER_CONTACTS_CMDE = REST_API_PATH + "providercontacts";
+
+    /**
+     * Commande pour accéder aux événement des tickets
+     */
+    static final String TICKETS_CMDE = EVENT_API_PATH + "tickets";
+
+    /**
+     * Cookie pour l'authentification
+     */
     private String cookies = null;
+
+    /**
+     * Code de réponse suite à l'envoi de la requête HTTPS
+     */
     private int responseCode = 0;
+
+    /**
+     * Réponse suite à l'envoi de la requête HTTPS
+     */
     private String response = null;
+
+    /**
+     * Nombre d'enregistrements renvoyés par consultation
+     */
     private String acceptRange = null;
+
+    /**
+     * Nombre d'enregistrements récupérés
+     */
     private String contentRange = null;
 
     /**
@@ -67,7 +125,7 @@ public class HttpsClient {
         URL url;
         HttpsURLConnection connection;
 
-        commandUrl = baseUrl + API_PATH + Command;
+        commandUrl = baseUrl + Command;
         url = new URL(commandUrl);
         connection = (HttpsURLConnection) url.openConnection();
 
@@ -98,7 +156,7 @@ public class HttpsClient {
         DataOutputStream dataOutputStream;
         String urlParameters;
 
-        commandUrl = baseUrl + API_PATH + Command;
+        commandUrl = baseUrl + Command;
         urlParameters = identifiants.toJson();
 
         url = new URL(commandUrl);

@@ -15,7 +15,7 @@ import utils.DBServerException;
  * Web et les importe dans une base de données MongoDb locale.
  *
  * @author Thierry Baribaud.
- * @version 0.20
+ * @version 0.22
  */
 public class Bkgpi2a {
 
@@ -585,7 +585,7 @@ public class Bkgpi2a {
 
         System.out.println("Suppression des événements ...");
         eventDAO.drop();
-        command = HttpsClient.EVENTS_CMDE;
+        command = HttpsClient.TICKETS_CMDE;
         System.out.println("  Commande pour récupérer les événements : " + command);
         objectMapper = new ObjectMapper();
         range = new Range();
