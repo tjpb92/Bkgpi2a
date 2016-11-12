@@ -12,7 +12,7 @@ package bkgpi2a;
  * 460 = ActivityAdded
  * 
  * @author Thierry Baribaud
- * @version Octobre 2016
+ * @version 0.23
  */
 public class ProviderContactEnabled extends Event {
     

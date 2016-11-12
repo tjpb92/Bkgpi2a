@@ -1,30 +1,29 @@
 package bkgpi2a;
 
-import static bkgpi2a.EventType.INTERVENTION_SCHEDULED;
+import static bkgpi2a.EventType.MISSION_SCHEDULED;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 
 /**
- * Classe décrivant la programmation d'une intervention : InterventionScheduled,
- * #610
+ * Classe décrivant la programmation d'une intervention : MissionScheduled, #610
  *
  * @author Thierry Baribaud
- * @version 0.21
+ * @version 0.23
  * @see http://performanceimmo.github.io/API/#ticketevent
  */
-@JsonIgnoreProperties({"date", "eventTypeUid"})
-@JsonTypeName("InterventionScheduled")
-public class InterventionScheduled extends Event {
+@JsonIgnoreProperties({"eventTypeUid"})
+@JsonTypeName("MissionScheduled")
+public class MissionScheduled extends Event {
 
     /**
      * Date et heure du début de l'intervention
      */
-    private String start;
+    private String startDate;
 
     /**
      * Date et heure de la fin de l'intervention
      */
-    private String end;
+    private String endDate;
 
     /**
      * Opérateur ayant saisi la programmation de l'intervention
@@ -37,11 +36,11 @@ public class InterventionScheduled extends Event {
     private String comment;
 
     /**
-     * Constructeur de la classe InterventionScheduled
+     * Constructeur de la classe MissionScheduled
      */
-    public InterventionScheduled() {
-        setEventTypeUid(INTERVENTION_SCHEDULED.getUid());
-        setEventType(INTERVENTION_SCHEDULED.getName());
+    public MissionScheduled() {
+        setEventTypeUid(MISSION_SCHEDULED.getUid());
+        setEventType(MISSION_SCHEDULED.getName());
     }
 
     /**
@@ -76,44 +75,44 @@ public class InterventionScheduled extends Event {
     /**
      * @return la date à laquelle l'événement a eu lieu
      */
-    public String getInterventionScheduledDate() {
-        return getDate();
-    }
+//    public DateTime getMissionScheduledDate() {
+//        return getDate();
+//    }
 
     /**
-     * @param interventionScheduledDate définit la date à laquelle l'événement a
-     * eu lieu
+     * @param missionScheduledDate définit la date à laquelle l'événement a eu
+     * lieu
      */
-    public void setInterventionScheduledDate(String interventionScheduledDate) {
-        setDate(interventionScheduledDate);
-    }
-
+//    public void setMissionScheduledDate(String missionScheduledDate) {
+//        setDate(missionScheduledDate);
+//    }
+    
     /**
      * @return la date et heure du début de l'intervention
      */
-    public String getStart() {
-        return start;
+    public String getStartDate() {
+        return startDate;
     }
 
     /**
-     * @param start définit la date et heure du début de l'intervention
+     * @param startDate définit la date et heure du début de l'intervention
      */
-    public void setStart(String start) {
-        this.start = start;
+    public void setStartDate(String startDate) {
+        this.startDate = startDate;
     }
 
     /**
      * @return la date et heure de la fin de l'intervention
      */
-    public String getEnd() {
-        return end;
+    public String getEndDate() {
+        return endDate;
     }
 
     /**
-     * @param end définit la date et heure de la fin de l'intervention
+     * @param endDate définit la date et heure de la fin de l'intervention
      */
-    public void setEnd(String end) {
-        this.end = end;
+    public void setEndDate(String endDate) {
+        this.endDate = endDate;
     }
 
     /**
@@ -121,13 +120,13 @@ public class InterventionScheduled extends Event {
      */
     @Override
     public String toString() {
-        return "InterventionScheduled:{"
+        return "MissionScheduled:{"
                 + super.toString()
-                + ", début d'intervention:" + getStart()
-                + ", fin d'intervention:" + getEnd()
+                + ", début d'intervention:" + getStartDate()
+                + ", fin d'intervention:" + getEndDate()
                 + ", " + getOperator()
                 + ", commentaire:" + getComment()
-                + ", interventionScheduledDate:" + getInterventionScheduledDate()
+//                + ", missionScheduledDate:" + getMissionScheduledDate()
                 + "}";
     }
 }

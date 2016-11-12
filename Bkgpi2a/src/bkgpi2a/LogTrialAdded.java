@@ -9,7 +9,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
  * Classe décrivant un essai ajouté au journal d'un ticket : LogTrialAdded, #565
  *
  * @author Thierry Baribaud
- * @version Octobre 2016
+ * @version 0.23
  * @see http://performanceimmo.github.io/API/#ticketevent
  */
 @JsonIgnoreProperties({"date", "eventTypeUid"})

@@ -1,9 +1,6 @@
 package bkgpi2a;
 
-import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonSetter;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
@@ -11,7 +8,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
  * Classe abstraite décrivant un événément.
  *
  * @author Thierry Baribaud
- * @version 0.22
+ * @version 0.23
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME,
@@ -25,7 +22,9 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
     @JsonSubTypes.Type(value = TicketClosedImpossibleRepair.class, name = "TicketClosedImpossibleRepair"),
     @JsonSubTypes.Type(value = PostponedFix.class, name = "PostponedFix"),
     @JsonSubTypes.Type(value = TicketOpened.class, name = "TicketOpened"),
-    @JsonSubTypes.Type(value = InterventionScheduled.class, name = "InterventionScheduled"),
+    @JsonSubTypes.Type(value = TicketUpdated.class, name = "TicketUpdated"),
+    @JsonSubTypes.Type(value = MissionAccepted.class, name = "MissionAccepted"),
+    @JsonSubTypes.Type(value = MissionScheduled.class, name = "MissionScheduled"),
     @JsonSubTypes.Type(value = InterventionStarted.class, name = "InterventionStarted"),
     @JsonSubTypes.Type(value = InterventionFinished.class, name = "InterventionFinished"),
     @JsonSubTypes.Type(value = MessageAdded.class, name = "MessageAdded")})
@@ -36,7 +35,6 @@ public abstract class Event {
      */
 //    @JsonProperty("_links")
 //    private Links _links;
-
     /**
      * Identifiant unique de l'événement
      */
@@ -68,12 +66,24 @@ public abstract class Event {
     private int eventTypeUid;
 
     /**
+     * Status de l'événement
+     */
+    private int status;
+
+    /**
+     * Nombre d'erreur(s) de traitement
+     */
+    private int nbError;
+
+    /**
      * Constructeur de la classe Event
      */
-    public Event () {
+    public Event() {
 //        setLinks(new Links());
+        setStatus(0);
+        setNbError(0);
     }
-    
+
     /**
      * @return l'dentifiant unique de l'événement
      */
@@ -104,24 +114,10 @@ public abstract class Event {
     }
 
     /**
-     * @return la date où l'événement s'est passé
-     */
-    public String getDate() {
-        return date;
-    }
-
-    /**
      * @param date définit la date où l'événement s'est passé
      */
     public void setDate(String date) {
         this.date = date;
-    }
-
-    /**
-     * @return la date à laquelle l'événement a été envoyé
-     */
-    public String getSentDate() {
-        return sentDate;
     }
 
     /**
@@ -166,7 +162,6 @@ public abstract class Event {
 //    public Links getLinks() {
 //        return _links;
 //    }
-
     /**
      * @param _links définit une liste de liens entre entités
      */
@@ -174,7 +169,6 @@ public abstract class Event {
 //    public void setLinks(Links _links) {
 //        this._links = _links;
 //    }
-
     /**
      * Ajoute un lien à la liste
      *
@@ -183,6 +177,47 @@ public abstract class Event {
 //    public void add(Link link) {
 //        _links.add(link);
 //    }
+    /**
+     * @return le status de l'événement
+     */
+    public int getStatus() {
+        return status;
+    }
+
+    /**
+     * @param status définit le status de l'événement
+     */
+    public void setStatus(int status) {
+        this.status = status;
+    }
+
+    /**
+     * @return le nombre d'erreur(s) de traitement
+     */
+    public int getNbError() {
+        return nbError;
+    }
+
+    /**
+     * @param nbError définit le nombre d'erreur(s) de traitement
+     */
+    public void setNbError(int nbError) {
+        this.nbError = nbError;
+    }
+
+    /**
+     * @return la date où à eu lieu l'événement
+     */
+    public String getDate() {
+        return date;
+    }
+
+    /**
+     * @return la date d'envoi de l'événement
+     */
+    public String getSentDate() {
+        return sentDate;
+    }
 
     /**
      * @return Retourne l'objet sous forme textuelle
@@ -190,13 +225,15 @@ public abstract class Event {
     @Override
     public String toString() {
         return "Event:{"
-//                + "_links:" + getLinks()
+                //                + "_links:" + getLinks()
                 + "processUid:" + getProcessUid()
                 + ", aggregateUid:" + getAggregateUid()
                 + ", date:" + getDate()
                 + ", sentDate:" + getSentDate()
                 + ", eventType:" + getEventType()
                 + ", eventTypeUid:" + getEventTypeUid()
+                + ", status:" + getStatus()
+                + ", nbError:" + getNbError()
                 + "}";
     }
 }

@@ -4,7 +4,7 @@ package bkgpi2a;
  * Enumération décrivant les identifiants et libellés des événements.
  *
  * @author Thierry Baribaud
- * @version 0.21
+ * @version 0.23
  */
 public enum EventType {
 
@@ -32,7 +32,7 @@ public enum EventType {
     TICKET_ARCHIVED("TicketArchived", 590),
     CALL_ANSWERED_BY_PROVIDER("CallAnsweredByProvider", 600),
     CALL_NOT_ANSWERED_BY_PROVIDER("CallNotAnsweredByProvider", 605),
-    INTERVENTION_SCHEDULED("InterventionScheduled", 610);
+    MISSION_SCHEDULED("MissionScheduled", 610);
 
     /**
      * Type d'événement

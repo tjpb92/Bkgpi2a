@@ -2,5 +2,5 @@
 .gitignore
 MyDatabases.prop
 Tester.java
-
+*.json
 

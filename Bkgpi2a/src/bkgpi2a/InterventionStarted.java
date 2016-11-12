@@ -8,7 +8,7 @@ import com.fasterxml.jackson.annotation.JsonTypeName;
  * Classe décrivant un début d'intervention : InterventionStarted, #532
  *
  * @author Thierry Baribaud
- * @version 0.21
+ * @version 0.23
  * @see http://performanceimmo.github.io/API/#ticketevent
  */
 @JsonIgnoreProperties({"date", "eventTypeUid"})
@@ -80,7 +80,7 @@ public class InterventionStarted extends Event {
      */
     @Override
     public String toString() {
-        return "Started:{"
+        return "InterventionStarted:{"
                 + super.toString()
                 + ", " + getOperator()
                 + ", " + getProvider()

@@ -2,24 +2,27 @@ package bkgpi2a;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonTypeName;
-import static bkgpi2a.EventType.TICKET_OPENED;
+import static bkgpi2a.EventType.TICKET_UPDATED;
+import com.fasterxml.jackson.annotation.JsonGetter;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonSetter;
 
 /**
- * Classe décrivant l'événement ouverture de ticket : TicketOpened, #500
+ * Classe décrivant l'événement de mise à jour du ticket : TicketUpdated, #510
  *
  * @author Thierry Baribaud
  * @version 0.23
  * @see http://performanceimmo.github.io/API/#ticketevent
  */
 @JsonIgnoreProperties({"date", "eventTypeUid"})
-@JsonTypeName("TicketOpened")
-public class TicketOpened extends Event {
+@JsonTypeName("TicketUpdated")
+public class TicketUpdated extends Event {
 
     /**
      * Référence à l'agence ou au patrimoine
      */
     private LocationReference locationRef;
-    
+
     /**
      * Opérateur ayant ajouté le ticketInfos
      */
@@ -28,14 +31,15 @@ public class TicketOpened extends Event {
     /**
      * Informations sur le ticket
      */
+    @JsonProperty("ticket")
     private TicketInfos ticketInfos;
 
     /**
      * Constructeur de la classe MessageAdded
      */
-    public TicketOpened() {
-        setEventTypeUid(TICKET_OPENED.getUid());
-        setEventType(TICKET_OPENED.getName());
+    public TicketUpdated() {
+        setEventTypeUid(TICKET_UPDATED.getUid());
+        setEventType(TICKET_UPDATED.getName());
     }
 
     /**
@@ -69,6 +73,7 @@ public class TicketOpened extends Event {
     /**
      * @return les informations sur le ticket
      */
+    @JsonGetter("ticket")
     public TicketInfos getTicketInfos() {
         return ticketInfos;
     }
@@ -76,6 +81,7 @@ public class TicketOpened extends Event {
     /**
      * @param ticketInfos définit les informations sur le ticket
      */
+    @JsonSetter("ticket")
     public void setTicketInfos(TicketInfos ticketInfos) {
         this.ticketInfos = ticketInfos;
     }
@@ -99,7 +105,7 @@ public class TicketOpened extends Event {
      */
     @Override
     public String toString() {
-        return "TicketOpened:{"
+        return "TicketUpdated:{"
                 + super.toString()
                 + ", " + getLocationRef()
                 + ", " + getOperator()
