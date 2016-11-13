@@ -16,7 +16,7 @@ import java.util.logging.Logger;
  * @see https://www.mkyong.com/java/how-to-send-http-request-getpost-in-java/
  *
  * @author Thierry Baribaud
- * @version 0.22
+ * @version 0.24
  */
 public class HttpsClient {
 
@@ -35,47 +35,47 @@ public class HttpsClient {
     /**
      * Chemin vers l'API REST en lecture
      */
-    private final static String REST_API_PATH = "/api/v1/";
+    final static String REST_API_PATH = "/api/v1/";
 
     /**
      * Chemin vers l'API événementielle
      */
-    private final static String EVENT_API_PATH = "/api/vEvent/";
+    final static String EVENT_API_PATH = "/api/vEvent/";
 
     /**
      * Commande pour la connexion à l'API
      */
-    static final String LOGIN_CMDE = REST_API_PATH + "login";
+    static final String LOGIN_CMDE = "login";
 
     /**
      * Commande pour accéder aux sociétés
      */
-    static final String COMPANIES_CMDE = REST_API_PATH + "companies";
+    static final String COMPANIES_CMDE = "companies";
 
     /**
      * Commande pour accéder aux filiales
      */
-    static final String SUBSIDIARIES_CMDE = REST_API_PATH + "subsidiaries";
+    static final String SUBSIDIARIES_CMDE = "subsidiaries";
 
     /**
      * Commande pour accéder aux agences
      */
-    static final String AGENCIES_CMDE = REST_API_PATH + "agencies";
+    static final String AGENCIES_CMDE = "agencies";
 
     /**
      * Commande pour accéder aux utilisateurs
      */
-    static final String USERS_CMDE = REST_API_PATH + "users";
+    static final String USERS_CMDE = "users";
 
     /**
      * Commande pour accéder aux patrimonies
      */
-    static final String PATRIMONIES_CMDE = REST_API_PATH + "patrimonies";
+    static final String PATRIMONIES_CMDE = "patrimonies";
 
     /**
      * Commande pour accéder aux intervenants/fournisseurs
      */
-    static final String PROVIDER_CONTACTS_CMDE = REST_API_PATH + "providercontacts";
+    static final String PROVIDER_CONTACTS_CMDE = "providercontacts";
 
     /**
      * Commande pour accéder aux événement des tickets

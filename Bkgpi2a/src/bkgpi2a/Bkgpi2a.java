@@ -15,7 +15,7 @@ import utils.DBServerException;
  * Web et les importe dans une base de données MongoDb locale.
  *
  * @author Thierry Baribaud.
- * @version 0.22
+ * @version 0.24
  */
 public class Bkgpi2a {
 
@@ -118,19 +118,19 @@ public class Bkgpi2a {
         httpsClient = new HttpsClient(webServer.getIpAddress(), getWebId());
 
         System.out.println("Authentification en cours ...");
-        httpsClient.sendPost(HttpsClient.LOGIN_CMDE);
+        httpsClient.sendPost(HttpsClient.REST_API_PATH + HttpsClient.LOGIN_CMDE);
 
         System.out.println("Récupération des compagnies ...");
-//        processCompanies(httpsClient, null, mongoDatabase);
+        processCompanies(httpsClient, null, mongoDatabase);
 
         System.out.println("Récupération des patrimoines ...");
-//        processPatrimonies(httpsClient, mongoDatabase);
+        processPatrimonies(httpsClient, mongoDatabase);
 
         System.out.println("Récupération des intervenants ...");
         processProviderContacts(httpsClient, mongoDatabase);
 
         System.out.println("Récupération des événements ...");
-//        processEvents(httpsClient, mongoDatabase);
+        processEvents(httpsClient, mongoDatabase);
 
     }
 
@@ -298,15 +298,15 @@ public class Bkgpi2a {
         agencyDAO = new AgencyDAO(mongoDatabase);
 
         if (uid != null) {
-            command = HttpsClient.COMPANIES_CMDE + "/" + uid + "/" + HttpsClient.AGENCIES_CMDE;
+            command = HttpsClient.REST_API_PATH + HttpsClient.COMPANIES_CMDE + "/" + uid + "/" + HttpsClient.AGENCIES_CMDE;
         } else {
-            command = HttpsClient.COMPANIES_CMDE;
-            System.out.println("Suppression des compagnies ...");
-            companyDAO.drop();
-            System.out.println("Suppression des agences ...");
-            agencyDAO.drop();
-            System.out.println("Suppression des utilisateurs ...");
-            userDAO.drop();
+            command = HttpsClient.REST_API_PATH + HttpsClient.COMPANIES_CMDE;
+//            System.out.println("Suppression des compagnies ...");
+//            companyDAO.drop();
+//            System.out.println("Suppression des agences ...");
+//            agencyDAO.drop();
+//            System.out.println("Suppression des utilisateurs ...");
+//            userDAO.drop();
         }
         System.out.println("Commande pour récupérer les clients : " + command);
         objectMapper = new ObjectMapper();
@@ -360,7 +360,7 @@ public class Bkgpi2a {
 
         usersDAO = new UserDAO(mongoDatabase);
 
-        command = HttpsClient.COMPANIES_CMDE + "/" + uid + "/" + HttpsClient.USERS_CMDE;
+        command = HttpsClient.REST_API_PATH + HttpsClient.COMPANIES_CMDE + "/" + uid + "/" + HttpsClient.USERS_CMDE;
         System.out.println("  Commande pour récupérer les utilisateurs : " + command);
         objectMapper = new ObjectMapper();
         range = new Range();
@@ -404,7 +404,7 @@ public class Bkgpi2a {
 
         agencyDAO = new AgencyDAO(mongoDatabase);
 
-        command = HttpsClient.COMPANIES_CMDE + "/" + uid + "/" + HttpsClient.AGENCIES_CMDE;
+        command = HttpsClient.REST_API_PATH + HttpsClient.COMPANIES_CMDE + "/" + uid + "/" + HttpsClient.AGENCIES_CMDE;
         System.out.println("  Commande pour récupérer les agences : " + command);
         objectMapper = new ObjectMapper();
         range = new Range();
@@ -448,7 +448,7 @@ public class Bkgpi2a {
 
         subsidiaryDAO = new CompanyDAO(mongoDatabase);
 
-        command = HttpsClient.COMPANIES_CMDE + "/" + uid + "/" + HttpsClient.SUBSIDIARIES_CMDE;
+        command = HttpsClient.REST_API_PATH + HttpsClient.COMPANIES_CMDE + "/" + uid + "/" + HttpsClient.SUBSIDIARIES_CMDE;
         System.out.println("  Commande pour récupérer les filiales : " + command);
         objectMapper = new ObjectMapper();
         range = new Range();
@@ -494,7 +494,7 @@ public class Bkgpi2a {
 
         System.out.println("Suppression des patrimoines ...");
         patrimonyDAO.drop();
-        command = HttpsClient.PATRIMONIES_CMDE;
+        command = HttpsClient.REST_API_PATH + HttpsClient.PATRIMONIES_CMDE;
         System.out.println("  Commande pour récupérer les patrimoines : " + command);
         objectMapper = new ObjectMapper();
         range = new Range();
@@ -541,7 +541,7 @@ public class Bkgpi2a {
 
         System.out.println("Suppression des providerContacts ...");
         providerContactDAO.drop();
-        command = HttpsClient.PROVIDER_CONTACTS_CMDE;
+        command = HttpsClient.REST_API_PATH + HttpsClient.PROVIDER_CONTACTS_CMDE;
         System.out.println("  Commande pour récupérer les providerContacts : " + command);
         objectMapper = new ObjectMapper();
         range = new Range();
@@ -585,7 +585,7 @@ public class Bkgpi2a {
 
         System.out.println("Suppression des événements ...");
         eventDAO.drop();
-        command = HttpsClient.TICKETS_CMDE;
+        command = HttpsClient.EVENT_API_PATH + HttpsClient.TICKETS_CMDE;
         System.out.println("  Commande pour récupérer les événements : " + command);
         objectMapper = new ObjectMapper();
         range = new Range();
