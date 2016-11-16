@@ -16,7 +16,7 @@ import java.util.logging.Logger;
  * @see https://www.mkyong.com/java/how-to-send-http-request-getpost-in-java/
  *
  * @author Thierry Baribaud
- * @version 0.24
+ * @version 0.25
  */
 public class HttpsClient {
 
@@ -35,52 +35,52 @@ public class HttpsClient {
     /**
      * Chemin vers l'API REST en lecture
      */
-    final static String REST_API_PATH = "/api/v1/";
+    public final static String REST_API_PATH = "/api/v1/";
 
     /**
      * Chemin vers l'API événementielle
      */
-    final static String EVENT_API_PATH = "/api/vEvent/";
+    public final static String EVENT_API_PATH = "/api/vEvent/";
 
     /**
      * Commande pour la connexion à l'API
      */
-    static final String LOGIN_CMDE = "login";
+    public static final String LOGIN_CMDE = "login";
 
     /**
      * Commande pour accéder aux sociétés
      */
-    static final String COMPANIES_CMDE = "companies";
+    public static final String COMPANIES_CMDE = "companies";
 
     /**
      * Commande pour accéder aux filiales
      */
-    static final String SUBSIDIARIES_CMDE = "subsidiaries";
+    public static final String SUBSIDIARIES_CMDE = "subsidiaries";
 
     /**
      * Commande pour accéder aux agences
      */
-    static final String AGENCIES_CMDE = "agencies";
+    public static final String AGENCIES_CMDE = "agencies";
 
     /**
      * Commande pour accéder aux utilisateurs
      */
-    static final String USERS_CMDE = "users";
+    public static final String USERS_CMDE = "users";
 
     /**
      * Commande pour accéder aux patrimonies
      */
-    static final String PATRIMONIES_CMDE = "patrimonies";
+    public static final String PATRIMONIES_CMDE = "patrimonies";
 
     /**
      * Commande pour accéder aux intervenants/fournisseurs
      */
-    static final String PROVIDER_CONTACTS_CMDE = "providercontacts";
+    public static final String PROVIDER_CONTACTS_CMDE = "providercontacts";
 
     /**
      * Commande pour accéder aux événement des tickets
      */
-    static final String TICKETS_CMDE = EVENT_API_PATH + "tickets";
+    public static final String TICKETS_CMDE = EVENT_API_PATH + "tickets";
 
     /**
      * Cookie pour l'authentification

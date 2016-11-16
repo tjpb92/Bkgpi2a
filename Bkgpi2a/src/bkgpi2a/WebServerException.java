@@ -4,9 +4,9 @@ package bkgpi2a;
  * Class qui définit une Exception à lancer lorsque l'objet WebServer rencontre
  * une erreur lors de son instanciation.
  * @author Thierry Baribaud.
- * @version Octobre 2016
+ * @version 0.25
  */
-class WebServerException extends Exception {
+public class WebServerException extends Exception {
 
 	private final static String ERRMSG = 
 		"Problème à l'instanciation de WebServer";
