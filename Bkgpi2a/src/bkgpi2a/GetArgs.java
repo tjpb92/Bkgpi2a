@@ -2,9 +2,9 @@ package bkgpi2a;
 
 /*
  * Cette classe sert à vérifier et à récupérer les arguments passés en ligne de
- * commande au programme Bkgpi2a.
+ * commande au programme Bkgpi2a ou pi2a-client.
  * @author Thierry Baribaud
- * @version Octobre 2016
+ * @version 0.26
  */
 import java.sql.Timestamp;
 import java.text.DateFormat;
@@ -16,26 +16,50 @@ public class GetArgs {
     private static final DateFormat MyDateFormat = new SimpleDateFormat("dd/MM/yyyy");
 
     /**
-     * webServerType : prod pour le serveur de production, pre-prod pour le serveur
- de pré-production. Valeur par défaut : pre-prod.
+     * webServerType : prod pour le serveur de production, pre-prod pour le
+     * serveur de pré-production. Valeur par défaut : pre-prod.
      */
     private String webServerType = "pre-prod";
 
     /**
-     * dbServerType : prod pour le serveur de production, pre-prod pour le serveur
- de pré-production. Valeur par défaut : pre-prod.
+     * dbServerType : prod pour le serveur de production, pre-prod pour le
+     * serveur de pré-production. Valeur par défaut : pre-prod.
      */
     private String dbServerType = "pre-prod";
 
     /**
-     * BegDate : date de début de l'export à 0h. Valeur par défaut : la veille.
+     * begDate : date de début de l'export à 0h. Valeur par défaut : la veille.
      */
-    private Timestamp BegDate = new Timestamp((new java.util.Date().getTime()) - 1000 * 60 * 60 * 24);
+    private Timestamp begDate = new Timestamp((new java.util.Date().getTime()) - 1000 * 60 * 60 * 24);
 
     /**
-     * EndDate : date de fin de l'export à 0h. Valeur par défaut : aujourd'hui.
+     * endDate : date de fin de l'export à 0h. Valeur par défaut : aujourd'hui.
      */
-    private Timestamp EndDate = new Timestamp(new java.util.Date().getTime());
+    private Timestamp endDate = new Timestamp(new java.util.Date().getTime());
+
+    /**
+     * readCompanies : demande la lecture des sociétés (true/false). Valeur par
+     * défaut : false.
+     */
+    private boolean readCompanies = false;
+
+    /**
+     * readPatrimonies : demande la lecture des patrimoines (true/false). Valeur par
+     * défaut : false.
+     */
+    private boolean readPatrimonies = false;
+
+    /**
+     * readProviders : demande la lecture des fournisseurs (true/false). Valeur par
+     * défaut : false.
+     */
+    private boolean readProviders = false;
+
+    /**
+     * readEvents : demande la lecture des événements (true/false). Valeur par
+     * défaut : false.
+     */
+    private boolean readEvents = false;
 
     /**
      * debugMode : fonctionnement du programme en mode debug (true/false).
@@ -57,17 +81,17 @@ public class GetArgs {
     }
 
     /**
-     * @return BegDate : date de début de l'export à 0h.
+     * @return begDate : date de début de l'export à 0h.
      */
     public Timestamp getBegDate() {
-        return (BegDate);
+        return (begDate);
     }
 
     /**
-     * @return EndDate : date de fin de l'export à 0h.
+     * @return endDate : date de fin de l'export à 0h.
      */
     public Timestamp getEndDate() {
-        return (EndDate);
+        return (endDate);
     }
 
     /**
@@ -92,17 +116,17 @@ public class GetArgs {
     }
 
     /**
-     * @param BegDate : date de début de l'export à 0h.
+     * @param begDate : date de début de l'export à 0h.
      */
-    public void setBegDate(Timestamp BegDate) {
-        this.BegDate = BegDate;
+    public void setBegDate(Timestamp begDate) {
+        this.begDate = begDate;
     }
 
     /**
-     * @param EndDate : date de fin de l'export à 0h.
+     * @param endDate : date de fin de l'export à 0h.
      */
-    public void setEndDate(Timestamp EndDate) {
-        this.EndDate = EndDate;
+    public void setEndDate(Timestamp endDate) {
+        this.endDate = endDate;
     }
 
     /**
@@ -121,7 +145,6 @@ public class GetArgs {
     }
 
     /**
-     *
      * @param args arguments de la ligne de commande.
      * @throws GetArgsException en cas d'erreur sur les paramètres
      */
@@ -188,6 +211,14 @@ public class GetArgs {
                 } else {
                     throw new GetArgsException("Date de fin non définie");
                 }
+            } else if (args[i].equals("-companies")) {
+                setReadCompanies(true);
+            } else if (args[i].equals("-patrimonies")) {
+                setReadPatrimonies(true);
+            } else if (args[i].equals("-providers")) {
+                setReadProviders(true);
+            } else if (args[i].equals("-events")) {
+                setReadEvents(true);
             } else if (args[i].equals("-d")) {
                 setDebugMode(true);
             } else if (args[i].equals("-t")) {
@@ -208,24 +239,9 @@ public class GetArgs {
      */
     public static void usage() {
         System.out.println("Usage : java Bkgpi2a -webserver prod -dbserver prod"
-                + " [-b début] [-f fin] [-d] [-t]");
-    }
-
-    /**
-     * Affiche le contenu de GetArgs.
-     *
-     * @return retourne le contenu de GetArgs.
-     */
-    @Override
-    public String toString() {
-        return "GetArg: {"
-                + "webServerType=" + webServerType
-                + ", dbServerType=" + dbServerType
-                + ", début=" + MyDateFormat.format(BegDate)
-                + ", fin=" + MyDateFormat.format(EndDate)
-                + ", debugMode=" + debugMode
-                + ", testMode=" + testMode
-                + "}";
+                + " [-b début] [-f fin]"
+                + " [-companies] [-patrimonies] [-providers] [-events]"
+                + " [-d] [-t]");
     }
 
     /**
@@ -240,5 +256,82 @@ public class GetArgs {
      */
     public void setDbServerType(String dbServerType) {
         this.dbServerType = dbServerType;
+    }
+
+    /**
+     * @return s'il faut lire ou non les sociétés
+     */
+    public boolean getReadCompanies() {
+        return readCompanies;
+    }
+
+    /**
+     * @param readCompanies demande ou non la lecture des sociétés
+     */
+    public void setReadCompanies(boolean readCompanies) {
+        this.readCompanies = readCompanies;
+    }
+
+    /**
+     * @return s'il faut lire ou non les patrimoines
+     */
+    public boolean getReadPatrimonies() {
+        return readPatrimonies;
+    }
+
+    /**
+     * @param readPatrimonies demande ou non la lecture des patrimoines
+     */
+    public void setReadPatrimonies(boolean readPatrimonies) {
+        this.readPatrimonies = readPatrimonies;
+    }
+
+    /**
+     * @return s'il faut lire ou non les fournisseurs
+     */
+    public boolean getReadProviders() {
+        return readProviders;
+    }
+
+    /**
+     * @param readProviders demande ou non la lecture des fournisseurs
+     */
+    public void setReadProviders(boolean readProviders) {
+        this.readProviders = readProviders;
+    }
+
+    /**
+     * @return s'il faut lire ou non les événements
+     */
+    public boolean getReadEvents() {
+        return readEvents;
+    }
+
+    /**
+     * @param readEvents demande ou non la lecture des événements
+     */
+    public void setReadEvents(boolean readEvents) {
+        this.readEvents = readEvents;
+    }
+
+    /**
+     * Affiche le contenu de GetArgs.
+     *
+     * @return retourne le contenu de GetArgs.
+     */
+    @Override
+    public String toString() {
+        return "GetArg: {"
+                + "webServerType:" + getWebServerType()
+                + ", dbServerType:" + getDbServerType()
+                + ", début:" + MyDateFormat.format(getBegDate())
+                + ", fin:" + MyDateFormat.format(getEndDate())
+                + ", companies:" + getReadCompanies()
+                + ", patrimonies:" + getReadPatrimonies()
+                + ", providers:" + getReadProviders()
+                + ", events:" + getReadEvents()
+                + ", debugMode:" + getDebugMode()
+                + ", testMode:" + getTestMode()
+                + "}";
     }
 }
