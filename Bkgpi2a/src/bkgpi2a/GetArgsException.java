@@ -5,7 +5,7 @@ package bkgpi2a;
  * arguments de ligne de commande.
  *
  * @author Thierry Baribaud
- * @version Octobre 2016
+ * @version 0.28
  */
 public class GetArgsException extends Exception {
 

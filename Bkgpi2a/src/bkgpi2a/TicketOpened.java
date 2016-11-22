@@ -3,15 +3,16 @@ package bkgpi2a;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import static bkgpi2a.EventType.TICKET_OPENED;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  * Classe décrivant l'événement ouverture de ticket : TicketOpened, #500
  *
  * @author Thierry Baribaud
- * @version 0.23
+ * @version 0.28
  * @see http://performanceimmo.github.io/API/#ticketevent
  */
-@JsonIgnoreProperties({"date", "eventTypeUid"})
+@JsonIgnoreProperties({"_id", "date", "eventTypeUid"})
 @JsonTypeName("TicketOpened")
 public class TicketOpened extends Event {
 
@@ -28,6 +29,7 @@ public class TicketOpened extends Event {
     /**
      * Informations sur le ticket
      */
+    @JsonProperty("ticket")
     private TicketInfos ticketInfos;
 
     /**

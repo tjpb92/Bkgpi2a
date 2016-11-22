@@ -8,10 +8,10 @@ import static bkgpi2a.EventType.MESSAGE_ADDED;
  * Classe décrivant un message ajouté au journal d'un ticket : MessageAdded, #570
  *
  * @author Thierry Baribaud
- * @version 0.23
+ * @version 0.28
  * @see http://performanceimmo.github.io/API/#ticketevent
  */
-@JsonIgnoreProperties({"date", "eventTypeUid"})
+@JsonIgnoreProperties({"_id", "date", "eventTypeUid"})
 @JsonTypeName("MessageAdded")
 public class MessageAdded extends Event {
 

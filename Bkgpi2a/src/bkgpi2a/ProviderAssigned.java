@@ -13,10 +13,10 @@ import com.fasterxml.jackson.annotation.JsonSetter;
  * ProviderAssigned, #515
  *
  * @author Thierry Baribaud
- * @version Octobre 2016
+ * @version 0.28
  * @see http://performanceimmo.github.io/API/#ticketevent
  */
-@JsonIgnoreProperties({"eventTypeUid", "providerAssignationPurpose"})
+@JsonIgnoreProperties({"_id", "eventTypeUid", "providerAssignationPurpose"})
 @JsonTypeName("ProviderAssigned")
 public class ProviderAssigned extends Event {
 
