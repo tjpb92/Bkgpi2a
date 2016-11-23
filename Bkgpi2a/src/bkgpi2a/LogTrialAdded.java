@@ -9,10 +9,10 @@ import com.fasterxml.jackson.annotation.JsonInclude;
  * Classe décrivant un essai ajouté au journal d'un ticket : LogTrialAdded, #565
  *
  * @author Thierry Baribaud
- * @version 0.23
+ * @version 0.29
  * @see http://performanceimmo.github.io/API/#ticketevent
  */
-@JsonIgnoreProperties({"date", "eventTypeUid"})
+@JsonIgnoreProperties({"_id", "date", "eventTypeUid"})
 @JsonTypeName("LogTrialAdded")
 public class LogTrialAdded extends Event {
 

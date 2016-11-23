@@ -8,10 +8,10 @@ import com.fasterxml.jackson.annotation.JsonTypeName;
  * Classe décrivant la programmation d'une intervention : MissionScheduled, #610
  *
  * @author Thierry Baribaud
- * @version 0.23
+ * @version 0.29
  * @see http://performanceimmo.github.io/API/#ticketevent
  */
-@JsonIgnoreProperties({"eventTypeUid"})
+@JsonIgnoreProperties({"_id", "eventTypeUid"})
 @JsonTypeName("MissionScheduled")
 public class MissionScheduled extends Event {
 
