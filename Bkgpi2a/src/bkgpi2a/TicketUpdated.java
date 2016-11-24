@@ -11,10 +11,10 @@ import com.fasterxml.jackson.annotation.JsonSetter;
  * Classe décrivant l'événement de mise à jour du ticket : TicketUpdated, #510
  *
  * @author Thierry Baribaud
- * @version 0.23
+ * @version 0.30
  * @see http://performanceimmo.github.io/API/#ticketevent
  */
-@JsonIgnoreProperties({"date", "eventTypeUid"})
+@JsonIgnoreProperties({"_id", "date", "eventTypeUid"})
 @JsonTypeName("TicketUpdated")
 public class TicketUpdated extends Event {
 

@@ -8,10 +8,10 @@ import com.fasterxml.jackson.annotation.JsonTypeName;
  * Classe décrivant un fin d'intervention : InterventionFinished, #534
  *
  * @author Thierry Baribaud
- * @version 0.23
+ * @version 0.30
  * @see http://performanceimmo.github.io/API/#ticketevent
  */
-@JsonIgnoreProperties({"date", "eventTypeUid"})
+@JsonIgnoreProperties({"_id", "date", "eventTypeUid"})
 @JsonTypeName("InterventionFinished")
 public class InterventionFinished extends Event {
 

@@ -9,10 +9,10 @@ import com.fasterxml.jackson.annotation.JsonInclude;
  * Classe décrivant une clôture d'appel impossible : TicketClosedImpossibleRepair, #545
  *
  * @author Thierry Baribaud
- * @version 0.23
+ * @version 0.30
  * @see http://performanceimmo.github.io/API/#ticketevent
  */
-@JsonIgnoreProperties({"date", "eventTypeUid"})
+@JsonIgnoreProperties({"_id", "date", "eventTypeUid"})
 @JsonTypeName("TicketClosedImpossibleRepair")
 public class TicketClosedImpossibleRepair extends Event {
 

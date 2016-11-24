@@ -34,7 +34,7 @@ import utils.DBServerException;
  * de données MongoDB par rapport à une base de données Informix
  *
  * @author Thierry Baribaud.
- * @version 0.291
+ * @version 0.30
  */
 public class Bkgpi2a {
 
@@ -227,7 +227,7 @@ public class Bkgpi2a {
                         + ", aggregateUid:" + event.getAggregateUid()
                         + ", processUid:" + event.getProcessUid());
                 if (event instanceof MessageAdded) {
-                    retcode = processMessageAdded(informixConnection, (MessageAdded) event);
+//                    retcode = processMessageAdded(informixConnection, (MessageAdded) event);
                     }
                 else if (event instanceof ProviderAssigned) {
                     retcode = processProviderAssigned(informixConnection, (ProviderAssigned) event);
@@ -282,8 +282,14 @@ public class Bkgpi2a {
     private int processMessageAdded(Connection informixConnection, MessageAdded messageAdded) {
         int retcode = 0;
 
-        if ((retcode = processMessageAdded_00(informixConnection, messageAdded)) == 0) {
-            retcode = processMessageAdded_99(informixConnection, messageAdded);
+        if (messageAdded.getOperator() instanceof ReferencedUser) {
+            if ((retcode = processMessageAdded_00(informixConnection, messageAdded)) == 0) {
+                retcode = processMessageAdded_99(informixConnection, messageAdded);
+            }
+
+        } else {
+            System.out.println("    ERREUR : événement rejeté, raison : généré par Anstel");
+            retcode = -1;
         }
 
         return retcode;
@@ -408,14 +414,19 @@ public class Bkgpi2a {
      * Traite l'événement ProviderAssigned
      *
      * @param informixConnection connection à la base de données Informix locale
-     * @param ProviderAssigned événement à traiter
+     * @param providerAssigned événement à traiter
      * @return code de retour : 1=Succès, 0=ne rien faire, -1=erreur
      */
-    private int processProviderAssigned(Connection informixConnection, ProviderAssigned ProviderAssigned) {
+    private int processProviderAssigned(Connection informixConnection, ProviderAssigned providerAssigned) {
         int retcode = 0;
 
-        if ((retcode = processProviderAssigned_00(informixConnection, ProviderAssigned)) == 0) {
-            retcode = processProviderAssigned_99(informixConnection, ProviderAssigned);
+        if (providerAssigned.getOperator() instanceof ReferencedUser) {
+            if ((retcode = processProviderAssigned_00(informixConnection, providerAssigned)) == 0) {
+                retcode = processProviderAssigned_99(informixConnection, providerAssigned);
+            }
+        } else {
+            System.out.println("    ERREUR : événement rejeté, raison : généré par Anstel");
+            retcode = -1;
         }
 
         return retcode;
@@ -428,21 +439,65 @@ public class Bkgpi2a {
      * @param ProviderAssigned événement à traiter
      * @return code de retour : 1=Succès, 0=ne rien faire, -1=erreur
      */
-    private int processProviderAssigned_00(Connection informixConnection, ProviderAssigned ProviderAssigned) {
+    private int processProviderAssigned_00(Connection informixConnection, ProviderAssigned providerAssigned) {
         Fcalls fcalls;
         FcallsDAO fcallsDAO;
         int retcode = 0;
+        PreparedStatement preparedStatement;
+        ResultSet resultSet;
+        DateTime dateTime;
+        Provider provider;
+        ProviderAssignationPurpose providerAssignationPurpose;
+        String comment;
 
         try {
             fcallsDAO = new FcallsDAO(informixConnection, EtatTicket.EN_COURS);
-            fcallsDAO.filterByUuid(ProviderAssigned.getAggregateUid());
+            fcallsDAO.filterByUuid(providerAssigned.getAggregateUid());
 //                    System.out.println("    " + fcallsDAO.getSelectStatement());
             fcallsDAO.setSelectPreparedStatement();
             fcalls = fcallsDAO.select();
             fcallsDAO.closeSelectPreparedStatement();
             if (fcalls != null) {
                 System.out.println("    ticket en cours associé : " + fcalls);
-                retcode = 1;
+                
+                preparedStatement = informixConnection.prepareStatement("{call providerAssigned(?, ?, ?, ?, ?, ?)}");
+                preparedStatement.setInt(1, fcalls.getCnum());
+                provider = providerAssigned.getProvider();
+                if (provider instanceof ReferencedProvider) {
+                    preparedStatement.setString(2, ((ReferencedProvider)provider).getProviderUid());
+                }
+                else {
+                    preparedStatement.setNull(2, java.sql.Types.INTEGER);
+                }
+                
+                providerAssignationPurpose = providerAssigned.getProviderAssignationPurpose();
+                if (providerAssignationPurpose instanceof RecourseChanged) {
+                    comment = ((RecourseChanged)providerAssignationPurpose).getComment();
+                } else if (providerAssignationPurpose instanceof Purpose) {
+                    comment = ((Purpose)providerAssignationPurpose).getPurpose();
+                } else {
+                    comment = null;
+                }
+                if (comment == null)
+                    preparedStatement.setNull(3, java.sql.Types.CHAR);
+                else if ("comment".equals(comment))
+                    preparedStatement.setNull(3, java.sql.Types.CHAR);
+                else
+                    preparedStatement.setString(3, comment);
+                
+                dateTime = format.parseDateTime(providerAssigned.getDate());
+                preparedStatement.setTimestamp(4, new Timestamp(dateTime.getMillis()));
+                preparedStatement.setInt(5, onum);
+                preparedStatement.setInt(6, fcalls.getCunum());
+                resultSet = preparedStatement.executeQuery();
+                if (resultSet.next()) {
+                    retcode = resultSet.getInt(1);
+                    System.out.println("      ProviderAssigned:{retcode:" + retcode + ", nbTrials:" + resultSet.getInt(2) + "}");
+                }
+                resultSet.close();
+                preparedStatement.close();
+            
+//                retcode = 1;
             }
         } catch (ClassNotFoundException exception) {
             Logger.getLogger(Bkgpi2a.class.getName()).log(Level.SEVERE, null, exception);
@@ -462,21 +517,65 @@ public class Bkgpi2a {
      * @param ProviderAssigned événement à traiter
      * @return code de retour : 1=Succès, 0=ne rien faire, -1=erreur
      */
-    private int processProviderAssigned_99(Connection informixConnection, ProviderAssigned ProviderAssigned) {
+    private int processProviderAssigned_99(Connection informixConnection, ProviderAssigned providerAssigned) {
         Fcalls fcalls;
         FcallsDAO fcallsDAO;
         int retcode = 0;
+        PreparedStatement preparedStatement;
+        ResultSet resultSet;
+        DateTime dateTime;
+        Provider provider;
+        ProviderAssignationPurpose providerAssignationPurpose;
+        String comment;
 
         try {
             fcallsDAO = new FcallsDAO(informixConnection, EtatTicket.ARCHIVE);
-            fcallsDAO.filterByUuid(ProviderAssigned.getAggregateUid());
+            fcallsDAO.filterByUuid(providerAssigned.getAggregateUid());
 //                    System.out.println("    " + fcallsDAO.getSelectStatement());
             fcallsDAO.setSelectPreparedStatement();
             fcalls = fcallsDAO.select();
             fcallsDAO.closeSelectPreparedStatement();
             if (fcalls != null) {
                 System.out.println("    ticket archivé associé : " + fcalls);
-                retcode = 1;
+                
+                preparedStatement = informixConnection.prepareStatement("{call providerAssigned(?, ?, ?, ?, ?, ?)}");
+                preparedStatement.setInt(1, fcalls.getCnum());
+                provider = providerAssigned.getProvider();
+                if (provider instanceof ReferencedProvider) {
+                    preparedStatement.setString(2, ((ReferencedProvider)provider).getProviderUid());
+                }
+                else {
+                    preparedStatement.setNull(2, java.sql.Types.INTEGER);
+                }
+                
+                providerAssignationPurpose = providerAssigned.getProviderAssignationPurpose();
+                if (providerAssignationPurpose instanceof RecourseChanged) {
+                    comment = ((RecourseChanged)providerAssignationPurpose).getComment();
+                } else if (providerAssignationPurpose instanceof Purpose) {
+                    comment = ((Purpose)providerAssignationPurpose).getPurpose();
+                } else {
+                    comment = null;
+                }
+                if (comment == null)
+                    preparedStatement.setNull(3, java.sql.Types.CHAR);
+                else if ("comment".equals(comment))
+                    preparedStatement.setNull(3, java.sql.Types.CHAR);
+                else
+                    preparedStatement.setString(3, comment);
+                
+                dateTime = format.parseDateTime(providerAssigned.getDate());
+                preparedStatement.setTimestamp(4, new Timestamp(dateTime.getMillis()));
+                preparedStatement.setInt(5, onum);
+                preparedStatement.setInt(6, fcalls.getCunum());
+                resultSet = preparedStatement.executeQuery();
+                if (resultSet.next()) {
+                    retcode = resultSet.getInt(1);
+                    System.out.println("      ProviderAssigned:{retcode:" + retcode + ", nbTrials:" + resultSet.getInt(2) + "}");
+                }
+                resultSet.close();
+                preparedStatement.close();
+            
+//                retcode = 1;
             }
         } catch (ClassNotFoundException exception) {
             Logger.getLogger(Bkgpi2a.class.getName()).log(Level.SEVERE, null, exception);
