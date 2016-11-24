@@ -21,6 +21,9 @@ import java.sql.Timestamp;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.bson.Document;
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormatter;
+import org.joda.time.format.ISODateTimeFormat;
 import utils.ApplicationProperties;
 import utils.DBManager;
 import utils.DBServer;
@@ -31,10 +34,21 @@ import utils.DBServerException;
  * de données MongoDB par rapport à une base de données Informix
  *
  * @author Thierry Baribaud.
- * @version 0.28
+ * @version 0.291
  */
 public class Bkgpi2a {
 
+    /**
+     * Pour convertir les datetimes du format texte au format DateTime
+     */
+    private static final DateTimeFormatter format = ISODateTimeFormat.dateTimeParser();
+//    private static final DateTimeFormatter format = DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ssZ");
+    
+    /**
+     * Référence de l'utilisateur Extranet
+     */
+    private static final int onum = 805;
+    
     /**
      * mongoDbServerType : prod pour le serveur de production, pre-prod pour le
      * serveur de pré-production. Valeur par défaut : pre-prod.
@@ -285,6 +299,10 @@ public class Bkgpi2a {
     private int processMessageAdded_00(Connection informixConnection, MessageAdded messageAdded) {
         Fcalls fcalls;
         FcallsDAO fcallsDAO;
+        PreparedStatement preparedStatement;
+        ResultSet resultSet;
+        DateTime dateTime;
+
         int retcode = 0;
 
         try {
@@ -296,12 +314,32 @@ public class Bkgpi2a {
             fcallsDAO.closeSelectPreparedStatement();
             if (fcalls != null) {
                 System.out.println("    ticket en cours associé : " + fcalls);
-                retcode = 1;
+                System.out.println("    message : " + messageAdded.getMessage());
+                
+                preparedStatement = informixConnection.prepareStatement("{call addMessage(?, ?, ?, ?, ?)}");
+                preparedStatement.setInt(1, fcalls.getCnum());
+                preparedStatement.setString(2, new String (messageAdded.getMessage().getBytes(), "ISO-8859-15" ));
+                dateTime = format.parseDateTime(messageAdded.getMessageAddedDate());
+                preparedStatement.setTimestamp(3, new Timestamp(dateTime.getMillis()));
+                preparedStatement.setInt(4, onum);
+                preparedStatement.setInt(5, fcalls.getCunum());
+                resultSet = preparedStatement.executeQuery();
+                if (resultSet.next()) {
+                    retcode = resultSet.getInt(1);
+                    System.out.println("      AddMessage:{retcode:" + retcode + ", nbTrials:" + resultSet.getInt(2) + "}");
+                }
+                resultSet.close();
+                preparedStatement.close();
+            
+//                retcode = 1;
             }
         } catch (ClassNotFoundException exception) {
             Logger.getLogger(Bkgpi2a.class.getName()).log(Level.SEVERE, null, exception);
             retcode = -1;
         } catch (SQLException exception) {
+            Logger.getLogger(Bkgpi2a.class.getName()).log(Level.SEVERE, null, exception);
+            retcode = -1;
+        } catch (UnsupportedEncodingException exception) {
             Logger.getLogger(Bkgpi2a.class.getName()).log(Level.SEVERE, null, exception);
             retcode = -1;
         }
@@ -319,6 +357,10 @@ public class Bkgpi2a {
     private int processMessageAdded_99(Connection informixConnection, MessageAdded messageAdded) {
         Fcalls fcalls;
         FcallsDAO fcallsDAO;
+        PreparedStatement preparedStatement;
+        ResultSet resultSet;
+        DateTime dateTime;
+
         int retcode = 0;
 
         try {
@@ -330,13 +372,32 @@ public class Bkgpi2a {
             fcallsDAO.closeSelectPreparedStatement();
             if (fcalls != null) {
                 System.out.println("    ticket archivé associé : " + fcalls);
-                retcode = 1;
+                
+                preparedStatement = informixConnection.prepareStatement("{call add99Message(?, ?, ?, ?, ?)}");
+                preparedStatement.setInt(1, fcalls.getCnum());
+                preparedStatement.setString(2, new String (messageAdded.getMessage().getBytes(), "ISO-8859-15" ));
+                dateTime = format.parseDateTime(messageAdded.getMessageAddedDate());
+                preparedStatement.setTimestamp(3, new Timestamp(dateTime.getMillis()));
+                preparedStatement.setInt(4, onum);
+                preparedStatement.setInt(5, fcalls.getCunum());
+                resultSet = preparedStatement.executeQuery();
+                if (resultSet.next()) {
+                    retcode = resultSet.getInt(1);
+                    System.out.println("      Add99Message:{retcode:" + retcode + ", nbTrials:" + resultSet.getInt(2) + "}");
+                }
+                resultSet.close();
+                preparedStatement.close();
+            
+//                retcode = 1;
             }
         } catch (ClassNotFoundException exception) {
             Logger.getLogger(Bkgpi2a.class.getName()).log(Level.SEVERE, null, exception);
             retcode = -1;
         } catch (SQLException exception) {
             Logger.getLogger(Bkgpi2a.class.getName()).log(Level.SEVERE, null, exception);
+            retcode = -1;
+        } catch (UnsupportedEncodingException ex) {
+            Logger.getLogger(Bkgpi2a.class.getName()).log(Level.SEVERE, null, ex);
             retcode = -1;
         }
 
