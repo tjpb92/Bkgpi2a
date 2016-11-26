@@ -2,21 +2,19 @@ package bkgpi2a;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonTypeName;
-import static bkgpi2a.EventType.SERVICE_ORDER_SENT;
+import static bkgpi2a.EventType.SENDING_SERVICE_ORDER_REPORTED;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 /**
- * Classe décrivant l'envoi d'un ordre de service :
- * ServiceOrderSent, #615
+ * Classe décrivant l'envoi d'un ordre de service : SendingServiceOrderReported, #615
  *
  * @author Thierry Baribaud
  * @version 0.31
  * @see http://performanceimmo.github.io/API/#ticketevent
- * @deprecated le 25/11/16, remplacé par SendingServiceOrderReported
  */
 @JsonIgnoreProperties({"_id", "eventTypeUid"})
-@JsonTypeName("ServiceOrderSent")
-public class ServiceOrderSent extends Event {
+@JsonTypeName("SendingServiceOrderReported")
+public class SendingServiceOrderReported extends Event {
 
     /**
      * Opérateur ayant ajouté l'essai
@@ -35,18 +33,16 @@ public class ServiceOrderSent extends Event {
     private String ref;
 
     /**
-     * Type d'envoi
-     * ATTENTION : à implémenter avec le type ServiceOrderKind ultérieurement
-     * @see http://performanceimmo.github.io/API/#serviceorderkind
+     * Date à laquelle l'ordre de service a été envoyé
      */
-    private String kindOfSending;
-    
+    private String sendingDate;
+
     /**
      * Constructeur de la classe ServiceOrderSent
      */
-    public ServiceOrderSent() {
-        setEventTypeUid(SERVICE_ORDER_SENT.getUid());
-        setEventType(SERVICE_ORDER_SENT.getName());
+    public SendingServiceOrderReported() {
+        setEventTypeUid(SENDING_SERVICE_ORDER_REPORTED.getUid());
+        setEventType(SENDING_SERVICE_ORDER_REPORTED.getName());
     }
 
     /**
@@ -92,17 +88,32 @@ public class ServiceOrderSent extends Event {
     }
 
     /**
-     * @return le type d'envoi
+     * @return la date à laquelle l'événement a eu lieu
      */
-    public String getKindOfSending() {
-        return kindOfSending;
+    public String getReportDate() {
+        return getDate();
     }
 
     /**
-     * @param kindOfSending définit le type d'envoi
+     * @param reportDate définit la date à laquelle l'événement a eu lieu
      */
-    public void setKindOfSending(String kindOfSending) {
-        this.kindOfSending = kindOfSending;
+    public void setReportDate(String reportDate) {
+        setDate(reportDate);
+    }
+
+    /**
+     * @return la date à laquelle l'ordre de service a été envoyé
+     */
+    public String getSendingDate() {
+        return sendingDate;
+    }
+
+    /**
+     * @param sendingDate définit la date à laquelle l'ordre de service a été
+     * envoyé
+     */
+    public void setSendingDate(String sendingDate) {
+        this.sendingDate = sendingDate;
     }
 
     /**
@@ -110,12 +121,13 @@ public class ServiceOrderSent extends Event {
      */
     @Override
     public String toString() {
-        return "ServiceOrderSent:{"
+        return "SendingServiceOrderReported:{"
                 + super.toString()
                 + ", " + getOperator()
                 + ", " + getProvider()
                 + ", ref:" + getRef()
-                + ", kindOfSending:" + getKindOfSending()
+                + ", reportDate:" + getReportDate()
+                + ", sendingDate:" + getSendingDate()
                 + "}";
     }
 

@@ -3,8 +3,6 @@ package bkgpi2a;
 import bdd.EtatTicket;
 import bdd.Fcalls;
 import bdd.FcallsDAO;
-import bdd.Furgent;
-import bdd.FurgentDAO;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mongodb.BasicDBObject;
 import com.mongodb.MongoClient;
@@ -34,7 +32,7 @@ import utils.DBServerException;
  * de données MongoDB par rapport à une base de données Informix
  *
  * @author Thierry Baribaud.
- * @version 0.30
+ * @version 0.31
  */
 public class Bkgpi2a {
 
@@ -43,12 +41,12 @@ public class Bkgpi2a {
      */
     private static final DateTimeFormatter format = ISODateTimeFormat.dateTimeParser();
 //    private static final DateTimeFormatter format = DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ssZ");
-    
+
     /**
      * Référence de l'utilisateur Extranet
      */
     private static final int onum = 805;
-    
+
     /**
      * mongoDbServerType : prod pour le serveur de production, pre-prod pour le
      * serveur de pré-production. Valeur par défaut : pre-prod.
@@ -148,48 +146,6 @@ public class Bkgpi2a {
 
         System.out.println("Synchronisation des événements ...");
         syncEvents(mongoDatabase, informixConnection);
-
-//        System.out.println("Synchronisation des sociétés ...");
-//        splTester(informixConnection);
-    }
-
-    /**
-     * Méthode pour tester l'utilisation de procédures stockées depuis Java
-     *
-     * @param informixConnection connexion à la base de données Informix
-     */
-    public void splTester(Connection informixConnection) {
-        PreparedStatement preparedStatement;
-        ResultSet resultSet;
-        Timestamp timestamp;
-
-        timestamp = new Timestamp(System.currentTimeMillis());
-        System.out.println("timestamp:" + timestamp);
-        try {
-//            preparedStatement = informixConnection.prepareStatement("{call addMessage(?, ?, ?)}");
-//            preparedStatement.setInt(1, 4828941);
-//            preparedStatement.setString(2, "Les sanglots longs Des violons De l'automne Blessent mon coeur D'une langueur Monotone. Tout suffocant Et blÃªme, quand Sonne l'heure, Je me souviens Des jours anciens Et je pleure Et je m'en vais Au vent mauvais Qui m'emporte DeÃ§à, delà, Pareil à la Feuille morte.");
-//            preparedStatement.setTimestamp(3, timestamp);
-//            resultSet = preparedStatement.executeQuery();
-//            while (resultSet.next()) {
-//                System.out.println("retcode:" + resultSet.getInt(1));
-//            }
-//            resultSet.close();
-//            preparedStatement.close();
-            preparedStatement = informixConnection.prepareStatement("{call findCall(?, ?)}");
-            preparedStatement.setString(1, "49");
-            preparedStatement.setInt(2, 635);
-            resultSet = preparedStatement.executeQuery();
-            while (resultSet.next()) {
-                System.out.println("retcode:" + resultSet.getInt(1)
-                        + ", table:" + resultSet.getInt(2)
-                        + ", cnum:" + resultSet.getInt(3));
-            }
-            resultSet.close();
-            preparedStatement.close();
-        } catch (SQLException ex) {
-            Logger.getLogger(Bkgpi2a.class.getName()).log(Level.SEVERE, null, ex);
-        }
     }
 
     /**
@@ -197,80 +153,231 @@ public class Bkgpi2a {
      * Informix.
      */
     private void syncEvents(MongoDatabase mongoDatabase, Connection informixConnection) {
-        Furgent emergencyService;
-        FurgentDAO furgentDAO;
-        int i;
-        String aggregateUid;
         MongoCollection<Document> collection;
         MongoCursor<Document> cursor;
-        int n;
         ObjectMapper objectMapper;
         Event event;
         int nbEvent;
-        BasicDBObject filter;
+        BasicDBObject filter1;
+        BasicDBObject filter2;
+        BasicDBObject orderBy;
         UpdateResult updateResult;
-        int retcode;
-        
+        int retcode = 0;
+
         objectMapper = new ObjectMapper();
 
         collection = mongoDatabase.getCollection("events");
         System.out.println(collection.count() + " événément(s) dans la base MongoDb");
 
+        nbEvent = 0;
         try {
-            nbEvent = 0;
-            filter = new BasicDBObject("status", 0);
-            cursor = collection.find(filter).iterator();
+            filter1 = new BasicDBObject("status", 0);
+            orderBy = new BasicDBObject("processUid", 1);
+            cursor = collection.find(filter1).sort(orderBy).iterator();
             while (cursor.hasNext()) {
                 nbEvent++;
                 event = objectMapper.readValue(cursor.next().toJson(), Event.class);
-                System.out.println("  événement trouvé : " + event.getEventType()
-                        + ", aggregateUid:" + event.getAggregateUid()
-                        + ", processUid:" + event.getProcessUid());
+                System.out.println("  événement #" + nbEvent + " : "
+                        + event.getEventType()
+                        + ", processUid:" + event.getProcessUid()
+                        + ", aggregateUid:" + event.getAggregateUid());
+                retcode = -1;   // Tout va mal par défaut :-(
                 if (event instanceof MessageAdded) {
-//                    retcode = processMessageAdded(informixConnection, (MessageAdded) event);
-                    }
-                else if (event instanceof ProviderAssigned) {
+                    retcode = processMessageAdded(informixConnection, (MessageAdded) event);
+                } else if (event instanceof ProviderAssigned) {
                     retcode = processProviderAssigned(informixConnection, (ProviderAssigned) event);
-                    }
+                } else if (event instanceof MissionAccepted) {
+                    retcode = processMissionAccepted(informixConnection, (MissionAccepted) event);
+                } else if (event instanceof MissionScheduled) {
+                    retcode = processMissionScheduled(informixConnection, (MissionScheduled) event);
+                } else if (event instanceof PermanentlyFixed) {
+                    retcode = processPermanentlyFixed(informixConnection, (PermanentlyFixed) event);
                 }
+                System.out.println("  retcode:" + retcode);
+
+                filter2 = new BasicDBObject("processUid", event.getProcessUid());
+                updateResult = collection.updateOne(filter2, new BasicDBObject("$set", new BasicDBObject("status", retcode)));
+                if (updateResult.getMatchedCount() > 0) {
+                    System.out.println("  updateResult:" + updateResult);
+                }
+            }
         } catch (IOException ex) {
             Logger.getLogger(Bkgpi2a.class.getName()).log(Level.SEVERE, null, ex);
         }
 
     }
-//            furgentDAO = new FurgentDAO(informixConnection);
-//            furgentDAO.orderBy("unum");
-//            System.out.println("  SelectStatement=" + furgentDAO.getSelectStatement());
-//            furgentDAO.setSelectPreparedStatement();
-//            i = 0;
-//            nbEvent = 0;
-//            while ((emergencyService = furgentDAO.select()) != null) {
-//                i++;
-//                System.out.println("Client(" + i + ")=" + emergencyService);
-//                aggregateUid = Md5.encode("u:" + emergencyService.getUnum());
-////                System.out.println("  aggregateUid:" + aggregateUid);
-//                filter = new BasicDBObject("uid", aggregateUid);
-////                cursor = collection.find(filter).iterator();
-////                if (cursor.hasNext()) {
-////                    nbCompany++;
-////                    company = objectMapper.readValue(cursor.next().toJson(), Company.class);
-////                    updateResult = collection.updateOne(filter, new BasicDBObject("$set", new BasicDBObject("id", emergencyService.getUnum())));
-////                    System.out.println("  trouvé : " + company.getLabel() + ", uid:" + company.getUid() + ", updateResult:" + updateResult);
-////                }
-//                updateResult = collection.updateOne(filter, new BasicDBObject("$set", new BasicDBObject("id", emergencyService.getUnum())));
-//                if (updateResult.getMatchedCount() > 0) {
-//                    nbEvent++;
-//                    System.out.println("  trouvé : updateResult:" + updateResult);
-//                }
-//            }
-//            furgentDAO.closeSelectPreparedStatement();
-//            System.out.println(i + " client(s) lu(s), " + nbEvent + " société(s) trouvée(s)");
-//
-//        } catch (ClassNotFoundException exception) {
-//            Logger.getLogger(Bkgpi2a.class.getName()).log(Level.SEVERE, null, exception);
-//        } catch (SQLException exception) {
-//            Logger.getLogger(Bkgpi2a.class.getName()).log(Level.SEVERE, null, exception);
-//        }
+    /**
+     * Traite l'événement PermanentlyFixed sur un ticket
+     *
+     * @param informixConnection connection à la base de données Informix locale
+     * @param ProviderAssigned événement à traiter
+     * @return code de retour : 1=Succès, 0=ne rien faire, -1=erreur
+     */
+    private int processPermanentlyFixed(Connection informixConnection, PermanentlyFixed permanentlyFixed) {
+        int retcode = 0;
+        int nbTrials = 0;
+        PreparedStatement preparedStatement;
+        ResultSet resultSet;
+        DateTime dateTime;
+        String message;
+        String stillOnSite;
+
+        try {
+            preparedStatement = informixConnection.prepareStatement("{call addLogTrial(?, ?, ?, ?, ?, ?)}");
+            preparedStatement.setString(1, permanentlyFixed.getAggregateUid());
+            preparedStatement.setNull(2, java.sql.Types.INTEGER);
+            preparedStatement.setInt(3, 71);
+//            message = new StringBuffer("Intervention programmée                 ");
+//            message.append("Début:" + permanentlyFixed.getStartDate() + "          ");
+//            message.append("Fin:" + permanentlyFixed.getEndDate());
+            preparedStatement.setString(4, "Réparation définitive");
+            dateTime = format.parseDateTime(permanentlyFixed.getDate());
+            preparedStatement.setTimestamp(5, new Timestamp(dateTime.getMillis()));
+            preparedStatement.setInt(6, onum);
+            resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
+                retcode = resultSet.getInt(1);
+                nbTrials = resultSet.getInt(2);
+            }
+            resultSet.close();
+            
+            if (retcode == 1) {
+                if ((message = permanentlyFixed.getReport()) != null) {
+                    preparedStatement.setInt(3, 72);
+                    preparedStatement.setString(4, message);
+                    resultSet = preparedStatement.executeQuery();
+                    if (resultSet.next()) {
+                        retcode = resultSet.getInt(1);
+                        nbTrials += resultSet.getInt(2);
+                    }
+                    resultSet.close();
+                }
+            }
+
+            if (retcode == 1) {
+                if ((stillOnSite = permanentlyFixed.getStillOnSite()) != null) {
+                    preparedStatement.setInt(3, 73);
+                    if ("Yes".equals(stillOnSite)) 
+                        message = "Oui";
+                    else if ("No".equals(stillOnSite))
+                        message = "Non";
+                    else if ("NotAsked".equals(stillOnSite))
+                        message = "Non demandée";
+                    else if ("ProviderRefuseToReply".equals(stillOnSite))
+                        message = "Refus";
+                    else 
+                        message = "Non disponible";
+                    preparedStatement.setString(4, message);
+                    resultSet = preparedStatement.executeQuery();
+                    if (resultSet.next()) {
+                        retcode = resultSet.getInt(1);
+                        nbTrials += resultSet.getInt(2);
+                    }
+                    resultSet.close();
+                }
+            }
+
+            preparedStatement.close();
+        } catch (SQLException exception) {
+            Logger.getLogger(Bkgpi2a.class.getName()).log(Level.SEVERE, null, exception);
+            retcode = -1;
+        }
+
+        System.out.println("      PermanentlyFixed:{retcode:" + retcode + ", nbTrials:" + nbTrials + "}");
+        
+        return retcode;
+    }
+
+    /**
+     * Traite l'événement MissionScheduled sur un ticket
+     *
+     * @param informixConnection connection à la base de données Informix locale
+     * @param ProviderAssigned événement à traiter
+     * @return code de retour : 1=Succès, 0=ne rien faire, -1=erreur
+     */
+    private int processMissionScheduled(Connection informixConnection, MissionScheduled missionScheduled) {
+        int retcode = 0;
+        int nbTrials = 0;
+        PreparedStatement preparedStatement;
+        ResultSet resultSet;
+        DateTime dateTime;
+        StringBuffer message;
+
+        try {
+            preparedStatement = informixConnection.prepareStatement("{call addLogTrial(?, ?, ?, ?, ?, ?)}");
+            preparedStatement.setString(1, missionScheduled.getAggregateUid());
+            preparedStatement.setNull(2, java.sql.Types.INTEGER);
+            preparedStatement.setInt(3, -1);
+            message = new StringBuffer("Intervention programmée                 ");
+            message.append("Début:" + missionScheduled.getStartDate() + "          ");
+            message.append("Fin:" + missionScheduled.getEndDate());
+            System.out.println("    " + message);
+            preparedStatement.setString(4, message.toString());
+            dateTime = format.parseDateTime(missionScheduled.getDate());
+            preparedStatement.setTimestamp(5, new Timestamp(dateTime.getMillis()));
+            preparedStatement.setInt(6, onum);
+            resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
+                retcode = resultSet.getInt(1);
+                nbTrials = resultSet.getInt(2);
+            }
+            resultSet.close();
+            preparedStatement.close();
+        } catch (SQLException exception) {
+            Logger.getLogger(Bkgpi2a.class.getName()).log(Level.SEVERE, null, exception);
+            retcode = -1;
+        }
+
+        System.out.println("      MissionScheduled:{retcode:" + retcode + ", nbTrials:" + nbTrials + "}");
+        
+        return retcode;
+    }
+
+    /**
+     * Traite l'événement MissionAccepted sur un ticket
+     *
+     * @param informixConnection connection à la base de données Informix locale
+     * @param ProviderAssigned événement à traiter
+     * @return code de retour : 1=Succès, 0=ne rien faire, -1=erreur
+     */
+    private int processMissionAccepted(Connection informixConnection, MissionAccepted missionAccepted) {
+        int retcode = 0;
+        int nbTrials = 0;
+        PreparedStatement preparedStatement;
+        ResultSet resultSet;
+        DateTime dateTime;
+        Provider provider;
+
+        try {
+            preparedStatement = informixConnection.prepareStatement("{call addLogTrial(?, ?, ?, ?, ?, ?)}");
+            preparedStatement.setString(1, missionAccepted.getAggregateUid());
+            provider = missionAccepted.getProvider();
+            if (provider instanceof ReferencedProvider) {
+                preparedStatement.setString(2, ((ReferencedProvider) provider).getProviderUid());
+            } else {
+                preparedStatement.setNull(2, java.sql.Types.INTEGER);
+            }
+            preparedStatement.setInt(3, 77);
+            preparedStatement.setString(4, missionAccepted.getComment());
+            dateTime = format.parseDateTime(missionAccepted.getDate());
+            preparedStatement.setTimestamp(5, new Timestamp(dateTime.getMillis()));
+            preparedStatement.setInt(6, onum);
+            resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
+                retcode = resultSet.getInt(1);
+                nbTrials = resultSet.getInt(2);
+            }
+            resultSet.close();
+            preparedStatement.close();
+        } catch (SQLException exception) {
+            Logger.getLogger(Bkgpi2a.class.getName()).log(Level.SEVERE, null, exception);
+            retcode = -1;
+        }
+
+        System.out.println("      MissionAccepted:{retcode:" + retcode + ", nbTrials:" + nbTrials + "}");
+        
+        return retcode;
+    }
 
     /**
      * Traite l'événement MessageAdded
@@ -321,10 +428,10 @@ public class Bkgpi2a {
             if (fcalls != null) {
                 System.out.println("    ticket en cours associé : " + fcalls);
                 System.out.println("    message : " + messageAdded.getMessage());
-                
+
                 preparedStatement = informixConnection.prepareStatement("{call addMessage(?, ?, ?, ?, ?)}");
                 preparedStatement.setInt(1, fcalls.getCnum());
-                preparedStatement.setString(2, new String (messageAdded.getMessage().getBytes(), "ISO-8859-15" ));
+                preparedStatement.setString(2, new String(messageAdded.getMessage().getBytes(), "ISO-8859-15"));
                 dateTime = format.parseDateTime(messageAdded.getMessageAddedDate());
                 preparedStatement.setTimestamp(3, new Timestamp(dateTime.getMillis()));
                 preparedStatement.setInt(4, onum);
@@ -336,7 +443,7 @@ public class Bkgpi2a {
                 }
                 resultSet.close();
                 preparedStatement.close();
-            
+
 //                retcode = 1;
             }
         } catch (ClassNotFoundException exception) {
@@ -378,10 +485,10 @@ public class Bkgpi2a {
             fcallsDAO.closeSelectPreparedStatement();
             if (fcalls != null) {
                 System.out.println("    ticket archivé associé : " + fcalls);
-                
+
                 preparedStatement = informixConnection.prepareStatement("{call add99Message(?, ?, ?, ?, ?)}");
                 preparedStatement.setInt(1, fcalls.getCnum());
-                preparedStatement.setString(2, new String (messageAdded.getMessage().getBytes(), "ISO-8859-15" ));
+                preparedStatement.setString(2, new String(messageAdded.getMessage().getBytes(), "ISO-8859-15"));
                 dateTime = format.parseDateTime(messageAdded.getMessageAddedDate());
                 preparedStatement.setTimestamp(3, new Timestamp(dateTime.getMillis()));
                 preparedStatement.setInt(4, onum);
@@ -393,7 +500,7 @@ public class Bkgpi2a {
                 }
                 resultSet.close();
                 preparedStatement.close();
-            
+
 //                retcode = 1;
             }
         } catch (ClassNotFoundException exception) {
@@ -459,32 +566,32 @@ public class Bkgpi2a {
             fcallsDAO.closeSelectPreparedStatement();
             if (fcalls != null) {
                 System.out.println("    ticket en cours associé : " + fcalls);
-                
+
                 preparedStatement = informixConnection.prepareStatement("{call providerAssigned(?, ?, ?, ?, ?, ?)}");
                 preparedStatement.setInt(1, fcalls.getCnum());
                 provider = providerAssigned.getProvider();
                 if (provider instanceof ReferencedProvider) {
-                    preparedStatement.setString(2, ((ReferencedProvider)provider).getProviderUid());
-                }
-                else {
+                    preparedStatement.setString(2, ((ReferencedProvider) provider).getProviderUid());
+                } else {
                     preparedStatement.setNull(2, java.sql.Types.INTEGER);
                 }
-                
+
                 providerAssignationPurpose = providerAssigned.getProviderAssignationPurpose();
                 if (providerAssignationPurpose instanceof RecourseChanged) {
-                    comment = ((RecourseChanged)providerAssignationPurpose).getComment();
+                    comment = ((RecourseChanged) providerAssignationPurpose).getComment();
                 } else if (providerAssignationPurpose instanceof Purpose) {
-                    comment = ((Purpose)providerAssignationPurpose).getPurpose();
+                    comment = ((Purpose) providerAssignationPurpose).getPurpose();
                 } else {
                     comment = null;
                 }
-                if (comment == null)
+                if (comment == null) {
                     preparedStatement.setNull(3, java.sql.Types.CHAR);
-                else if ("comment".equals(comment))
+                } else if ("comment".equals(comment)) {
                     preparedStatement.setNull(3, java.sql.Types.CHAR);
-                else
+                } else {
                     preparedStatement.setString(3, comment);
-                
+                }
+
                 dateTime = format.parseDateTime(providerAssigned.getDate());
                 preparedStatement.setTimestamp(4, new Timestamp(dateTime.getMillis()));
                 preparedStatement.setInt(5, onum);
@@ -496,7 +603,7 @@ public class Bkgpi2a {
                 }
                 resultSet.close();
                 preparedStatement.close();
-            
+
 //                retcode = 1;
             }
         } catch (ClassNotFoundException exception) {
@@ -537,32 +644,32 @@ public class Bkgpi2a {
             fcallsDAO.closeSelectPreparedStatement();
             if (fcalls != null) {
                 System.out.println("    ticket archivé associé : " + fcalls);
-                
+
                 preparedStatement = informixConnection.prepareStatement("{call providerAssigned(?, ?, ?, ?, ?, ?)}");
                 preparedStatement.setInt(1, fcalls.getCnum());
                 provider = providerAssigned.getProvider();
                 if (provider instanceof ReferencedProvider) {
-                    preparedStatement.setString(2, ((ReferencedProvider)provider).getProviderUid());
-                }
-                else {
+                    preparedStatement.setString(2, ((ReferencedProvider) provider).getProviderUid());
+                } else {
                     preparedStatement.setNull(2, java.sql.Types.INTEGER);
                 }
-                
+
                 providerAssignationPurpose = providerAssigned.getProviderAssignationPurpose();
                 if (providerAssignationPurpose instanceof RecourseChanged) {
-                    comment = ((RecourseChanged)providerAssignationPurpose).getComment();
+                    comment = ((RecourseChanged) providerAssignationPurpose).getComment();
                 } else if (providerAssignationPurpose instanceof Purpose) {
-                    comment = ((Purpose)providerAssignationPurpose).getPurpose();
+                    comment = ((Purpose) providerAssignationPurpose).getPurpose();
                 } else {
                     comment = null;
                 }
-                if (comment == null)
+                if (comment == null) {
                     preparedStatement.setNull(3, java.sql.Types.CHAR);
-                else if ("comment".equals(comment))
+                } else if ("comment".equals(comment)) {
                     preparedStatement.setNull(3, java.sql.Types.CHAR);
-                else
+                } else {
                     preparedStatement.setString(3, comment);
-                
+                }
+
                 dateTime = format.parseDateTime(providerAssigned.getDate());
                 preparedStatement.setTimestamp(4, new Timestamp(dateTime.getMillis()));
                 preparedStatement.setInt(5, onum);
@@ -574,7 +681,7 @@ public class Bkgpi2a {
                 }
                 resultSet.close();
                 preparedStatement.close();
-            
+
 //                retcode = 1;
             }
         } catch (ClassNotFoundException exception) {
