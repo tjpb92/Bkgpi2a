@@ -8,28 +8,31 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
  * Classe abstraite décrivant un événément.
  *
  * @author Thierry Baribaud
- * @version 0.31
+ * @version 0.33
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME,
         include = JsonTypeInfo.As.EXISTING_PROPERTY,
         property = "eventType")
 @JsonSubTypes({
+    @JsonSubTypes.Type(value = TicketOpened.class, name = "TicketOpened"),
     @JsonSubTypes.Type(value = ProviderAssigned.class, name = "ProviderAssigned"),
     @JsonSubTypes.Type(value = LogTrialAdded.class, name = "LogTrialAdded"),
     @JsonSubTypes.Type(value = PermanentlyFixed.class, name = "PermanentlyFixed"),
     @JsonSubTypes.Type(value = PartiallyFixed.class, name = "PartiallyFixed"),
     @JsonSubTypes.Type(value = TicketClosedImpossibleRepair.class, name = "TicketClosedImpossibleRepair"),
     @JsonSubTypes.Type(value = PostponedFix.class, name = "PostponedFix"),
-    @JsonSubTypes.Type(value = TicketOpened.class, name = "TicketOpened"),
-    @JsonSubTypes.Type(value = TicketUpdated.class, name = "TicketUpdated"),
     @JsonSubTypes.Type(value = MissionAccepted.class, name = "MissionAccepted"),
     @JsonSubTypes.Type(value = MissionScheduled.class, name = "MissionScheduled"),
     @JsonSubTypes.Type(value = InterventionStarted.class, name = "InterventionStarted"),
     @JsonSubTypes.Type(value = InterventionFinished.class, name = "InterventionFinished"),
     @JsonSubTypes.Type(value = ServiceOrderSent.class, name = "ServiceOrderSent"), // deprecated
     @JsonSubTypes.Type(value = SendingServiceOrderReported.class, name = "SendingServiceOrderReported"),
-    @JsonSubTypes.Type(value = MessageAdded.class, name = "MessageAdded")})
+    @JsonSubTypes.Type(value = FormalNoticeForProviderReported.class, name = "FormalNoticeForProviderReported"),
+    @JsonSubTypes.Type(value = InterventionDeadLineDefined.class, name = "InterventionDeadLineDefined"),
+    @JsonSubTypes.Type(value = MessageAdded.class, name = "MessageAdded"),
+    @JsonSubTypes.Type(value = TicketUpdated.class, name = "TicketUpdated")
+    })
 public abstract class Event {
 
     /**

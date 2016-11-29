@@ -33,7 +33,7 @@ import utils.DBServerException;
  * de données MongoDB par rapport à une base de données Informix
  *
  * @author Thierry Baribaud.
- * @version 0.32
+ * @version 0.33
  */
 public class Bkgpi2a {
 
@@ -211,8 +211,16 @@ public class Bkgpi2a {
                     retcode = processPostponedFix(informixConnection, (PostponedFix) event);
                 } else if (event instanceof LogTrialAdded) {
                     retcode = processLogTrialAdded(informixConnection, (LogTrialAdded) event);
+                } else if (event instanceof FormalNoticeForProviderReported) {
+                    retcode = processFormalNoticeForProviderReported(informixConnection, (FormalNoticeForProviderReported) event);
+                } else if (event instanceof InterventionDeadLineDefined) {
+                    retcode = processInterventionDeadLineDefined(informixConnection, (InterventionDeadLineDefined) event);
+                } else if (event instanceof ServiceOrderSent) {
+                    retcode = processServiceOrderSent(informixConnection, (ServiceOrderSent) event);
                 } else if (event instanceof TicketUpdated) {
                     retcode = processTicketUpdated(informixConnection, (TicketUpdated) event);
+                } else {
+                    System.out.println("ERROR : Unknown/unprocessed event:" + event + ", class:" + event.getClass().getSimpleName());
                 }
                 System.out.println("  retcode:" + retcode);
 
@@ -229,6 +237,26 @@ public class Bkgpi2a {
     }
 
     /**
+     * Traite l'événement ServiceOrderSent sur un ticket
+     *
+     * @param informixConnection connection à la base de données Informix locale
+     * @param ProviderAssigned événement à traiter
+     * @return code de retour : 1=Succès, 0=ne rien faire, -1=erreur
+     */
+    private int processServiceOrderSent(Connection informixConnection, ServiceOrderSent serviceOrderSent) {
+        int nbTrials = 0;
+        int errno = 0;
+        int isam = 0;
+        String errmsg = null;
+
+        int retcode = -1;
+
+        System.out.println("      ServiceOrderSent:{retcode:" + retcode + ", nbTrials:" + nbTrials + "}");
+
+        return retcode;
+    }
+
+    /**
      * Traite l'événement TicketOpened sur un ticket
      *
      * @param informixConnection connection à la base de données Informix locale
@@ -236,8 +264,12 @@ public class Bkgpi2a {
      * @return code de retour : 1=Succès, 0=ne rien faire, -1=erreur
      */
     private int processTicketOpened(Connection informixConnection, TicketOpened ticketOpened) {
-        int retcode = -1;
         int nbTrials = 0;
+        int errno = 0;
+        int isam = 0;
+        String errmsg = null;
+
+        int retcode = -1;
 
         System.out.println("      TicketOpened:{retcode:" + retcode + ", nbTrials:" + nbTrials + "}");
 
@@ -252,11 +284,15 @@ public class Bkgpi2a {
      * @return code de retour : 1=Succès, 0=ne rien faire, -1=erreur
      */
     private int processInterventionStarted(Connection informixConnection, InterventionStarted interventionStarted) {
-        int retcode = -1;
-        int nbTrials = 0;
         PreparedStatement preparedStatement;
         ResultSet resultSet;
         DateTime dateTime;
+        int nbTrials = 0;
+        int errno = 0;
+        int isam = 0;
+        String errmsg = null;
+
+        int retcode = 0;
 
         try {
             dateTime = isoDateTimeFormat.parseDateTime(interventionStarted.getStartedDate());
@@ -273,6 +309,9 @@ public class Bkgpi2a {
             if (resultSet.next()) {
                 retcode = resultSet.getInt(1);
                 nbTrials = resultSet.getInt(2);
+                errno = resultSet.getInt(3);
+                isam = resultSet.getInt(4);
+                errmsg = resultSet.getString(5);
             }
             resultSet.close();
 
@@ -288,6 +327,125 @@ public class Bkgpi2a {
     }
 
     /**
+     * Traite l'événement FormalNoticeForProviderReported sur un ticket
+     *
+     * @param informixConnection connection à la base de données Informix locale
+     * @param ProviderAssigned événement à traiter
+     * @return code de retour : 1=Succès, 0=ne rien faire, -1=erreur
+     */
+    private int processFormalNoticeForProviderReported(Connection informixConnection, FormalNoticeForProviderReported formalNoticeForProviderReported) {
+        PreparedStatement preparedStatement;
+        ResultSet resultSet;
+        DateTime dateTime;
+        Provider provider;
+        DateTimeFormatter ddmmyy = DateTimeFormat.forPattern("dd/MM/YY");
+        StringBuffer comment;
+        String ref;
+        int nbTrials = 0;
+        int errno = 0;
+        int isam = 0;
+        String errmsg = null;
+
+        int retcode = 0;
+
+        try {
+            preparedStatement = informixConnection.prepareStatement("{call addLogTrial(?, ?, ?, ?, ?, ?, ?)}");
+            preparedStatement.setString(1, formalNoticeForProviderReported.getAggregateUid());
+            provider = formalNoticeForProviderReported.getProvider();
+            if (provider instanceof ReferencedProvider) {
+                preparedStatement.setString(2, ((ReferencedProvider) provider).getProviderUid());
+            } else {
+                preparedStatement.setNull(2, java.sql.Types.INTEGER);
+            }
+            preparedStatement.setInt(3, 300);
+            dateTime = isoDateTimeFormat.parseDateTime(formalNoticeForProviderReported.getDeadline());
+            comment = new StringBuffer("Mise en demeure");
+            if ((ref = formalNoticeForProviderReported.getRef()) != null) {
+                comment.append(" no ").append(ref);
+            }
+            comment.append(" du ").append(dateTime.toString(ddmmyy));
+            preparedStatement.setString(4, comment.toString());
+            dateTime = isoDateTimeFormat.parseDateTime(formalNoticeForProviderReported.getReportDate());
+            preparedStatement.setTimestamp(5, new Timestamp(dateTime.getMillis()));
+            preparedStatement.setInt(6, onum);
+            preparedStatement.setInt(7, 0);
+            resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
+                retcode = resultSet.getInt(1);
+                nbTrials = resultSet.getInt(2);
+                errno = resultSet.getInt(3);
+                isam = resultSet.getInt(4);
+                errmsg = resultSet.getString(5);
+            }
+            resultSet.close();
+            preparedStatement.close();
+        } catch (SQLException exception) {
+            Logger.getLogger(Bkgpi2a.class.getName()).log(Level.SEVERE, null, exception);
+            retcode = -1;
+        }
+
+        System.out.println("      FormalNoticeForProviderReported:{retcode:" + retcode + ", nbTrials:" + nbTrials + "}");
+
+        return retcode;
+    }
+
+    /**
+     * Traite l'événement InterventionDeadLineDefined sur un ticket
+     *
+     * @param informixConnection connection à la base de données Informix locale
+     * @param ProviderAssigned événement à traiter
+     * @return code de retour : 1=Succès, 0=ne rien faire, -1=erreur
+     */
+    private int processInterventionDeadLineDefined(Connection informixConnection, InterventionDeadLineDefined interventionDeadLineDefined) {
+        PreparedStatement preparedStatement;
+        ResultSet resultSet;
+        DateTime dateTime;
+        Provider provider;
+        DateTimeFormatter ddmmyy = DateTimeFormat.forPattern("dd/MM/YY");
+        int nbTrials = 0;
+        int errno = 0;
+        int isam = 0;
+        String errmsg = null;
+
+        int retcode = 0;
+
+        try {
+            preparedStatement = informixConnection.prepareStatement("{call addLogTrial(?, ?, ?, ?, ?, ?, ?)}");
+            preparedStatement.setString(1, interventionDeadLineDefined.getAggregateUid());
+            provider = interventionDeadLineDefined.getProvider();
+            if (provider instanceof ReferencedProvider) {
+                preparedStatement.setString(2, ((ReferencedProvider) provider).getProviderUid());
+            } else {
+                preparedStatement.setNull(2, java.sql.Types.INTEGER);
+            }
+            preparedStatement.setInt(3, 305);
+            dateTime = isoDateTimeFormat.parseDateTime(interventionDeadLineDefined.getDeadline());
+            preparedStatement.setString(4, "Date butoir intervention " + dateTime.toString(ddmmyy));
+            dateTime = isoDateTimeFormat.parseDateTime(interventionDeadLineDefined.getDate());
+            preparedStatement.setTimestamp(5, new Timestamp(dateTime.getMillis()));
+            preparedStatement.setInt(6, onum);
+            preparedStatement.setInt(7, 0);
+            resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
+                retcode = resultSet.getInt(1);
+                nbTrials = resultSet.getInt(2);
+                errno = resultSet.getInt(3);
+                isam = resultSet.getInt(4);
+                errmsg = resultSet.getString(5);
+            }
+            resultSet.close();
+            preparedStatement.close();
+        } catch (SQLException exception) {
+            Logger.getLogger(Bkgpi2a.class.getName()).log(Level.SEVERE, null, exception);
+            retcode = -1;
+        }
+
+        System.out.println("      InterventionDeadLineDefined:{retcode:" + retcode + ", nbTrials:" + nbTrials + "}");
+
+        return retcode;
+    }
+
+    /**
      * Traite l'événement SendingServiceOrderReported sur un ticket
      *
      * @param informixConnection connection à la base de données Informix locale
@@ -295,8 +453,49 @@ public class Bkgpi2a {
      * @return code de retour : 1=Succès, 0=ne rien faire, -1=erreur
      */
     private int processSendingServiceOrderReported(Connection informixConnection, SendingServiceOrderReported sendingServiceOrderReported) {
-        int retcode = -1;
+        PreparedStatement preparedStatement;
+        ResultSet resultSet;
+        DateTime dateTime;
+        Provider provider;
+        DateTimeFormatter ddmmyy = DateTimeFormat.forPattern("dd/MM/YY");
         int nbTrials = 0;
+        int errno = 0;
+        int isam = 0;
+        String errmsg = null;
+
+        int retcode = 0;
+
+        try {
+            preparedStatement = informixConnection.prepareStatement("{call addLogTrial(?, ?, ?, ?, ?, ?, ?)}");
+            preparedStatement.setString(1, sendingServiceOrderReported.getAggregateUid());
+            provider = sendingServiceOrderReported.getProvider();
+            if (provider instanceof ReferencedProvider) {
+                preparedStatement.setString(2, ((ReferencedProvider) provider).getProviderUid());
+            } else {
+                preparedStatement.setNull(2, java.sql.Types.INTEGER);
+            }
+            preparedStatement.setInt(3, 300);
+            dateTime = isoDateTimeFormat.parseDateTime(sendingServiceOrderReported.getSendingDate());
+            preparedStatement.setString(4, "OE no " + sendingServiceOrderReported.getRef()
+                    + " du " + dateTime.toString(ddmmyy));
+            dateTime = isoDateTimeFormat.parseDateTime(sendingServiceOrderReported.getReportDate());
+            preparedStatement.setTimestamp(5, new Timestamp(dateTime.getMillis()));
+            preparedStatement.setInt(6, onum);
+            preparedStatement.setInt(7, 0);
+            resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
+                retcode = resultSet.getInt(1);
+                nbTrials = resultSet.getInt(2);
+                errno = resultSet.getInt(3);
+                isam = resultSet.getInt(4);
+                errmsg = resultSet.getString(5);
+            }
+            resultSet.close();
+            preparedStatement.close();
+        } catch (SQLException exception) {
+            Logger.getLogger(Bkgpi2a.class.getName()).log(Level.SEVERE, null, exception);
+            retcode = -1;
+        }
 
         System.out.println("      SendingServiceOrderReported:{retcode:" + retcode + ", nbTrials:" + nbTrials + "}");
 
@@ -311,12 +510,16 @@ public class Bkgpi2a {
      * @return code de retour : 1=Succès, 0=ne rien faire, -1=erreur
      */
     private int processInterventionFinished(Connection informixConnection, InterventionFinished interventionFinished) {
-        int retcode = -1;
-        int nbTrials = 0;
         PreparedStatement preparedStatement;
         ResultSet resultSet;
         DateTime dateTime;
-        
+        int nbTrials = 0;
+        int errno = 0;
+        int isam = 0;
+        String errmsg = null;
+
+        int retcode = 0;
+
         try {
             dateTime = isoDateTimeFormat.parseDateTime(interventionFinished.getFinishedDate());
 
@@ -332,6 +535,9 @@ public class Bkgpi2a {
             if (resultSet.next()) {
                 retcode = resultSet.getInt(1);
                 nbTrials = resultSet.getInt(2);
+                errno = resultSet.getInt(3);
+                isam = resultSet.getInt(4);
+                errmsg = resultSet.getString(5);
             }
             resultSet.close();
 
@@ -354,8 +560,12 @@ public class Bkgpi2a {
      * @return code de retour : 1=Succès, 0=ne rien faire, -1=erreur
      */
     private int processLogTrialAdded(Connection informixConnection, LogTrialAdded logTrialAdded) {
-        int retcode = -1;
         int nbTrials = 0;
+        int errno = 0;
+        int isam = 0;
+        String errmsg = null;
+
+        int retcode = -1;
 
         System.out.println("      LogTrialAdded:{retcode:" + retcode + ", nbTrials:" + nbTrials + "}");
 
@@ -370,8 +580,12 @@ public class Bkgpi2a {
      * @return code de retour : 1=Succès, 0=ne rien faire, -1=erreur
      */
     private int processTicketUpdated(Connection informixConnection, TicketUpdated ticketUpdated) {
-        int retcode = -1;
         int nbTrials = 0;
+        int errno = 0;
+        int isam = 0;
+        String errmsg = null;
+
+        int retcode = -1;
 
         System.out.println("      TicketUpdated:{retcode:" + retcode + ", nbTrials:" + nbTrials + "}");
 
@@ -386,22 +600,23 @@ public class Bkgpi2a {
      * @return code de retour : 1=Succès, 0=ne rien faire, -1=erreur
      */
     private int processPermanentlyFixed(Connection informixConnection, PermanentlyFixed permanentlyFixed) {
-        int retcode = 0;
-        int nbTrials = 0;
         PreparedStatement preparedStatement;
         ResultSet resultSet;
         DateTime dateTime;
         String message;
         String stillOnSite;
+        int nbTrials = 0;
+        int errno = 0;
+        int isam = 0;
+        String errmsg = null;
+
+        int retcode = 0;
 
         try {
             preparedStatement = informixConnection.prepareStatement("{call addLogTrial(?, ?, ?, ?, ?, ?, ?)}");
             preparedStatement.setString(1, permanentlyFixed.getAggregateUid());
             preparedStatement.setNull(2, java.sql.Types.INTEGER);
             preparedStatement.setInt(3, 71);
-//            message = new StringBuffer("Intervention programmée                 ");
-//            message.append("Début:" + permanentlyFixed.getStartDate() + "          ");
-//            message.append("Fin:" + permanentlyFixed.getEndDate());
             preparedStatement.setString(4, "Réparation définitive");
             dateTime = isoDateTimeFormat.parseDateTime(permanentlyFixed.getDate());
             preparedStatement.setTimestamp(5, new Timestamp(dateTime.getMillis()));
@@ -411,6 +626,9 @@ public class Bkgpi2a {
             if (resultSet.next()) {
                 retcode = resultSet.getInt(1);
                 nbTrials = resultSet.getInt(2);
+                errno = resultSet.getInt(3);
+                isam = resultSet.getInt(4);
+                errmsg = resultSet.getString(5);
             }
             resultSet.close();
 
@@ -422,6 +640,9 @@ public class Bkgpi2a {
                     if (resultSet.next()) {
                         retcode = resultSet.getInt(1);
                         nbTrials += resultSet.getInt(2);
+                        errno = resultSet.getInt(3);
+                        isam = resultSet.getInt(4);
+                        errmsg = resultSet.getString(5);
                     }
                     resultSet.close();
                 }
@@ -446,6 +667,9 @@ public class Bkgpi2a {
                     if (resultSet.next()) {
                         retcode = resultSet.getInt(1);
                         nbTrials += resultSet.getInt(2);
+                        errno = resultSet.getInt(3);
+                        isam = resultSet.getInt(4);
+                        errmsg = resultSet.getString(5);
                     }
                     resultSet.close();
                 }
@@ -470,22 +694,23 @@ public class Bkgpi2a {
      * @return code de retour : 1=Succès, 0=ne rien faire, -1=erreur
      */
     private int processPartiallyFixed(Connection informixConnection, PartiallyFixed partiallyFixed) {
-        int retcode = 0;
-        int nbTrials = 0;
         PreparedStatement preparedStatement;
         ResultSet resultSet;
         DateTime dateTime;
         String message;
         String stillOnSite;
+        int nbTrials = 0;
+        int errno = 0;
+        int isam = 0;
+        String errmsg = null;
+
+        int retcode = 0;
 
         try {
             preparedStatement = informixConnection.prepareStatement("{call addLogTrial(?, ?, ?, ?, ?, ?, ?)}");
             preparedStatement.setString(1, partiallyFixed.getAggregateUid());
             preparedStatement.setNull(2, java.sql.Types.INTEGER);
             preparedStatement.setInt(3, 71);
-//            message = new StringBuffer("Intervention programmée                 ");
-//            message.append("Début:" + permanentlyFixed.getStartDate() + "          ");
-//            message.append("Fin:" + permanentlyFixed.getEndDate());
             preparedStatement.setString(4, "Réparation partielle");
             dateTime = isoDateTimeFormat.parseDateTime(partiallyFixed.getDate());
             preparedStatement.setTimestamp(5, new Timestamp(dateTime.getMillis()));
@@ -495,6 +720,9 @@ public class Bkgpi2a {
             if (resultSet.next()) {
                 retcode = resultSet.getInt(1);
                 nbTrials = resultSet.getInt(2);
+                errno = resultSet.getInt(3);
+                isam = resultSet.getInt(4);
+                errmsg = resultSet.getString(5);
             }
             resultSet.close();
 
@@ -506,6 +734,9 @@ public class Bkgpi2a {
                     if (resultSet.next()) {
                         retcode = resultSet.getInt(1);
                         nbTrials += resultSet.getInt(2);
+                        errno = resultSet.getInt(3);
+                        isam = resultSet.getInt(4);
+                        errmsg = resultSet.getString(5);
                     }
                     resultSet.close();
                 }
@@ -530,6 +761,9 @@ public class Bkgpi2a {
                     if (resultSet.next()) {
                         retcode = resultSet.getInt(1);
                         nbTrials += resultSet.getInt(2);
+                        errno = resultSet.getInt(3);
+                        isam = resultSet.getInt(4);
+                        errmsg = resultSet.getString(5);
                     }
                     resultSet.close();
                 }
@@ -554,22 +788,23 @@ public class Bkgpi2a {
      * @return code de retour : 1=Succès, 0=ne rien faire, -1=erreur
      */
     private int processTicketClosedImpossibleRepair(Connection informixConnection, TicketClosedImpossibleRepair ticketClosedImpossibleRepair) {
-        int retcode = 0;
-        int nbTrials = 0;
         PreparedStatement preparedStatement;
         ResultSet resultSet;
         DateTime dateTime;
         String message;
         String stillOnSite;
+        int nbTrials = 0;
+        int errno = 0;
+        int isam = 0;
+        String errmsg = null;
+
+        int retcode = 0;
 
         try {
             preparedStatement = informixConnection.prepareStatement("{call addLogTrial(?, ?, ?, ?, ?, ?, ?)}");
             preparedStatement.setString(1, ticketClosedImpossibleRepair.getAggregateUid());
             preparedStatement.setNull(2, java.sql.Types.INTEGER);
             preparedStatement.setInt(3, 71);
-//            message = new StringBuffer("Intervention programmée                 ");
-//            message.append("Début:" + permanentlyFixed.getStartDate() + "          ");
-//            message.append("Fin:" + permanentlyFixed.getEndDate());
             preparedStatement.setString(4, "Réparation impossible");
             dateTime = isoDateTimeFormat.parseDateTime(ticketClosedImpossibleRepair.getDate());
             preparedStatement.setTimestamp(5, new Timestamp(dateTime.getMillis()));
@@ -579,6 +814,9 @@ public class Bkgpi2a {
             if (resultSet.next()) {
                 retcode = resultSet.getInt(1);
                 nbTrials = resultSet.getInt(2);
+                errno = resultSet.getInt(3);
+                isam = resultSet.getInt(4);
+                errmsg = resultSet.getString(5);
             }
             resultSet.close();
 
@@ -590,6 +828,9 @@ public class Bkgpi2a {
                     if (resultSet.next()) {
                         retcode = resultSet.getInt(1);
                         nbTrials += resultSet.getInt(2);
+                        errno = resultSet.getInt(3);
+                        isam = resultSet.getInt(4);
+                        errmsg = resultSet.getString(5);
                     }
                     resultSet.close();
                 }
@@ -614,6 +855,9 @@ public class Bkgpi2a {
                     if (resultSet.next()) {
                         retcode = resultSet.getInt(1);
                         nbTrials += resultSet.getInt(2);
+                        errno = resultSet.getInt(3);
+                        isam = resultSet.getInt(4);
+                        errmsg = resultSet.getString(5);
                     }
                     resultSet.close();
                 }
@@ -638,22 +882,23 @@ public class Bkgpi2a {
      * @return code de retour : 1=Succès, 0=ne rien faire, -1=erreur
      */
     private int processPostponedFix(Connection informixConnection, PostponedFix postponedFix) {
-        int retcode = 0;
-        int nbTrials = 0;
         PreparedStatement preparedStatement;
         ResultSet resultSet;
         DateTime dateTime;
         String message;
         String stillOnSite;
+        int nbTrials = 0;
+        int errno = 0;
+        int isam = 0;
+        String errmsg = null;
+
+        int retcode = 0;
 
         try {
             preparedStatement = informixConnection.prepareStatement("{call addLogTrial(?, ?, ?, ?, ?, ?, ?)}");
             preparedStatement.setString(1, postponedFix.getAggregateUid());
             preparedStatement.setNull(2, java.sql.Types.INTEGER);
             preparedStatement.setInt(3, 71);
-//            message = new StringBuffer("Intervention programmée                 ");
-//            message.append("Début:" + permanentlyFixed.getStartDate() + "          ");
-//            message.append("Fin:" + permanentlyFixed.getEndDate());
             preparedStatement.setString(4, "Réparation reportée en heure ouvrée");
             dateTime = isoDateTimeFormat.parseDateTime(postponedFix.getDate());
             preparedStatement.setTimestamp(5, new Timestamp(dateTime.getMillis()));
@@ -663,6 +908,9 @@ public class Bkgpi2a {
             if (resultSet.next()) {
                 retcode = resultSet.getInt(1);
                 nbTrials = resultSet.getInt(2);
+                errno = resultSet.getInt(3);
+                isam = resultSet.getInt(4);
+                errmsg = resultSet.getString(5);
             }
             resultSet.close();
 
@@ -674,6 +922,9 @@ public class Bkgpi2a {
                     if (resultSet.next()) {
                         retcode = resultSet.getInt(1);
                         nbTrials += resultSet.getInt(2);
+                        errno = resultSet.getInt(3);
+                        isam = resultSet.getInt(4);
+                        errmsg = resultSet.getString(5);
                     }
                     resultSet.close();
                 }
@@ -698,6 +949,9 @@ public class Bkgpi2a {
                     if (resultSet.next()) {
                         retcode = resultSet.getInt(1);
                         nbTrials += resultSet.getInt(2);
+                        errno = resultSet.getInt(3);
+                        isam = resultSet.getInt(4);
+                        errmsg = resultSet.getString(5);
                     }
                     resultSet.close();
                 }
@@ -722,8 +976,6 @@ public class Bkgpi2a {
      * @return code de retour : 1=Succès, 0=ne rien faire, -1=erreur
      */
     private int processMissionScheduled(Connection informixConnection, MissionScheduled missionScheduled) {
-        int retcode = 0;
-        int nbTrials = 0;
         PreparedStatement preparedStatement;
         ResultSet resultSet;
         DateTime dateTime;
@@ -731,11 +983,17 @@ public class Bkgpi2a {
         DateTime endDate;
         String message;
         DateTimeFormatter ddmmyy_hhmm = DateTimeFormat.forPattern("dd/MM/YY HH:mm");
+        int nbTrials = 0;
+        int errno = 0;
+        int isam = 0;
+        String errmsg = null;
+
+        int retcode = 0;
 
         try {
             startDate = isoDateTimeFormat.parseDateTime(missionScheduled.getStartDate());
             endDate = isoDateTimeFormat.parseDateTime(missionScheduled.getEndDate());
-            message = String.format("%-40s%s et le %s", "Intervention prévue entre le :", 
+            message = String.format("%-40s%s et le %s", "Intervention prévue entre le :",
                     startDate.toString(ddmmyy_hhmm), endDate.toString(ddmmyy_hhmm));
             System.out.println("    message:" + message);
             preparedStatement = informixConnection.prepareStatement("{call addLogTrial(?, ?, ?, ?, ?, ?, ?)}");
@@ -751,6 +1009,9 @@ public class Bkgpi2a {
             if (resultSet.next()) {
                 retcode = resultSet.getInt(1);
                 nbTrials = resultSet.getInt(2);
+                errno = resultSet.getInt(3);
+                isam = resultSet.getInt(4);
+                errmsg = resultSet.getString(5);
             }
             resultSet.close();
             preparedStatement.close();
@@ -772,12 +1033,16 @@ public class Bkgpi2a {
      * @return code de retour : 1=Succès, 0=ne rien faire, -1=erreur
      */
     private int processMissionAccepted(Connection informixConnection, MissionAccepted missionAccepted) {
-        int retcode = 0;
-        int nbTrials = 0;
         PreparedStatement preparedStatement;
         ResultSet resultSet;
         DateTime dateTime;
         Provider provider;
+        int nbTrials = 0;
+        int errno = 0;
+        int isam = 0;
+        String errmsg = null;
+
+        int retcode = 0;
 
         try {
             preparedStatement = informixConnection.prepareStatement("{call addLogTrial(?, ?, ?, ?, ?, ?, ?)}");
@@ -798,6 +1063,9 @@ public class Bkgpi2a {
             if (resultSet.next()) {
                 retcode = resultSet.getInt(1);
                 nbTrials = resultSet.getInt(2);
+                errno = resultSet.getInt(3);
+                isam = resultSet.getInt(4);
+                errmsg = resultSet.getString(5);
             }
             resultSet.close();
             preparedStatement.close();
@@ -819,17 +1087,52 @@ public class Bkgpi2a {
      * @return code de retour : 1=Succès, 0=ne rien faire, -1=erreur
      */
     private int processMessageAdded(Connection informixConnection, MessageAdded messageAdded) {
+        PreparedStatement preparedStatement;
+        ResultSet resultSet;
+        DateTime dateTime;
+        int nbTrials = 0;
+        int errno = 0;
+        int isam = 0;
+        String errmsg = null;
+
         int retcode = 0;
 
         if (messageAdded.getOperator() instanceof ReferencedUser) {
-            if ((retcode = processMessageAdded_00(informixConnection, messageAdded)) == 0) {
-                retcode = processMessageAdded_99(informixConnection, messageAdded);
+//            if ((retcode = processMessageAdded_00(informixConnection, messageAdded)) == 0) {
+//                retcode = processMessageAdded_99(informixConnection, messageAdded);
+//            }
+
+            try {
+                preparedStatement = informixConnection.prepareStatement("{call addLogTrial(?, ?, ?, ?, ?, ?, ?)}");
+                preparedStatement.setString(1, messageAdded.getAggregateUid());
+                preparedStatement.setNull(2, java.sql.Types.INTEGER);
+                preparedStatement.setInt(3, -1);
+                preparedStatement.setString(4, messageAdded.getMessage());
+                dateTime = isoDateTimeFormat.parseDateTime(messageAdded.getMessageAddedDate());
+                preparedStatement.setTimestamp(5, new Timestamp(dateTime.getMillis()));
+                preparedStatement.setInt(6, onum);
+                preparedStatement.setInt(7, 0);
+                resultSet = preparedStatement.executeQuery();
+                if (resultSet.next()) {
+                    retcode = resultSet.getInt(1);
+                    nbTrials = resultSet.getInt(2);
+                    errno = resultSet.getInt(3);
+                    isam = resultSet.getInt(4);
+                    errmsg = resultSet.getString(5);
+                }
+                resultSet.close();
+                preparedStatement.close();
+            } catch (SQLException exception) {
+                Logger.getLogger(Bkgpi2a.class.getName()).log(Level.SEVERE, null, exception);
+                retcode = -1;
             }
 
         } else {
             System.out.println("    ERREUR : événement rejeté, raison : généré par Anstel");
             retcode = -1;
         }
+
+        System.out.println("      MissionAccepted:{retcode:" + retcode + ", nbTrials:" + nbTrials + "}");
 
         return retcode;
     }
@@ -959,16 +1262,74 @@ public class Bkgpi2a {
      * @return code de retour : 1=Succès, 0=ne rien faire, -1=erreur
      */
     private int processProviderAssigned(Connection informixConnection, ProviderAssigned providerAssigned) {
+        PreparedStatement preparedStatement;
+        ResultSet resultSet;
+        DateTime dateTime;
+        int nbTrials = 0;
+        int errno = 0;
+        int isam = 0;
+        String errmsg = null;
+        Provider provider;
+        ProviderAssignationPurpose providerAssignationPurpose;
+        String comment;
+
         int retcode = 0;
 
         if (providerAssigned.getOperator() instanceof ReferencedUser) {
-            if ((retcode = processProviderAssigned_00(informixConnection, providerAssigned)) == 0) {
-                retcode = processProviderAssigned_99(informixConnection, providerAssigned);
-            }
+//            if ((retcode = processProviderAssigned_00(informixConnection, providerAssigned)) == 0) {
+//                retcode = processProviderAssigned_99(informixConnection, providerAssigned);
+//            }
+
+            try {
+                preparedStatement = informixConnection.prepareStatement("{call addLogTrial(?, ?, ?, ?, ?, ?, ?)}");
+                preparedStatement.setString(1, providerAssigned.getAggregateUid());
+                provider = providerAssigned.getProvider();
+                if (provider instanceof ReferencedProvider) {
+                    preparedStatement.setString(2, ((ReferencedProvider) provider).getProviderUid());
+                } else {
+                    preparedStatement.setNull(2, java.sql.Types.INTEGER);
+                }
+                preparedStatement.setInt(3, 22);
+                providerAssignationPurpose = providerAssigned.getProviderAssignationPurpose();
+                if (providerAssignationPurpose instanceof RecourseChanged) {
+                    comment = ((RecourseChanged) providerAssignationPurpose).getComment();
+                } else if (providerAssignationPurpose instanceof Purpose) {
+                    comment = ((Purpose) providerAssignationPurpose).getPurpose();
+                } else {
+                    comment = null;
+                }
+                if (comment == null) {
+                    preparedStatement.setNull(3, java.sql.Types.CHAR);
+                } else if ("comment".equals(comment)) {
+                    preparedStatement.setNull(3, java.sql.Types.CHAR);
+                } else {
+                    preparedStatement.setString(3, comment);
+                }
+                dateTime = isoDateTimeFormat.parseDateTime(providerAssigned.getDate());
+                preparedStatement.setTimestamp(5, new Timestamp(dateTime.getMillis()));
+                preparedStatement.setInt(6, onum);
+                preparedStatement.setInt(7, 0);
+                resultSet = preparedStatement.executeQuery();
+                if (resultSet.next()) {
+                    retcode = resultSet.getInt(1);
+                    nbTrials = resultSet.getInt(2);
+                    errno = resultSet.getInt(3);
+                    isam = resultSet.getInt(4);
+                    errmsg = resultSet.getString(5);
+                }
+                resultSet.close();
+                preparedStatement.close();
+            } catch (SQLException exception) {
+                Logger.getLogger(Bkgpi2a.class.getName()).log(Level.SEVERE, null, exception);
+                retcode = -1;
+            } 
+
         } else {
             System.out.println("    ERREUR : événement rejeté, raison : généré par Anstel");
             retcode = -1;
         }
+
+        System.out.println("      ProviderAssigned:{retcode:" + retcode + ", nbTrials:" + nbTrials + "}");
 
         return retcode;
     }

@@ -2,19 +2,20 @@ package bkgpi2a;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonTypeName;
-import static bkgpi2a.EventType.SERVICE_ORDER_SENT;
+import static bkgpi2a.EventType.INTERVENTION_DEADLINE_DEFINED;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 /**
- * Classe décrivant l'envoi d'un ordre de service : ServiceOrderSent, #615
+ * Classe décrivant l'envoi d'un ordre de service : InterventionDeadLineDefined,
+ * #625
  *
  * @author Thierry Baribaud
  * @version 0.33
  * @see http://performanceimmo.github.io/API/#ticketevent
  */
 @JsonIgnoreProperties({"_id", "eventTypeUid"})
-@JsonTypeName("ServiceOrderSent")
-public class ServiceOrderSent extends Event {
+@JsonTypeName("InterventionDeadLineDefined")
+public class InterventionDeadLineDefined extends Event {
 
     /**
      * Opérateur ayant ajouté l'essai
@@ -28,21 +29,16 @@ public class ServiceOrderSent extends Event {
     private Provider provider;
 
     /**
-     * Référence de l'ordre de service
+     * Date de fin des travaux
      */
-    private String ref;
-
-    /**
-     * Date à laquelle l'ordre de service a été envoyé
-     */
-    private String sendingDate;
+    private String deadline;
 
     /**
      * Constructeur de la classe ServiceOrderSent
      */
-    public ServiceOrderSent() {
-        setEventTypeUid(SERVICE_ORDER_SENT.getUid());
-        setEventType(SERVICE_ORDER_SENT.getName());
+    public InterventionDeadLineDefined() {
+        setEventTypeUid(INTERVENTION_DEADLINE_DEFINED.getUid());
+        setEventType(INTERVENTION_DEADLINE_DEFINED.getName());
     }
 
     /**
@@ -60,20 +56,6 @@ public class ServiceOrderSent extends Event {
     }
 
     /**
-     * @return la référence de l'ordre de service
-     */
-    public String getRef() {
-        return ref;
-    }
-
-    /**
-     * @param ref définit la référence de l'ordre de service
-     */
-    public void setRef(String ref) {
-        this.ref = ref;
-    }
-
-    /**
      * @return l'intervenant courant si présent
      */
     public Provider getProvider() {
@@ -88,32 +70,17 @@ public class ServiceOrderSent extends Event {
     }
 
     /**
-     * @return la date à laquelle l'événement a eu lieu
+     * @return la date de fin des travaux
      */
-    public String getReportDate() {
-        return getDate();
+    public String getDeadline() {
+        return deadline;
     }
 
     /**
-     * @param reportDate définit la date à laquelle l'événement a eu lieu
+     * @param deadline définit la date de fin des travaux
      */
-    public void setReportDate(String reportDate) {
-        setDate(reportDate);
-    }
-
-    /**
-     * @return la date à laquelle l'ordre de service a été envoyé
-     */
-    public String getSendingDate() {
-        return sendingDate;
-    }
-
-    /**
-     * @param sendingDate définit la date à laquelle l'ordre de service a été
-     * envoyé
-     */
-    public void setSendingDate(String sendingDate) {
-        this.sendingDate = sendingDate;
+    public void setDeadline(String deadline) {
+        this.deadline = deadline;
     }
 
     /**
@@ -121,13 +88,11 @@ public class ServiceOrderSent extends Event {
      */
     @Override
     public String toString() {
-        return "ServiceOrderSent:{"
+        return "InterventionDeadLineDefined:{"
                 + super.toString()
                 + ", " + getOperator()
                 + ", " + getProvider()
-                + ", ref:" + getRef()
-                + ", reportDate:" + getReportDate()
-                + ", sendingDate:" + getSendingDate()
+                + ", deadline:" + getDeadline()
                 + "}";
     }
 

@@ -2,19 +2,19 @@ package bkgpi2a;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonTypeName;
-import static bkgpi2a.EventType.SERVICE_ORDER_SENT;
+import static bkgpi2a.EventType.FORMAL_NOTICE_FOR_PROVIDER_REPORTED;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 /**
- * Classe décrivant l'envoi d'un ordre de service : ServiceOrderSent, #615
+ * Classe décrivant l'envoi d'un ordre de service : FormalNoticeForProviderReported, #620
  *
  * @author Thierry Baribaud
  * @version 0.33
  * @see http://performanceimmo.github.io/API/#ticketevent
  */
 @JsonIgnoreProperties({"_id", "eventTypeUid"})
-@JsonTypeName("ServiceOrderSent")
-public class ServiceOrderSent extends Event {
+@JsonTypeName("FormalNoticeForProviderReported")
+public class FormalNoticeForProviderReported extends Event {
 
     /**
      * Opérateur ayant ajouté l'essai
@@ -33,16 +33,16 @@ public class ServiceOrderSent extends Event {
     private String ref;
 
     /**
-     * Date à laquelle l'ordre de service a été envoyé
+     * Date de fin des travaux
      */
-    private String sendingDate;
+    private String deadline;
 
     /**
      * Constructeur de la classe ServiceOrderSent
      */
-    public ServiceOrderSent() {
-        setEventTypeUid(SERVICE_ORDER_SENT.getUid());
-        setEventType(SERVICE_ORDER_SENT.getName());
+    public FormalNoticeForProviderReported() {
+        setEventTypeUid(FORMAL_NOTICE_FOR_PROVIDER_REPORTED.getUid());
+        setEventType(FORMAL_NOTICE_FOR_PROVIDER_REPORTED.getName());
     }
 
     /**
@@ -102,18 +102,17 @@ public class ServiceOrderSent extends Event {
     }
 
     /**
-     * @return la date à laquelle l'ordre de service a été envoyé
+     * @return la date de fin des travaux
      */
-    public String getSendingDate() {
-        return sendingDate;
+    public String getDeadline() {
+        return deadline;
     }
 
     /**
-     * @param sendingDate définit la date à laquelle l'ordre de service a été
-     * envoyé
+     * @param deadline définit la date de fin des travaux
      */
-    public void setSendingDate(String sendingDate) {
-        this.sendingDate = sendingDate;
+    public void setDeadline(String deadline) {
+        this.deadline = deadline;
     }
 
     /**
@@ -121,13 +120,13 @@ public class ServiceOrderSent extends Event {
      */
     @Override
     public String toString() {
-        return "ServiceOrderSent:{"
+        return "FormalNoticeForProviderReported:{"
                 + super.toString()
                 + ", " + getOperator()
                 + ", " + getProvider()
                 + ", ref:" + getRef()
                 + ", reportDate:" + getReportDate()
-                + ", sendingDate:" + getSendingDate()
+                + ", deadline:" + getDeadline()
                 + "}";
     }
 

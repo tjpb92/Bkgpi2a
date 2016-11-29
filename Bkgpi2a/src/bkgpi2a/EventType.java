@@ -4,7 +4,7 @@ package bkgpi2a;
  * Enumération décrivant les identifiants et libellés des événements.
  *
  * @author Thierry Baribaud
- * @version 0.31
+ * @version 0.33
  */
 public enum EventType {
 
@@ -34,7 +34,10 @@ public enum EventType {
     CALL_NOT_ANSWERED_BY_PROVIDER("CallNotAnsweredByProvider", 605),
     MISSION_SCHEDULED("MissionScheduled", 610),
     SERVICE_ORDER_SENT("ServiceOrderSent", 615), // deprecated
-    SENDING_SERVICE_ORDER_REPORTED("SendingServiceOrderReported", 615);
+    SENDING_SERVICE_ORDER_REPORTED("SendingServiceOrderReported", 615),
+    FORMAL_NOTICE_FOR_PROVIDER_REPORTED("FormalNoticeForProviderReported", 620),
+    INTERVENTION_DEADLINE_DEFINED("InterventionDeadLineDefined", 625)
+    ;
 
     /**
      * Type d'événement

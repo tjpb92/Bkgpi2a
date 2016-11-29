@@ -6,15 +6,17 @@ import static bkgpi2a.EventType.SERVICE_ORDER_SENT;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 /**
- * Classe décrivant l'envoi d'un ordre de service : ServiceOrderSent, #615
+ * Classe décrivant l'envoi d'un ordre de service :
+ ServiceOrderSentOld, #615
  *
  * @author Thierry Baribaud
- * @version 0.33
+ * @version 0.31
  * @see http://performanceimmo.github.io/API/#ticketevent
+ * @deprecated le 25/11/16, remplacé par SendingServiceOrderReported
  */
 @JsonIgnoreProperties({"_id", "eventTypeUid"})
 @JsonTypeName("ServiceOrderSent")
-public class ServiceOrderSent extends Event {
+public class ServiceOrderSentOld extends Event {
 
     /**
      * Opérateur ayant ajouté l'essai
@@ -33,14 +35,16 @@ public class ServiceOrderSent extends Event {
     private String ref;
 
     /**
-     * Date à laquelle l'ordre de service a été envoyé
+     * Type d'envoi
+     * ATTENTION : à implémenter avec le type ServiceOrderKind ultérieurement
+     * @see http://performanceimmo.github.io/API/#serviceorderkind
      */
-    private String sendingDate;
-
+    private String kindOfSending;
+    
     /**
      * Constructeur de la classe ServiceOrderSent
      */
-    public ServiceOrderSent() {
+    public ServiceOrderSentOld() {
         setEventTypeUid(SERVICE_ORDER_SENT.getUid());
         setEventType(SERVICE_ORDER_SENT.getName());
     }
@@ -88,32 +92,17 @@ public class ServiceOrderSent extends Event {
     }
 
     /**
-     * @return la date à laquelle l'événement a eu lieu
+     * @return le type d'envoi
      */
-    public String getReportDate() {
-        return getDate();
+    public String getKindOfSending() {
+        return kindOfSending;
     }
 
     /**
-     * @param reportDate définit la date à laquelle l'événement a eu lieu
+     * @param kindOfSending définit le type d'envoi
      */
-    public void setReportDate(String reportDate) {
-        setDate(reportDate);
-    }
-
-    /**
-     * @return la date à laquelle l'ordre de service a été envoyé
-     */
-    public String getSendingDate() {
-        return sendingDate;
-    }
-
-    /**
-     * @param sendingDate définit la date à laquelle l'ordre de service a été
-     * envoyé
-     */
-    public void setSendingDate(String sendingDate) {
-        this.sendingDate = sendingDate;
+    public void setKindOfSending(String kindOfSending) {
+        this.kindOfSending = kindOfSending;
     }
 
     /**
@@ -126,8 +115,7 @@ public class ServiceOrderSent extends Event {
                 + ", " + getOperator()
                 + ", " + getProvider()
                 + ", ref:" + getRef()
-                + ", reportDate:" + getReportDate()
-                + ", sendingDate:" + getSendingDate()
+                + ", kindOfSending:" + getKindOfSending()
                 + "}";
     }
 
