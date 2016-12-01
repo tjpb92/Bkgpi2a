@@ -4,7 +4,7 @@ package bkgpi2a;
  * Enumération décrivant les identifiants et libellés des événements.
  *
  * @author Thierry Baribaud
- * @version 0.33
+ * @version 0.34
  */
 public enum EventType {
 
@@ -21,13 +21,14 @@ public enum EventType {
     PARTIALLY_FIXED("PartiallyFixed", 540),
     TICKET_CLOSED_IMPOSSIBLE_REPAIR("TicketClosedImpossibleRepair", 545),
     POSTPONED_FIX("PostponedFix", 550),
-    CLOSED_BEYOND_SCOPE("ClosedBeyondScope", 555),
-    CLOSED_UNSUCCESSFUL_RECALLS("ClosedUnsuccessfulRecalls", 560),
+    CLOSED_BEYOND_CALL_CENTER_SCOPE("ClosedBeyondCallCenterScope", 555),
+    CLOSED_AFTER_SEVERAL_UNSUCCESSFUL_RECALLS("ClosedAfterSeveralUnsuccessfulRecalls", 560),
     TICKET_CLOSED("TicketClosed", 561),
     LOG_TRIAL_ADDED("LogTrialAdded", 565),
     MESSAGE_ADDED("MessageAdded", 570),
     TICKET_REOPENED("TicketReopened", 575),
-    CALL_EMITTED_TO_USER("CallEmittedToUser", 580),
+    CALL_EMITTED_TO("CallEmittedTo", 580),
+    CALL_RECEIVED("CallReceived", 582),
     TICKET_CANCELED("TicketCanceled", 585),
     TICKET_ARCHIVED("TicketArchived", 590),
     CALL_ANSWERED_BY_PROVIDER("CallAnsweredByProvider", 600),
