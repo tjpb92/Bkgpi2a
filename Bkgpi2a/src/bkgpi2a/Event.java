@@ -8,7 +8,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
  * Classe abstraite décrivant un événément.
  *
  * @author Thierry Baribaud
- * @version 0.34
+ * @version 0.35
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME,
@@ -33,7 +33,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
     @JsonSubTypes.Type(value = ServiceOrderSent.class, name = "ServiceOrderSent"), // deprecated
     @JsonSubTypes.Type(value = SendingServiceOrderReported.class, name = "SendingServiceOrderReported"),
     @JsonSubTypes.Type(value = FormalNoticeForProviderReported.class, name = "FormalNoticeForProviderReported"),
-    @JsonSubTypes.Type(value = InterventionDeadLineDefined.class, name = "InterventionDeadLineDefined"),
+    @JsonSubTypes.Type(value = InterventionDeadlineDefined.class, name = "InterventionDeadlineDefined"),
     @JsonSubTypes.Type(value = MessageAdded.class, name = "MessageAdded"),
     @JsonSubTypes.Type(value = CallEmittedTo.class, name = "CallEmittedTo"),
     @JsonSubTypes.Type(value = CallReceived.class, name = "CallReceived"),

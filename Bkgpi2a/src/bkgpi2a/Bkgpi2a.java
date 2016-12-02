@@ -30,9 +30,76 @@ import utils.DBServerException;
  * de données MongoDB par rapport à une base de données Informix
  *
  * @author Thierry Baribaud.
- * @version 0.34
+ * @version 0.35
  */
 public class Bkgpi2a {
+
+    /**
+     * Classe interne pour stocker les résultats d'une requête SQL
+     */
+    private static class SqlResults {
+
+        private static int nbTrials = 0;
+        private static int errno = 0;
+        private static int isam = 0;
+        private static String errmsg = null;
+        private static int retcode = 0;
+
+        /**
+         * Constructeur principal de la classe SqlResults
+         * @param resultSet les résultats d'exécution d'une requête
+         */
+        public SqlResults(ResultSet resultSet) {
+
+            try {
+                errno = resultSet.getInt(3);
+                retcode = (errno == -243) ? -2 : resultSet.getInt(1);
+                nbTrials = resultSet.getInt(2);
+                isam = resultSet.getInt(4);
+                errmsg = resultSet.getString(5);
+            } catch (SQLException exception) {
+//                Logger.getLogger(Bkgpi2a.class.getName()).log(Level.SEVERE, null, ex);
+                System.out.println("ERROR : erreur dans la récupération des résultats de la requête SQL " + exception);
+            }
+        }
+
+        /**
+         * Ajoute les résultats d'exécution d'une requête à des résultats existants
+         * @param resultSet les résultats d'exécution d'une requête
+         */
+        public void add(ResultSet resultSet) {
+            try {
+                errno = resultSet.getInt(3);
+                retcode = (errno == -243) ? -2 : resultSet.getInt(1);
+                nbTrials += resultSet.getInt(2);
+                isam = resultSet.getInt(4);
+                errmsg = resultSet.getString(5);
+            } catch (SQLException exception) {
+//                Logger.getLogger(Bkgpi2a.class.getName()).log(Level.SEVERE, null, ex);
+                System.out.println("ERROR : erreur dans la récupération des résultats de la requête SQL " + exception);
+            }
+            
+        }
+        
+        /**
+         * Retourne le code d'erreur associé à l'exécution d'une requête SQL
+         *
+         * @return retourne le code d'erreur associé à l'exécution d'une requête
+         * SQL
+         */
+        public int getRetcode() {
+            return retcode;
+        }
+        
+        /**
+         * Retourne le nombre d'essais injectés
+         * 
+         * @return retourne le nombre d'essais injectés
+         */
+        public int getNbTrials() {
+            return nbTrials;
+        }
+    }
 
     /**
      * Pour convertir les datetimes du format texte au format DateTime
@@ -99,7 +166,6 @@ public class Bkgpi2a {
      */
     public Bkgpi2a(String[] args) throws IOException,
             DBServerException, GetArgsException, Exception {
-
         ApplicationProperties applicationProperties;
         DBServer mongoServer;
         DBServer informixServer;
@@ -162,6 +228,8 @@ public class Bkgpi2a {
         BasicDBObject orderBy;
         UpdateResult updateResult;
         int retcode = 0;
+        int nbError = 0;
+        int status = 0;
 
         objectMapper = new ObjectMapper();
 
@@ -180,11 +248,10 @@ public class Bkgpi2a {
                         + event.getEventType()
                         + ", processUid:" + event.getProcessUid()
                         + ", aggregateUid:" + event.getAggregateUid());
+                nbError = event.getNbError();
 
                 retcode = -1;   // Tout va mal par défaut :-(
-                if (event instanceof TicketOpened) {
-                    retcode = processTicketOpened(informixConnection, (TicketOpened) event);
-                } else if (event instanceof ProviderAssigned) {
+                if (event instanceof ProviderAssigned) {
                     retcode = processProviderAssigned(informixConnection, (ProviderAssigned) event);
                 } else if (event instanceof MessageAdded) {
                     retcode = processMessageAdded(informixConnection, (MessageAdded) event);
@@ -206,39 +273,53 @@ public class Bkgpi2a {
                     retcode = processTicketClosedImpossibleRepair(informixConnection, (TicketClosedImpossibleRepair) event);
                 } else if (event instanceof PostponedFix) {
                     retcode = processPostponedFix(informixConnection, (PostponedFix) event);
-                } else if (event instanceof LogTrialAdded) {
-                    retcode = processLogTrialAdded(informixConnection, (LogTrialAdded) event);
                 } else if (event instanceof FormalNoticeForProviderReported) {
                     retcode = processFormalNoticeForProviderReported(informixConnection, (FormalNoticeForProviderReported) event);
-                } else if (event instanceof InterventionDeadLineDefined) {
-                    retcode = processInterventionDeadLineDefined(informixConnection, (InterventionDeadLineDefined) event);
-                } else if (event instanceof ServiceOrderSent) {
-                    retcode = processServiceOrderSent(informixConnection, (ServiceOrderSent) event);
-                } else if (event instanceof TicketArchived) {
-                    retcode = processTicketArchived(informixConnection, (TicketArchived) event);
-                } else if (event instanceof TicketCancelled) {
-                    retcode = processTicketCancelled(informixConnection, (TicketCancelled) event);
-                } else if (event instanceof ClosedAfterSeveralUnsuccessfulRecalls) {
-                    retcode = processClosedAfterSeveralUnsuccessfulRecalls(informixConnection, (ClosedAfterSeveralUnsuccessfulRecalls) event);
-                } else if (event instanceof ClosedBeyondCallCenterScope) {
-                    retcode = processClosedBeyondCallCenterScope(informixConnection, (ClosedBeyondCallCenterScope) event);
-                } else if (event instanceof CallAnsweredByProvider) {
-                    retcode = processCallAnsweredByProvider(informixConnection, (CallAnsweredByProvider) event);
-                } else if (event instanceof CallNotAnsweredByProvider) {
-                    retcode = processCallNotAnsweredByProvider(informixConnection, (CallNotAnsweredByProvider) event);
-                } else if (event instanceof CallReceived) {
-                    retcode = processCallReceived(informixConnection, (CallReceived) event);
-                } else if (event instanceof CallEmittedTo) {
-                    retcode = processCallEmittedTo(informixConnection, (CallEmittedTo) event);
-                } else if (event instanceof TicketUpdated) {
-                    retcode = processTicketUpdated(informixConnection, (TicketUpdated) event);
+                } else if (event instanceof InterventionDeadlineDefined) {
+                    retcode = processInterventionDeadlineDefined(informixConnection, (InterventionDeadlineDefined) event);
+//                } else if (event instanceof LogTrialAdded) {
+//                    retcode = processLogTrialAdded(informixConnection, (LogTrialAdded) event);
+//                } else if (event instanceof TicketOpened) {
+//                    retcode = processTicketOpened(informixConnection, (TicketOpened) event);
+//                } else if (event instanceof TicketArchived) {
+//                    retcode = processTicketArchived(informixConnection, (TicketArchived) event);
+//                } else if (event instanceof TicketCancelled) {
+//                    retcode = processTicketCancelled(informixConnection, (TicketCancelled) event);
+//                } else if (event instanceof ClosedAfterSeveralUnsuccessfulRecalls) {
+//                    retcode = processClosedAfterSeveralUnsuccessfulRecalls(informixConnection, (ClosedAfterSeveralUnsuccessfulRecalls) event);
+//                } else if (event instanceof ClosedBeyondCallCenterScope) {
+//                    retcode = processClosedBeyondCallCenterScope(informixConnection, (ClosedBeyondCallCenterScope) event);
+//                } else if (event instanceof CallAnsweredByProvider) {
+//                    retcode = processCallAnsweredByProvider(informixConnection, (CallAnsweredByProvider) event);
+//                } else if (event instanceof CallNotAnsweredByProvider) {
+//                    retcode = processCallNotAnsweredByProvider(informixConnection, (CallNotAnsweredByProvider) event);
+//                } else if (event instanceof CallReceived) {
+//                    retcode = processCallReceived(informixConnection, (CallReceived) event);
+//                } else if (event instanceof CallEmittedTo) {
+//                    retcode = processCallEmittedTo(informixConnection, (CallEmittedTo) event);
+//                } else if (event instanceof TicketUpdated) {
+//                    retcode = processTicketUpdated(informixConnection, (TicketUpdated) event);
                 } else {
                     System.out.println("ERROR : Unknown/unprocessed event:" + event + ", class:" + event.getClass().getSimpleName());
                 }
                 System.out.println("  retcode:" + retcode);
 
+                switch (retcode) {
+                    case 1:         // Succès
+                        status = 1;
+                        break;
+                    case -2:        // Conflit d'accès
+                        status = 0;
+                        nbError++;
+                        break;
+                    default:        // Erreur
+                        status = -1;
+                        nbError++;
+                        break;
+                }
+
                 filter2 = new BasicDBObject("processUid", event.getProcessUid());
-                updateResult = collection.updateOne(filter2, new BasicDBObject("$set", new BasicDBObject("status", retcode)));
+                updateResult = collection.updateOne(filter2, new BasicDBObject("$set", new BasicDBObject("status", status).append("nbError", nbError)));
                 if (updateResult.getMatchedCount() > 0) {
                     System.out.println("  updateResult:" + updateResult);
                 }
@@ -256,19 +337,18 @@ public class Bkgpi2a {
      * @param ProviderAssigned événement à traiter
      * @return code de retour : 1=Succès, 0=ne rien faire, -1=erreur
      */
-    private int processCallReceived(Connection informixConnection, CallReceived callReceived) {
-        int nbTrials = 0;
-        int errno = 0;
-        int isam = 0;
-        String errmsg = null;
-
-        int retcode = -1;
-
-        System.out.println("      CallReceived:{retcode:" + retcode + ", nbTrials:" + nbTrials + "}");
-
-        return retcode;
-    }
-
+//    private int processCallReceived(Connection informixConnection, CallReceived callReceived) {
+//        int nbTrials = 0;
+//        int errno = 0;
+//        int isam = 0;
+//        String errmsg = null;
+//
+//        int retcode = -1;
+//
+//        System.out.println("      CallReceived:{retcode:" + retcode + ", nbTrials:" + nbTrials + "}");
+//
+//        return retcode;
+//    }
     /**
      * Traite l'événement CallEmittedTo sur un ticket
      *
@@ -276,19 +356,18 @@ public class Bkgpi2a {
      * @param ProviderAssigned événement à traiter
      * @return code de retour : 1=Succès, 0=ne rien faire, -1=erreur
      */
-    private int processCallEmittedTo(Connection informixConnection, CallEmittedTo callEmittedTo) {
-        int nbTrials = 0;
-        int errno = 0;
-        int isam = 0;
-        String errmsg = null;
-
-        int retcode = -1;
-
-        System.out.println("      CallEmittedTo:{retcode:" + retcode + ", nbTrials:" + nbTrials + "}");
-
-        return retcode;
-    }
-
+//    private int processCallEmittedTo(Connection informixConnection, CallEmittedTo callEmittedTo) {
+//        int nbTrials = 0;
+//        int errno = 0;
+//        int isam = 0;
+//        String errmsg = null;
+//
+//        int retcode = -1;
+//
+//        System.out.println("      CallEmittedTo:{retcode:" + retcode + ", nbTrials:" + nbTrials + "}");
+//
+//        return retcode;
+//    }
     /**
      * Traite l'événement CallAnsweredByProvider sur un ticket
      *
@@ -296,19 +375,18 @@ public class Bkgpi2a {
      * @param ProviderAssigned événement à traiter
      * @return code de retour : 1=Succès, 0=ne rien faire, -1=erreur
      */
-    private int processCallAnsweredByProvider(Connection informixConnection, CallAnsweredByProvider callAnsweredByProvider) {
-        int nbTrials = 0;
-        int errno = 0;
-        int isam = 0;
-        String errmsg = null;
-
-        int retcode = -1;
-
-        System.out.println("      CallAnsweredByProvider:{retcode:" + retcode + ", nbTrials:" + nbTrials + "}");
-
-        return retcode;
-    }
-
+//    private int processCallAnsweredByProvider(Connection informixConnection, CallAnsweredByProvider callAnsweredByProvider) {
+//        int nbTrials = 0;
+//        int errno = 0;
+//        int isam = 0;
+//        String errmsg = null;
+//
+//        int retcode = -1;
+//
+//        System.out.println("      CallAnsweredByProvider:{retcode:" + retcode + ", nbTrials:" + nbTrials + "}");
+//
+//        return retcode;
+//    }
     /**
      * Traite l'événement CallNotAnsweredByProvider sur un ticket
      *
@@ -316,19 +394,18 @@ public class Bkgpi2a {
      * @param ProviderAssigned événement à traiter
      * @return code de retour : 1=Succès, 0=ne rien faire, -1=erreur
      */
-    private int processCallNotAnsweredByProvider(Connection informixConnection, CallNotAnsweredByProvider callNotAnsweredByProvider) {
-        int nbTrials = 0;
-        int errno = 0;
-        int isam = 0;
-        String errmsg = null;
-
-        int retcode = -1;
-
-        System.out.println("      CallNotAnsweredByProvider:{retcode:" + retcode + ", nbTrials:" + nbTrials + "}");
-
-        return retcode;
-    }
-
+//    private int processCallNotAnsweredByProvider(Connection informixConnection, CallNotAnsweredByProvider callNotAnsweredByProvider) {
+//        int nbTrials = 0;
+//        int errno = 0;
+//        int isam = 0;
+//        String errmsg = null;
+//
+//        int retcode = -1;
+//
+//        System.out.println("      CallNotAnsweredByProvider:{retcode:" + retcode + ", nbTrials:" + nbTrials + "}");
+//
+//        return retcode;
+//    }
     /**
      * Traite l'événement ClosedAfterSeveralUnsuccessfulRecalls sur un ticket
      *
@@ -336,19 +413,18 @@ public class Bkgpi2a {
      * @param ProviderAssigned événement à traiter
      * @return code de retour : 1=Succès, 0=ne rien faire, -1=erreur
      */
-    private int processClosedAfterSeveralUnsuccessfulRecalls(Connection informixConnection, ClosedAfterSeveralUnsuccessfulRecalls closedAfterSeveralUnsuccessfulRecalls) {
-        int nbTrials = 0;
-        int errno = 0;
-        int isam = 0;
-        String errmsg = null;
-
-        int retcode = -1;
-
-        System.out.println("      ClosedAfterSeveralUnsuccessfulRecalls:{retcode:" + retcode + ", nbTrials:" + nbTrials + "}");
-
-        return retcode;
-    }
-
+//    private int processClosedAfterSeveralUnsuccessfulRecalls(Connection informixConnection, ClosedAfterSeveralUnsuccessfulRecalls closedAfterSeveralUnsuccessfulRecalls) {
+//        int nbTrials = 0;
+//        int errno = 0;
+//        int isam = 0;
+//        String errmsg = null;
+//
+//        int retcode = -1;
+//
+//        System.out.println("      ClosedAfterSeveralUnsuccessfulRecalls:{retcode:" + retcode + ", nbTrials:" + nbTrials + "}");
+//
+//        return retcode;
+//    }
     /**
      * Traite l'événement ClosedBeyondCallCenterScope sur un ticket
      *
@@ -356,19 +432,18 @@ public class Bkgpi2a {
      * @param ProviderAssigned événement à traiter
      * @return code de retour : 1=Succès, 0=ne rien faire, -1=erreur
      */
-    private int processClosedBeyondCallCenterScope(Connection informixConnection, ClosedBeyondCallCenterScope closedBeyondCallCenterScope) {
-        int nbTrials = 0;
-        int errno = 0;
-        int isam = 0;
-        String errmsg = null;
-
-        int retcode = -1;
-
-        System.out.println("      ClosedBeyondCallCenterScope:{retcode:" + retcode + ", nbTrials:" + nbTrials + "}");
-
-        return retcode;
-    }
-
+//    private int processClosedBeyondCallCenterScope(Connection informixConnection, ClosedBeyondCallCenterScope closedBeyondCallCenterScope) {
+//        int nbTrials = 0;
+//        int errno = 0;
+//        int isam = 0;
+//        String errmsg = null;
+//
+//        int retcode = -1;
+//
+//        System.out.println("      ClosedBeyondCallCenterScope:{retcode:" + retcode + ", nbTrials:" + nbTrials + "}");
+//
+//        return retcode;
+//    }
     /**
      * Traite l'événement TicketArchived sur un ticket
      *
@@ -376,19 +451,18 @@ public class Bkgpi2a {
      * @param ProviderAssigned événement à traiter
      * @return code de retour : 1=Succès, 0=ne rien faire, -1=erreur
      */
-    private int processTicketArchived(Connection informixConnection, TicketArchived ticketArchived) {
-        int nbTrials = 0;
-        int errno = 0;
-        int isam = 0;
-        String errmsg = null;
-
-        int retcode = -1;
-
-        System.out.println("      TicketArchived:{retcode:" + retcode + ", nbTrials:" + nbTrials + "}");
-
-        return retcode;
-    }
-
+//    private int processTicketArchived(Connection informixConnection, TicketArchived ticketArchived) {
+//        int nbTrials = 0;
+//        int errno = 0;
+//        int isam = 0;
+//        String errmsg = null;
+//
+//        int retcode = -1;
+//
+//        System.out.println("      TicketArchived:{retcode:" + retcode + ", nbTrials:" + nbTrials + "}");
+//
+//        return retcode;
+//    }
     /**
      * Traite l'événement TicketCancelled sur un ticket
      *
@@ -396,39 +470,18 @@ public class Bkgpi2a {
      * @param ProviderAssigned événement à traiter
      * @return code de retour : 1=Succès, 0=ne rien faire, -1=erreur
      */
-    private int processTicketCancelled(Connection informixConnection, TicketCancelled ticketCancelled) {
-        int nbTrials = 0;
-        int errno = 0;
-        int isam = 0;
-        String errmsg = null;
-
-        int retcode = -1;
-
-        System.out.println("      TicketCancelled:{retcode:" + retcode + ", nbTrials:" + nbTrials + "}");
-
-        return retcode;
-    }
-
-    /**
-     * Traite l'événement ServiceOrderSent sur un ticket
-     *
-     * @param informixConnection connection à la base de données Informix locale
-     * @param ProviderAssigned événement à traiter
-     * @return code de retour : 1=Succès, 0=ne rien faire, -1=erreur
-     */
-    private int processServiceOrderSent(Connection informixConnection, ServiceOrderSent serviceOrderSent) {
-        int nbTrials = 0;
-        int errno = 0;
-        int isam = 0;
-        String errmsg = null;
-
-        int retcode = -1;
-
-        System.out.println("      ServiceOrderSent:{retcode:" + retcode + ", nbTrials:" + nbTrials + "}");
-
-        return retcode;
-    }
-
+//    private int processTicketCancelled(Connection informixConnection, TicketCancelled ticketCancelled) {
+//        int nbTrials = 0;
+//        int errno = 0;
+//        int isam = 0;
+//        String errmsg = null;
+//
+//        int retcode = -1;
+//
+//        System.out.println("      TicketCancelled:{retcode:" + retcode + ", nbTrials:" + nbTrials + "}");
+//
+//        return retcode;
+//    }
     /**
      * Traite l'événement TicketOpened sur un ticket
      *
@@ -436,19 +489,18 @@ public class Bkgpi2a {
      * @param ProviderAssigned événement à traiter
      * @return code de retour : 1=Succès, 0=ne rien faire, -1=erreur
      */
-    private int processTicketOpened(Connection informixConnection, TicketOpened ticketOpened) {
-        int nbTrials = 0;
-        int errno = 0;
-        int isam = 0;
-        String errmsg = null;
-
-        int retcode = -1;
-
-        System.out.println("      TicketOpened:{retcode:" + retcode + ", nbTrials:" + nbTrials + "}");
-
-        return retcode;
-    }
-
+//    private int processTicketOpened(Connection informixConnection, TicketOpened ticketOpened) {
+//        int nbTrials = 0;
+//        int errno = 0;
+//        int isam = 0;
+//        String errmsg = null;
+//
+//        int retcode = -1;
+//
+//        System.out.println("      TicketOpened:{retcode:" + retcode + ", nbTrials:" + nbTrials + "}");
+//
+//        return retcode;
+//    }
     /**
      * Traite l'événement InterventionStarted sur un ticket
      *
@@ -464,6 +516,7 @@ public class Bkgpi2a {
         int errno = 0;
         int isam = 0;
         String errmsg = null;
+        SqlResults sqlResults;
 
         int retcode = 0;
 
@@ -481,11 +534,14 @@ public class Bkgpi2a {
             preparedStatement.setInt(8, 0);
             resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
-                retcode = resultSet.getInt(1);
-                nbTrials = resultSet.getInt(2);
-                errno = resultSet.getInt(3);
-                isam = resultSet.getInt(4);
-                errmsg = resultSet.getString(5);
+                sqlResults = new SqlResults(resultSet);
+                retcode = sqlResults.getRetcode();
+                nbTrials = sqlResults.getNbTrials();
+//                retcode = resultSet.getInt(1);
+//                nbTrials = resultSet.getInt(2);
+//                errno = resultSet.getInt(3);
+//                isam = resultSet.getInt(4);
+//                errmsg = resultSet.getString(5);
             }
             resultSet.close();
 
@@ -519,6 +575,7 @@ public class Bkgpi2a {
         int errno = 0;
         int isam = 0;
         String errmsg = null;
+        SqlResults sqlResults;
 
         int retcode = 0;
 
@@ -546,11 +603,14 @@ public class Bkgpi2a {
             preparedStatement.setInt(8, 0);
             resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
-                retcode = resultSet.getInt(1);
-                nbTrials = resultSet.getInt(2);
-                errno = resultSet.getInt(3);
-                isam = resultSet.getInt(4);
-                errmsg = resultSet.getString(5);
+                sqlResults = new SqlResults(resultSet);
+                retcode = sqlResults.getRetcode();
+                nbTrials = sqlResults.getNbTrials();
+//                retcode = resultSet.getInt(1);
+//                nbTrials = resultSet.getInt(2);
+//                errno = resultSet.getInt(3);
+//                isam = resultSet.getInt(4);
+//                errmsg = resultSet.getString(5);
             }
             resultSet.close();
             preparedStatement.close();
@@ -565,13 +625,13 @@ public class Bkgpi2a {
     }
 
     /**
-     * Traite l'événement InterventionDeadLineDefined sur un ticket
+     * Traite l'événement InterventionDeadlineDefined sur un ticket
      *
      * @param informixConnection connection à la base de données Informix locale
      * @param ProviderAssigned événement à traiter
      * @return code de retour : 1=Succès, 0=ne rien faire, -1=erreur
      */
-    private int processInterventionDeadLineDefined(Connection informixConnection, InterventionDeadLineDefined interventionDeadLineDefined) {
+    private int processInterventionDeadlineDefined(Connection informixConnection, InterventionDeadlineDefined interventionDeadlineDefined) {
         PreparedStatement preparedStatement;
         ResultSet resultSet;
         DateTime dateTime;
@@ -581,33 +641,37 @@ public class Bkgpi2a {
         int errno = 0;
         int isam = 0;
         String errmsg = null;
+        SqlResults sqlResults;
 
         int retcode = 0;
 
         try {
             preparedStatement = informixConnection.prepareStatement("{call addLogTrial(?, ?, ?, ?, ?, ?, ?, ?)}");
-            preparedStatement.setString(1, interventionDeadLineDefined.getAggregateUid());
-            provider = interventionDeadLineDefined.getProvider();
+            preparedStatement.setString(1, interventionDeadlineDefined.getAggregateUid());
+            provider = interventionDeadlineDefined.getProvider();
             if (provider instanceof ReferencedProvider) {
                 preparedStatement.setString(2, ((ReferencedProvider) provider).getProviderUid());
             } else {
                 preparedStatement.setNull(2, java.sql.Types.INTEGER);
             }
             preparedStatement.setInt(3, 305);
-            dateTime = isoDateTimeFormat.parseDateTime(interventionDeadLineDefined.getDeadline());
-            preparedStatement.setString(4, "Date butoir intervention " + dateTime.toString(ddmmyy));
-            dateTime = isoDateTimeFormat.parseDateTime(interventionDeadLineDefined.getDate());
+            dateTime = isoDateTimeFormat.parseDateTime(interventionDeadlineDefined.getDeadline());
+            preparedStatement.setString(4, dateTime.toString(ddmmyy));
+            dateTime = isoDateTimeFormat.parseDateTime(interventionDeadlineDefined.getDate());
             preparedStatement.setTimestamp(5, new Timestamp(dateTime.getMillis()));
             preparedStatement.setInt(6, onum);
             preparedStatement.setInt(7, 0);
             preparedStatement.setInt(8, 0);
             resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
-                retcode = resultSet.getInt(1);
-                nbTrials = resultSet.getInt(2);
-                errno = resultSet.getInt(3);
-                isam = resultSet.getInt(4);
-                errmsg = resultSet.getString(5);
+                sqlResults = new SqlResults(resultSet);
+                retcode = sqlResults.getRetcode();
+                nbTrials = sqlResults.getNbTrials();
+//                retcode = resultSet.getInt(1);
+//                nbTrials = resultSet.getInt(2);
+//                errno = resultSet.getInt(3);
+//                isam = resultSet.getInt(4);
+//                errmsg = resultSet.getString(5);
             }
             resultSet.close();
             preparedStatement.close();
@@ -616,7 +680,7 @@ public class Bkgpi2a {
             retcode = -1;
         }
 
-        System.out.println("      InterventionDeadLineDefined:{retcode:" + retcode + ", nbTrials:" + nbTrials + "}");
+        System.out.println("      InterventionDeadlineDefined:{retcode:" + retcode + ", nbTrials:" + nbTrials + "}");
 
         return retcode;
     }
@@ -638,6 +702,7 @@ public class Bkgpi2a {
         int errno = 0;
         int isam = 0;
         String errmsg = null;
+        SqlResults sqlResults;
 
         int retcode = 0;
 
@@ -661,11 +726,14 @@ public class Bkgpi2a {
             preparedStatement.setInt(8, 0);
             resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
-                retcode = resultSet.getInt(1);
-                nbTrials = resultSet.getInt(2);
-                errno = resultSet.getInt(3);
-                isam = resultSet.getInt(4);
-                errmsg = resultSet.getString(5);
+                sqlResults = new SqlResults(resultSet);
+                retcode = sqlResults.getRetcode();
+                nbTrials = sqlResults.getNbTrials();
+//                retcode = resultSet.getInt(1);
+//                nbTrials = resultSet.getInt(2);
+//                errno = resultSet.getInt(3);
+//                isam = resultSet.getInt(4);
+//                errmsg = resultSet.getString(5);
             }
             resultSet.close();
             preparedStatement.close();
@@ -694,6 +762,7 @@ public class Bkgpi2a {
         int errno = 0;
         int isam = 0;
         String errmsg = null;
+        SqlResults sqlResults;
 
         int retcode = 0;
 
@@ -711,11 +780,14 @@ public class Bkgpi2a {
             preparedStatement.setInt(8, 0);
             resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
-                retcode = resultSet.getInt(1);
-                nbTrials = resultSet.getInt(2);
-                errno = resultSet.getInt(3);
-                isam = resultSet.getInt(4);
-                errmsg = resultSet.getString(5);
+                sqlResults = new SqlResults(resultSet);
+                retcode = sqlResults.getRetcode();
+                nbTrials = sqlResults.getNbTrials();
+//                retcode = resultSet.getInt(1);
+//                nbTrials = resultSet.getInt(2);
+//                errno = resultSet.getInt(3);
+//                isam = resultSet.getInt(4);
+//                errmsg = resultSet.getString(5);
             }
             resultSet.close();
 
@@ -737,19 +809,18 @@ public class Bkgpi2a {
      * @param ProviderAssigned événement à traiter
      * @return code de retour : 1=Succès, 0=ne rien faire, -1=erreur
      */
-    private int processLogTrialAdded(Connection informixConnection, LogTrialAdded logTrialAdded) {
-        int nbTrials = 0;
-        int errno = 0;
-        int isam = 0;
-        String errmsg = null;
-
-        int retcode = -1;
-
-        System.out.println("      LogTrialAdded:{retcode:" + retcode + ", nbTrials:" + nbTrials + "}");
-
-        return retcode;
-    }
-
+//    private int processLogTrialAdded(Connection informixConnection, LogTrialAdded logTrialAdded) {
+//        int nbTrials = 0;
+//        int errno = 0;
+//        int isam = 0;
+//        String errmsg = null;
+//
+//        int retcode = -1;
+//
+//        System.out.println("      LogTrialAdded:{retcode:" + retcode + ", nbTrials:" + nbTrials + "}");
+//
+//        return retcode;
+//    }
     /**
      * Traite l'événement TicketUpdated sur un ticket
      *
@@ -757,19 +828,18 @@ public class Bkgpi2a {
      * @param ProviderAssigned événement à traiter
      * @return code de retour : 1=Succès, 0=ne rien faire, -1=erreur
      */
-    private int processTicketUpdated(Connection informixConnection, TicketUpdated ticketUpdated) {
-        int nbTrials = 0;
-        int errno = 0;
-        int isam = 0;
-        String errmsg = null;
-
-        int retcode = -1;
-
-        System.out.println("      TicketUpdated:{retcode:" + retcode + ", nbTrials:" + nbTrials + "}");
-
-        return retcode;
-    }
-
+//    private int processTicketUpdated(Connection informixConnection, TicketUpdated ticketUpdated) {
+//        int nbTrials = 0;
+//        int errno = 0;
+//        int isam = 0;
+//        String errmsg = null;
+//
+//        int retcode = -1;
+//
+//        System.out.println("      TicketUpdated:{retcode:" + retcode + ", nbTrials:" + nbTrials + "}");
+//
+//        return retcode;
+//    }
     /**
      * Traite l'événement PermanentlyFixed sur un ticket
      *
@@ -787,6 +857,7 @@ public class Bkgpi2a {
         int errno = 0;
         int isam = 0;
         String errmsg = null;
+        SqlResults sqlResults = null;
 
         int retcode = 0;
 
@@ -803,11 +874,14 @@ public class Bkgpi2a {
             preparedStatement.setInt(8, 1);
             resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
-                retcode = resultSet.getInt(1);
-                nbTrials = resultSet.getInt(2);
-                errno = resultSet.getInt(3);
-                isam = resultSet.getInt(4);
-                errmsg = resultSet.getString(5);
+                sqlResults = new SqlResults(resultSet);
+                retcode = sqlResults.getRetcode();
+                nbTrials = sqlResults.getNbTrials();
+//                retcode = resultSet.getInt(1);
+//                nbTrials = resultSet.getInt(2);
+//                errno = resultSet.getInt(3);
+//                isam = resultSet.getInt(4);
+//                errmsg = resultSet.getString(5);
             }
             resultSet.close();
 
@@ -817,11 +891,14 @@ public class Bkgpi2a {
                     preparedStatement.setString(4, message);
                     resultSet = preparedStatement.executeQuery();
                     if (resultSet.next()) {
-                        retcode = resultSet.getInt(1);
-                        nbTrials += resultSet.getInt(2);
-                        errno = resultSet.getInt(3);
-                        isam = resultSet.getInt(4);
-                        errmsg = resultSet.getString(5);
+                        sqlResults.add(resultSet);
+                        retcode = sqlResults.getRetcode();
+                         nbTrials = sqlResults.getNbTrials();
+//                        retcode = resultSet.getInt(1);
+//                        nbTrials += resultSet.getInt(2);
+//                        errno = resultSet.getInt(3);
+//                        isam = resultSet.getInt(4);
+//                        errmsg = resultSet.getString(5);
                     }
                     resultSet.close();
                 }
@@ -844,11 +921,14 @@ public class Bkgpi2a {
                     preparedStatement.setString(4, message);
                     resultSet = preparedStatement.executeQuery();
                     if (resultSet.next()) {
-                        retcode = resultSet.getInt(1);
-                        nbTrials += resultSet.getInt(2);
-                        errno = resultSet.getInt(3);
-                        isam = resultSet.getInt(4);
-                        errmsg = resultSet.getString(5);
+                        sqlResults.add(resultSet);
+                        retcode = sqlResults.getRetcode();
+                        nbTrials = sqlResults.getNbTrials();
+//                        retcode = resultSet.getInt(1);
+//                        nbTrials += resultSet.getInt(2);
+//                        errno = resultSet.getInt(3);
+//                        isam = resultSet.getInt(4);
+//                        errmsg = resultSet.getString(5);
                     }
                     resultSet.close();
                 }
@@ -882,6 +962,7 @@ public class Bkgpi2a {
         int errno = 0;
         int isam = 0;
         String errmsg = null;
+        SqlResults sqlResults = null;
 
         int retcode = 0;
 
@@ -898,11 +979,14 @@ public class Bkgpi2a {
             preparedStatement.setInt(8, 1);
             resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
-                retcode = resultSet.getInt(1);
-                nbTrials = resultSet.getInt(2);
-                errno = resultSet.getInt(3);
-                isam = resultSet.getInt(4);
-                errmsg = resultSet.getString(5);
+                sqlResults = new SqlResults(resultSet);
+                retcode = sqlResults.getRetcode();
+                nbTrials = sqlResults.getNbTrials();
+//                retcode = resultSet.getInt(1);
+//                nbTrials += resultSet.getInt(2);
+//                errno = resultSet.getInt(3);
+//                isam = resultSet.getInt(4);
+//                errmsg = resultSet.getString(5);
             }
             resultSet.close();
 
@@ -912,11 +996,14 @@ public class Bkgpi2a {
                     preparedStatement.setString(4, message);
                     resultSet = preparedStatement.executeQuery();
                     if (resultSet.next()) {
-                        retcode = resultSet.getInt(1);
-                        nbTrials += resultSet.getInt(2);
-                        errno = resultSet.getInt(3);
-                        isam = resultSet.getInt(4);
-                        errmsg = resultSet.getString(5);
+                        sqlResults.add(resultSet);
+                        retcode = sqlResults.getRetcode();
+                        nbTrials = sqlResults.getNbTrials();
+//                        retcode = resultSet.getInt(1);
+//                        nbTrials += resultSet.getInt(2);
+//                        errno = resultSet.getInt(3);
+//                        isam = resultSet.getInt(4);
+//                        errmsg = resultSet.getString(5);
                     }
                     resultSet.close();
                 }
@@ -939,11 +1026,14 @@ public class Bkgpi2a {
                     preparedStatement.setString(4, message);
                     resultSet = preparedStatement.executeQuery();
                     if (resultSet.next()) {
-                        retcode = resultSet.getInt(1);
-                        nbTrials += resultSet.getInt(2);
-                        errno = resultSet.getInt(3);
-                        isam = resultSet.getInt(4);
-                        errmsg = resultSet.getString(5);
+                        sqlResults.add(resultSet);
+                        retcode = sqlResults.getRetcode();
+                        nbTrials = sqlResults.getNbTrials();
+//                        retcode = resultSet.getInt(1);
+//                        nbTrials += resultSet.getInt(2);
+//                        errno = resultSet.getInt(3);
+//                        isam = resultSet.getInt(4);
+//                        errmsg = resultSet.getString(5);
                     }
                     resultSet.close();
                 }
@@ -977,6 +1067,7 @@ public class Bkgpi2a {
         int errno = 0;
         int isam = 0;
         String errmsg = null;
+        SqlResults sqlResults = null;
 
         int retcode = 0;
 
@@ -993,11 +1084,14 @@ public class Bkgpi2a {
             preparedStatement.setInt(8, 1);
             resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
-                retcode = resultSet.getInt(1);
-                nbTrials = resultSet.getInt(2);
-                errno = resultSet.getInt(3);
-                isam = resultSet.getInt(4);
-                errmsg = resultSet.getString(5);
+                sqlResults = new SqlResults(resultSet);
+                retcode = sqlResults.getRetcode();
+                nbTrials = sqlResults.getNbTrials();
+//                retcode = resultSet.getInt(1);
+//                nbTrials += resultSet.getInt(2);
+//                errno = resultSet.getInt(3);
+//                isam = resultSet.getInt(4);
+//                errmsg = resultSet.getString(5);
             }
             resultSet.close();
 
@@ -1007,11 +1101,14 @@ public class Bkgpi2a {
                     preparedStatement.setString(4, message);
                     resultSet = preparedStatement.executeQuery();
                     if (resultSet.next()) {
-                        retcode = resultSet.getInt(1);
-                        nbTrials += resultSet.getInt(2);
-                        errno = resultSet.getInt(3);
-                        isam = resultSet.getInt(4);
-                        errmsg = resultSet.getString(5);
+                        sqlResults.add(resultSet);
+                        retcode = sqlResults.getRetcode();
+                        nbTrials = sqlResults.getNbTrials();
+//                        retcode = resultSet.getInt(1);
+//                        nbTrials += resultSet.getInt(2);
+//                        errno = resultSet.getInt(3);
+//                        isam = resultSet.getInt(4);
+//                        errmsg = resultSet.getString(5);
                     }
                     resultSet.close();
                 }
@@ -1034,11 +1131,14 @@ public class Bkgpi2a {
                     preparedStatement.setString(4, message);
                     resultSet = preparedStatement.executeQuery();
                     if (resultSet.next()) {
-                        retcode = resultSet.getInt(1);
-                        nbTrials += resultSet.getInt(2);
-                        errno = resultSet.getInt(3);
-                        isam = resultSet.getInt(4);
-                        errmsg = resultSet.getString(5);
+                        sqlResults.add(resultSet);
+                        retcode = sqlResults.getRetcode();
+                        nbTrials = sqlResults.getNbTrials();
+//                        retcode = resultSet.getInt(1);
+//                        nbTrials += resultSet.getInt(2);
+//                        errno = resultSet.getInt(3);
+//                        isam = resultSet.getInt(4);
+//                        errmsg = resultSet.getString(5);
                     }
                     resultSet.close();
                 }
@@ -1072,6 +1172,7 @@ public class Bkgpi2a {
         int errno = 0;
         int isam = 0;
         String errmsg = null;
+        SqlResults sqlResults = null;
 
         int retcode = 0;
 
@@ -1088,11 +1189,14 @@ public class Bkgpi2a {
             preparedStatement.setInt(8, 1);
             resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
-                retcode = resultSet.getInt(1);
-                nbTrials = resultSet.getInt(2);
-                errno = resultSet.getInt(3);
-                isam = resultSet.getInt(4);
-                errmsg = resultSet.getString(5);
+                sqlResults = new SqlResults(resultSet);
+                retcode = sqlResults.getRetcode();
+                nbTrials = sqlResults.getNbTrials();
+//                retcode = resultSet.getInt(1);
+//                nbTrials += resultSet.getInt(2);
+//                errno = resultSet.getInt(3);
+//                isam = resultSet.getInt(4);
+//                errmsg = resultSet.getString(5);
             }
             resultSet.close();
 
@@ -1102,11 +1206,14 @@ public class Bkgpi2a {
                     preparedStatement.setString(4, message);
                     resultSet = preparedStatement.executeQuery();
                     if (resultSet.next()) {
-                        retcode = resultSet.getInt(1);
-                        nbTrials += resultSet.getInt(2);
-                        errno = resultSet.getInt(3);
-                        isam = resultSet.getInt(4);
-                        errmsg = resultSet.getString(5);
+                        sqlResults.add(resultSet);
+                        retcode = sqlResults.getRetcode();
+                        nbTrials = sqlResults.getNbTrials();
+//                        retcode = resultSet.getInt(1);
+//                        nbTrials += resultSet.getInt(2);
+//                        errno = resultSet.getInt(3);
+//                        isam = resultSet.getInt(4);
+//                        errmsg = resultSet.getString(5);
                     }
                     resultSet.close();
                 }
@@ -1129,11 +1236,14 @@ public class Bkgpi2a {
                     preparedStatement.setString(4, message);
                     resultSet = preparedStatement.executeQuery();
                     if (resultSet.next()) {
-                        retcode = resultSet.getInt(1);
-                        nbTrials += resultSet.getInt(2);
-                        errno = resultSet.getInt(3);
-                        isam = resultSet.getInt(4);
-                        errmsg = resultSet.getString(5);
+                        sqlResults.add(resultSet);
+                        retcode = sqlResults.getRetcode();
+                        nbTrials = sqlResults.getNbTrials();
+//                        retcode = resultSet.getInt(1);
+//                        nbTrials += resultSet.getInt(2);
+//                        errno = resultSet.getInt(3);
+//                        isam = resultSet.getInt(4);
+//                        errmsg = resultSet.getString(5);
                     }
                     resultSet.close();
                 }
@@ -1169,6 +1279,7 @@ public class Bkgpi2a {
         int errno = 0;
         int isam = 0;
         String errmsg = null;
+        SqlResults sqlResults;
 
         int retcode = 0;
 
@@ -1190,11 +1301,14 @@ public class Bkgpi2a {
             preparedStatement.setInt(8, 0);
             resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
-                retcode = resultSet.getInt(1);
-                nbTrials = resultSet.getInt(2);
-                errno = resultSet.getInt(3);
-                isam = resultSet.getInt(4);
-                errmsg = resultSet.getString(5);
+                sqlResults = new SqlResults(resultSet);
+                retcode = sqlResults.getRetcode();
+                nbTrials = sqlResults.getNbTrials();
+//                retcode = resultSet.getInt(1);
+//                nbTrials = resultSet.getInt(2);
+//                errno = resultSet.getInt(3);
+//                isam = resultSet.getInt(4);
+//                errmsg = resultSet.getString(5);
             }
             resultSet.close();
             preparedStatement.close();
@@ -1224,6 +1338,7 @@ public class Bkgpi2a {
         int errno = 0;
         int isam = 0;
         String errmsg = null;
+        SqlResults sqlResults;
 
         int retcode = 0;
 
@@ -1245,11 +1360,14 @@ public class Bkgpi2a {
             preparedStatement.setInt(8, 0);
             resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
-                retcode = resultSet.getInt(1);
-                nbTrials = resultSet.getInt(2);
-                errno = resultSet.getInt(3);
-                isam = resultSet.getInt(4);
-                errmsg = resultSet.getString(5);
+                sqlResults = new SqlResults(resultSet);
+                retcode = sqlResults.getRetcode();
+                nbTrials = sqlResults.getNbTrials();
+//                retcode = resultSet.getInt(1);
+//                nbTrials = resultSet.getInt(2);
+//                errno = resultSet.getInt(3);
+//                isam = resultSet.getInt(4);
+//                errmsg = resultSet.getString(5);
             }
             resultSet.close();
             preparedStatement.close();
@@ -1278,6 +1396,7 @@ public class Bkgpi2a {
         int errno = 0;
         int isam = 0;
         String errmsg = null;
+        SqlResults sqlResults;
 
         int retcode = 0;
 
@@ -1299,11 +1418,14 @@ public class Bkgpi2a {
                 preparedStatement.setInt(8, 0);
                 resultSet = preparedStatement.executeQuery();
                 if (resultSet.next()) {
-                    retcode = resultSet.getInt(1);
-                    nbTrials = resultSet.getInt(2);
-                    errno = resultSet.getInt(3);
-                    isam = resultSet.getInt(4);
-                    errmsg = resultSet.getString(5);
+                    sqlResults = new SqlResults(resultSet);
+                    retcode = sqlResults.getRetcode();
+                    nbTrials = sqlResults.getNbTrials();
+//                    retcode = resultSet.getInt(1);
+//                    nbTrials = resultSet.getInt(2);
+//                    errno = resultSet.getInt(3);
+//                    isam = resultSet.getInt(4);
+//                    errmsg = resultSet.getString(5);
                 }
                 resultSet.close();
                 preparedStatement.close();
@@ -1317,7 +1439,7 @@ public class Bkgpi2a {
             retcode = -1;
         }
 
-        System.out.println("      MissionAccepted:{retcode:" + retcode + ", nbTrials:" + nbTrials + "}");
+        System.out.println("      MessageAdded:{retcode:" + retcode + ", nbTrials:" + nbTrials + "}");
 
         return retcode;
     }
@@ -1342,6 +1464,7 @@ public class Bkgpi2a {
         String comment;
 
         int retcode = 0;
+        SqlResults sqlResults;
 
         if (providerAssigned.getOperator() instanceof ReferencedUser) {
 //            if ((retcode = processProviderAssigned_00(informixConnection, providerAssigned)) == 0) {
@@ -1380,11 +1503,14 @@ public class Bkgpi2a {
                 preparedStatement.setInt(8, 0);
                 resultSet = preparedStatement.executeQuery();
                 if (resultSet.next()) {
-                    retcode = resultSet.getInt(1);
-                    nbTrials = resultSet.getInt(2);
-                    errno = resultSet.getInt(3);
-                    isam = resultSet.getInt(4);
-                    errmsg = resultSet.getString(5);
+                    sqlResults = new SqlResults(resultSet);
+                    retcode = sqlResults.getRetcode();
+                    nbTrials = sqlResults.getNbTrials();
+//                    retcode = resultSet.getInt(1);
+//                    nbTrials = resultSet.getInt(2);
+//                    errno = resultSet.getInt(3);
+//                    isam = resultSet.getInt(4);
+//                    errmsg = resultSet.getString(5);
                 }
                 resultSet.close();
                 preparedStatement.close();
@@ -1438,7 +1564,7 @@ public class Bkgpi2a {
      */
     @Override
     public String toString() {
-        return "SyncCollections:{webServer=" + getMongoDbServerType()
+        return "Bkgpi2a:{webServer=" + getMongoDbServerType()
                 + ", dbServer=" + getInformixDbServerType() + "}";
     }
 
