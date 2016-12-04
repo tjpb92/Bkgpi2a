@@ -7,7 +7,7 @@ Projet permettant d'importer des données depuis l'extranet dans le serveur de b
 java Bkgpi2a [-dbserver db] [-webserver web] [-d] [-t] 
 ```
 où :
-* ```-dbserver db``` est la référence à la base de données, par défaut désigne la base de données de développement. Voir fichier *Bkgppi2a.prop* (optionnel).
+* ```-dbserver db``` est la référence à la base de données, par défaut désigne la base de données de développement. Voir fichier *Bkgpi2a.prop* (optionnel).
 * ```-webserver web``` est la référence au serveur web distant, par défaut désigne le serveur de développement (paramètre optionnel).
 * ```-d``` le programme s'exécute en mode débug, il est beaucoup plus verbeux. Désactivé par défaut (paramètre optionnel).
 * ```-t``` le programme s'exécute en mode test, les transcations en base de données ne sont pas faites. Désactivé par défaut (paramètre optionnel).
