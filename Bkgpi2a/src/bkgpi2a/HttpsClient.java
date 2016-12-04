@@ -10,13 +10,13 @@ import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-//import javax.net.ssl.HttpsURLConnection;
 /**
- * Classe réalisant des requetes GET/POST en HTTPS. Origine :
+ * Classe réalisant des requetes GET/POST en HTTPS.
+ *
  * @see https://www.mkyong.com/java/how-to-send-http-request-getpost-in-java/
  *
  * @author Thierry Baribaud
- * @version 0.26
+ * @version 0.37
  */
 public class HttpsClient {
 
@@ -108,6 +108,18 @@ public class HttpsClient {
     private String contentRange = null;
 
     /**
+     * debugMode : fonctionnement du programme en mode debug (true/false).
+     * Valeur par défaut : false.
+     */
+    private boolean debugMode = false;
+
+    /**
+     * testMode : fonctionnement du programme en mode test (true/false). Valeur
+     * par défaut : false.
+     */
+    private boolean testMode = false;
+
+    /**
      * Constructeur principal de la classe
      *
      * @param baseUrl URL du site Web
@@ -116,6 +128,21 @@ public class HttpsClient {
     public HttpsClient(String baseUrl, Identifiants identifiants) {
         HttpsClient.baseUrl = baseUrl;
         HttpsClient.identifiants = identifiants;
+    }
+
+    /**
+     * Constructeur alternatif de la classe
+     *
+     * @param baseUrl URL du site Web
+     * @param identifiants identifiants pour accéder au site Web
+     * @param debugMode indicateur du mode debug
+     * @param testMode indicateur du mode test
+     */
+    public HttpsClient(String baseUrl, Identifiants identifiants, boolean debugMode, boolean testMode) {
+        HttpsClient.baseUrl = baseUrl;
+        HttpsClient.identifiants = identifiants;
+        this.debugMode = debugMode;
+        this.testMode = testMode;
     }
 
     // HTTP GET request
@@ -175,7 +202,7 @@ public class HttpsClient {
         dataOutputStream.close();
 
         System.out.println("Sending 'POST' request to URL : " + commandUrl);
-        System.out.println("Post parameters : " + urlParameters);
+        if (debugMode) System.out.println("Post parameters : " + urlParameters);
         getResponseCode(connection);
         HttpsClient.this.getCookies(connection);
         HttpsClient.this.getResponse(connection);
@@ -187,7 +214,9 @@ public class HttpsClient {
 
         cookies = MyConnection.getHeaderField("Set-Cookie");
         if (cookies != null) {
-            System.out.println("Cookie(s)=" + cookies);
+            if (debugMode) {
+                System.out.println("Cookie(s)=" + cookies);
+            }
             setCookies(cookies);
         }
     }
@@ -221,7 +250,9 @@ public class HttpsClient {
             if (response != null) {
                 setResponse(response.toString());
                 //print result
-                System.out.println(response.toString());
+                if (debugMode) {
+                    System.out.println(response.toString());
+                }
             }
 
         } catch (IOException ex) {
@@ -297,5 +328,34 @@ public class HttpsClient {
      */
     public void setContentRange(String contentRange) {
         this.contentRange = contentRange;
+    }
+
+    /**
+     * @param debugMode : fonctionnement du programme en mode debug
+     * (true/false).
+     */
+    public void setDebugMode(boolean debugMode) {
+        this.debugMode = debugMode;
+    }
+
+    /**
+     * @param testMode : fonctionnement du programme en mode test (true/false).
+     */
+    public void setTestMode(boolean testMode) {
+        this.testMode = testMode;
+    }
+
+    /**
+     * @return debugMode : retourne le mode de fonctionnement debug.
+     */
+    public boolean getDebugMode() {
+        return (debugMode);
+    }
+
+    /**
+     * @return testMode : retourne le mode de fonctionnement test.
+     */
+    public boolean getTestMode() {
+        return (testMode);
     }
 }

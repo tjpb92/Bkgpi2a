@@ -30,7 +30,7 @@ import utils.DBServerException;
  * de données MongoDB par rapport à une base de données Informix
  *
  * @author Thierry Baribaud.
- * @version 0.35
+ * @version 0.37
  */
 public class Bkgpi2a {
 
@@ -47,6 +47,7 @@ public class Bkgpi2a {
 
         /**
          * Constructeur principal de la classe SqlResults
+         *
          * @param resultSet les résultats d'exécution d'une requête
          */
         public SqlResults(ResultSet resultSet) {
@@ -64,7 +65,9 @@ public class Bkgpi2a {
         }
 
         /**
-         * Ajoute les résultats d'exécution d'une requête à des résultats existants
+         * Ajoute les résultats d'exécution d'une requête à des résultats
+         * existants
+         *
          * @param resultSet les résultats d'exécution d'une requête
          */
         public void add(ResultSet resultSet) {
@@ -78,9 +81,9 @@ public class Bkgpi2a {
 //                Logger.getLogger(Bkgpi2a.class.getName()).log(Level.SEVERE, null, ex);
                 System.out.println("ERROR : erreur dans la récupération des résultats de la requête SQL " + exception);
             }
-            
+
         }
-        
+
         /**
          * Retourne le code d'erreur associé à l'exécution d'une requête SQL
          *
@@ -90,10 +93,10 @@ public class Bkgpi2a {
         public int getRetcode() {
             return retcode;
         }
-        
+
         /**
          * Retourne le nombre d'essais injectés
-         * 
+         *
          * @return retourne le nombre d'essais injectés
          */
         public int getNbTrials() {
@@ -140,6 +143,18 @@ public class Bkgpi2a {
     private Identifiants informixDbId;
 
     /**
+     * debugMode : fonctionnement du programme en mode debug (true/false).
+     * Valeur par défaut : false.
+     */
+    private static boolean debugMode = false;
+
+    /**
+     * testMode : fonctionnement du programme en mode test (true/false). Valeur
+     * par défaut : false.
+     */
+    private static boolean testMode = false;
+
+    /**
      * Constructeur de la classe SyncCollections
      * <p>
      * Les arguments en ligne de commande permettent de changer le mode de
@@ -181,19 +196,25 @@ public class Bkgpi2a {
         getArgs = new GetArgs(args);
         setMongoDbServerType(getArgs.getMongoDbServerType());
         setInformixDbServerType(getArgs.getInformixDbServerType());
+        setDebugMode(getArgs.getDebugMode());
+        setTestMode(getArgs.getTestMode());
 
         System.out.println("Lecture des paramètres d'exécution ...");
-        applicationProperties = new ApplicationProperties("MyDatabases.prop");
+        applicationProperties = new ApplicationProperties("Bkgpi2a.prop");
 
         System.out.println("Lecture des paramètres du serveur MongoDb ...");
         mongoServer = new DBServer(getMongoDbServerType(), "mgodb", applicationProperties);
-        System.out.println(mongoServer);
+        if (debugMode) {
+            System.out.println(mongoServer);
+        }
 //        setMongoDbId(applicationProperties);
 //        System.out.println(getMongoDbId());
 
         System.out.println("Lecture des paramètres du serveur Informix ...");
         informixServer = new DBServer(getInformixDbServerType(), "ifxdb", applicationProperties);
-        System.out.println(informixServer);
+        if (debugMode) {
+            System.out.println(informixServer);
+        }
 //        setInformixDbId(applicationProperties);
 //        System.out.println(getInformixDbId());
 
@@ -893,7 +914,7 @@ public class Bkgpi2a {
                     if (resultSet.next()) {
                         sqlResults.add(resultSet);
                         retcode = sqlResults.getRetcode();
-                         nbTrials = sqlResults.getNbTrials();
+                        nbTrials = sqlResults.getNbTrials();
 //                        retcode = resultSet.getInt(1);
 //                        nbTrials += resultSet.getInt(2);
 //                        errno = resultSet.getInt(3);
@@ -1581,7 +1602,9 @@ public class Bkgpi2a {
 
         try {
             syncCollections = new Bkgpi2a(args);
-            System.out.println(syncCollections);
+            if (debugMode) {
+                System.out.println(syncCollections);
+            }
         } catch (Exception exception) {
             System.out.println("Problème lors de l'instanciation de Bkgpi2a");
             exception.printStackTrace();
@@ -1669,4 +1692,32 @@ public class Bkgpi2a {
 //        }
 //        Bkgpi2a.this.setInformixDbId(identifiants);
 //    }
+    /**
+     * @param debugMode : fonctionnement du programme en mode debug
+     * (true/false).
+     */
+    public void setDebugMode(boolean debugMode) {
+        this.debugMode = debugMode;
+    }
+
+    /**
+     * @param testMode : fonctionnement du programme en mode test (true/false).
+     */
+    public void setTestMode(boolean testMode) {
+        this.testMode = testMode;
+    }
+
+    /**
+     * @return debugMode : retourne le mode de fonctionnement debug.
+     */
+    public boolean getDebugMode() {
+        return (debugMode);
+    }
+
+    /**
+     * @return testMode : retourne le mode de fonctionnement test.
+     */
+    public boolean getTestMode() {
+        return (testMode);
+    }
 }
