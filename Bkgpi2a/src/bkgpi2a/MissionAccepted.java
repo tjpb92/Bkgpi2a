@@ -2,14 +2,13 @@ package bkgpi2a;
 
 import static bkgpi2a.EventType.MISSION_ACCEPTED;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 
 /**
  * Classe décrivant la programmation d'une intervention : MissionAccepted, #505
  *
  * @author Thierry Baribaud
- * @version 0.29
+ * @version 0.38
  * @see http://performanceimmo.github.io/API/#ticketevent
  */
 @JsonIgnoreProperties({"_id", "eventTypeUid"})
@@ -22,9 +21,8 @@ public class MissionAccepted extends Event {
     private Operator operator;
 
     /**
-     * Intervenant courant sur l'essai (optionnel)
+     * Intervenant courant sur l'essai
      */
-    @JsonInclude(JsonInclude.Include.NON_NULL)
     private Provider provider;
 
     /**

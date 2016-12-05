@@ -8,7 +8,7 @@ import com.fasterxml.jackson.annotation.JsonTypeName;
  * Classe décrivant la programmation d'une intervention : MissionScheduled, #610
  *
  * @author Thierry Baribaud
- * @version 0.29
+ * @version 0.38
  * @see http://performanceimmo.github.io/API/#ticketevent
  */
 @JsonIgnoreProperties({"_id", "eventTypeUid"})
@@ -29,6 +29,11 @@ public class MissionScheduled extends Event {
      * Opérateur ayant saisi la programmation de l'intervention
      */
     private Operator operator;
+
+    /**
+     * Intervenant courant sur l'essai
+     */
+    private Provider provider;
 
     /**
      * Commentaire ajouté au ticket
@@ -59,6 +64,20 @@ public class MissionScheduled extends Event {
     }
 
     /**
+     * @return l'intervenant courant si présent
+     */
+    public Provider getProvider() {
+        return provider;
+    }
+
+    /**
+     * @param provider définit l'intervenant courant
+     */
+    public void setProvider(Provider provider) {
+        this.provider = provider;
+    }
+
+    /**
      * @return le comment ajouté au ticket
      */
     public String getComment() {
@@ -78,7 +97,6 @@ public class MissionScheduled extends Event {
 //    public DateTime getMissionScheduledDate() {
 //        return getDate();
 //    }
-
     /**
      * @param missionScheduledDate définit la date à laquelle l'événement a eu
      * lieu
@@ -86,7 +104,6 @@ public class MissionScheduled extends Event {
 //    public void setMissionScheduledDate(String missionScheduledDate) {
 //        setDate(missionScheduledDate);
 //    }
-    
     /**
      * @return la date et heure du début de l'intervention
      */
@@ -125,8 +142,9 @@ public class MissionScheduled extends Event {
                 + ", début d'intervention:" + getStartDate()
                 + ", fin d'intervention:" + getEndDate()
                 + ", " + getOperator()
+                + ", " + getProvider()
                 + ", commentaire:" + getComment()
-//                + ", missionScheduledDate:" + getMissionScheduledDate()
+                //                + ", missionScheduledDate:" + getMissionScheduledDate()
                 + "}";
     }
 }

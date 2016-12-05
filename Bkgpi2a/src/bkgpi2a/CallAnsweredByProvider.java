@@ -2,7 +2,6 @@ package bkgpi2a;
 
 import static bkgpi2a.EventType.CALL_ANSWERED_BY_PROVIDER;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 
 /**
@@ -10,7 +9,7 @@ import com.fasterxml.jackson.annotation.JsonTypeName;
  * CallAnsweredByProvider, #600
  *
  * @author Thierry Baribaud
- * @version 0.34
+ * @version 0.38
  * @see http://performanceimmo.github.io/API/#ticketevent
  */
 @JsonIgnoreProperties({"_id", "eventTypeUid"})
@@ -23,9 +22,8 @@ public class CallAnsweredByProvider extends Event {
     private Operator operator;
 
     /**
-     * Intervenant courant sur l'essai (optionnel)
+     * Intervenant courant sur l'essai
      */
-    @JsonInclude(JsonInclude.Include.NON_NULL)
     private Provider provider;
 
     /**

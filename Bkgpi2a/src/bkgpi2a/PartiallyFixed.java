@@ -9,13 +9,23 @@ import com.fasterxml.jackson.annotation.JsonInclude;
  * Classe décrivant une clôture d'appel partielle : PartiallyFixed, #540
  *
  * @author Thierry Baribaud
- * @version 0.30
+ * @version 0.38
  * @see http://performanceimmo.github.io/API/#ticketevent
  */
 @JsonIgnoreProperties({"_id", "date", "eventTypeUid"})
 @JsonTypeName("PartiallyFixed")
 public class PartiallyFixed extends Event {
 
+    /**
+     * Code de clôture d'appel
+     */
+    public static final int code = 71;
+    
+    /**
+     * Libellé de clôture d'appel
+     */
+    public static final String label = "Réparation partielle";
+    
     /**
      * Opérateur ayant ajouté l'essai
      */

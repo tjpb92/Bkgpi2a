@@ -8,7 +8,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
  * Classe abstraite décrivant un événément.
  *
  * @author Thierry Baribaud
- * @version 0.35
+ * @version 0.38
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME,
@@ -219,7 +219,7 @@ public abstract class Event {
     }
 
     /**
-     * @return la date où à eu lieu l'événement
+     * @return la date où a eu lieu l'événement
      */
     public String getDate() {
         return date;

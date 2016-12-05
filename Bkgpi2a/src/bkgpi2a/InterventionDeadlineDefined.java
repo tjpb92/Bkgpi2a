@@ -3,14 +3,13 @@ package bkgpi2a;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import static bkgpi2a.EventType.INTERVENTION_DEADLINE_DEFINED;
-import com.fasterxml.jackson.annotation.JsonInclude;
 
 /**
- * Classe décrivant l'envoi de la date butoir de l'interventin : InterventionDeadlineDefined,
- #625
+ * Classe décrivant l'envoi de la date butoir de l'interventin :
+ * InterventionDeadlineDefined, #625
  *
  * @author Thierry Baribaud
- * @version 0.35
+ * @version 0.38
  * @see http://performanceimmo.github.io/API/#ticketevent
  */
 @JsonIgnoreProperties({"_id", "eventTypeUid"})
@@ -23,9 +22,8 @@ public class InterventionDeadlineDefined extends Event {
     private Operator operator;
 
     /**
-     * Intervenant courant sur l'essai (optionnel)
+     * Intervenant courant sur l'essai
      */
-    @JsonInclude(JsonInclude.Include.NON_NULL)
     private Provider provider;
 
     /**

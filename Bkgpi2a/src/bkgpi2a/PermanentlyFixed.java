@@ -9,12 +9,22 @@ import com.fasterxml.jackson.annotation.JsonInclude;
  * Classe décrivant une clôture d'appel définitive : PermanentlyFixed, #535
  *
  * @author Thierry Baribaud
- * @version 0.291
+ * @version 0.38
  * @see http://performanceimmo.github.io/API/#ticketevent
  */
 @JsonIgnoreProperties({"_id", "date", "eventTypeUid"})
 @JsonTypeName("PermanentlyFixed")
 public class PermanentlyFixed extends Event {
+
+    /**
+     * Code de clôture d'appel
+     */
+    public static final int code = 71;
+    
+    /**
+     * Libellé de clôture d'appel
+     */
+    public static final String label = "Réparation définitive";
 
     /**
      * Opérateur ayant ajouté l'essai

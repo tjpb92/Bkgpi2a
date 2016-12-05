@@ -3,13 +3,13 @@ package bkgpi2a;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import static bkgpi2a.EventType.SENDING_SERVICE_ORDER_REPORTED;
-import com.fasterxml.jackson.annotation.JsonInclude;
 
 /**
- * Classe décrivant l'envoi d'un ordre de service : SendingServiceOrderReported, #615
+ * Classe décrivant l'envoi d'un ordre de service : SendingServiceOrderReported,
+ * #615
  *
  * @author Thierry Baribaud
- * @version 0.31
+ * @version 0.38
  * @see http://performanceimmo.github.io/API/#ticketevent
  */
 @JsonIgnoreProperties({"_id", "eventTypeUid"})
@@ -22,9 +22,8 @@ public class SendingServiceOrderReported extends Event {
     private Operator operator;
 
     /**
-     * Intervenant courant sur l'essai (optionnel)
+     * Intervenant courant sur l'essai
      */
-    @JsonInclude(JsonInclude.Include.NON_NULL)
     private Provider provider;
 
     /**

@@ -9,12 +9,22 @@ import com.fasterxml.jackson.annotation.JsonInclude;
  * Classe décrivant une clôture d'appel partielle : PostponedFix, #550
  *
  * @author Thierry Baribaud
- * @version 0.30
+ * @version 0.38
  * @see http://performanceimmo.github.io/API/#ticketevent
  */
 @JsonIgnoreProperties({"_id", "date", "eventTypeUid"})
 @JsonTypeName("PostponedFix")
 public class PostponedFix extends Event {
+
+    /**
+     * Code de clôture d'appel
+     */
+    public static final int code = 71;
+    
+    /**
+     * Libellé de clôture d'appel
+     */
+    public static final String label = "Réparation reportée en heure ouvrée";
 
     /**
      * Opérateur ayant ajouté l'essai

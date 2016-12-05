@@ -5,7 +5,7 @@ import utils.ApplicationProperties;
 /*
  * Classe qui décrit un serveur Web
  * @author Thierry Baribaud
- * @version Octobre 2016
+ * @version 0.38
  */
 public class WebServer {
 
@@ -34,7 +34,7 @@ public class WebServer {
      *
      * @param serverType type de serveur : dev/pre-prod/prod.
      * @param applicationProperties Application properties.
-     * @throws pi2a.WebServerException lorsqu'une erreur est rencontrée
+     * @throws bkgpi2a.WebServerException
      */
     public WebServer(String serverType, ApplicationProperties applicationProperties)
             throws WebServerException {
