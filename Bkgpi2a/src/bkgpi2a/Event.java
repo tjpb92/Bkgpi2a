@@ -8,7 +8,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
  * Classe abstraite décrivant un événément.
  *
  * @author Thierry Baribaud
- * @version 0.38
+ * @version 0.39
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME,
@@ -25,6 +25,9 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
     @JsonSubTypes.Type(value = ClosedBeyondCallCenterScope.class, name = "ClosedBeyondCallCenterScope"),
     @JsonSubTypes.Type(value = PostponedFix.class, name = "PostponedFix"),
     @JsonSubTypes.Type(value = MissionAccepted.class, name = "MissionAccepted"),
+    @JsonSubTypes.Type(value = MissionRefused.class, name = "MissionRefused"),
+    @JsonSubTypes.Type(value = ArrivedOnSite.class, name = "ArrivedOnSite"),
+    @JsonSubTypes.Type(value = GoneFromSite.class, name = "GoneFromSite"),
     @JsonSubTypes.Type(value = CallAnsweredByProvider.class, name = "CallAnsweredByProvider"),
     @JsonSubTypes.Type(value = CallNotAnsweredByProvider.class, name = "CallNotAnsweredByProvider"),
     @JsonSubTypes.Type(value = MissionScheduled.class, name = "MissionScheduled"),
@@ -38,6 +41,8 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
     @JsonSubTypes.Type(value = CallEmittedTo.class, name = "CallEmittedTo"),
     @JsonSubTypes.Type(value = CallReceived.class, name = "CallReceived"),
     @JsonSubTypes.Type(value = TicketArchived.class, name = "TicketArchived"),
+    @JsonSubTypes.Type(value = TicketReopened.class, name = "TicketReopened"),    
+    @JsonSubTypes.Type(value = TicketClosed.class, name = "TicketClosed"),
     @JsonSubTypes.Type(value = TicketCancelled.class, name = "TicketCancelled"),
     @JsonSubTypes.Type(value = TicketUpdated.class, name = "TicketUpdated")
     })

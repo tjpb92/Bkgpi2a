@@ -12,7 +12,7 @@ import org.bson.Document;
 /**
  * Classe qui implémente le pattern DAO pour la classe Event
  * @author Thierry Baribaud
- * @version 0.36
+ * @version 0.39
  */
 public class EventDAO extends MongoPatternDAO {
 
@@ -68,6 +68,8 @@ public class EventDAO extends MongoPatternDAO {
     public void insert(Event event) {
         try {
             this.collection.insertOne(Document.parse(objectMapper.writeValueAsString(event)));
+        } catch (IllegalArgumentException ex) {
+            Logger.getLogger(EventDAO.class.getName()).log(Level.SEVERE, "ERROR : insertion impossible, erreur dans un champ" + ex.toString());
         } catch (JsonProcessingException ex) {
             Logger.getLogger(EventDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
