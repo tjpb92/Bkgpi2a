@@ -30,7 +30,7 @@ import utils.DBServerException;
  * de données MongoDB par rapport à une base de données Informix
  *
  * @author Thierry Baribaud.
- * @version 0.39
+ * @version 0.40
  */
 public class Bkgpi2a {
 
@@ -492,10 +492,10 @@ public class Bkgpi2a {
      * Traite l'événement TicketCancelled sur un ticket
      *
      * @param informixConnection connection à la base de données Informix locale
-     * @param ticketCancelled événement à traiter
+     * @param TicketCancelled événement à traiter
      * @return code de retour : 1=Succès, 0=ne rien faire, -1=erreur
      */
-//    private int processTicketCancelled(Connection informixConnection, TicketCancelled ticketCancelled) {
+//    private int processTicketCancelled(Connection informixConnection, TicketCancelled TicketCancelled) {
 //        int nbTrials = 0;
 //        int errno = 0;
 //        int isam = 0;
@@ -542,30 +542,35 @@ public class Bkgpi2a {
 
         int retcode = 0;
 
-        try {
-            dateTime = isoDateTimeFormat.parseDateTime(interventionStarted.getStartedDate());
+        if (interventionStarted.getOperator() instanceof ReferencedUser) {
+            try {
+                dateTime = isoDateTimeFormat.parseDateTime(interventionStarted.getStartedDate());
 
-            preparedStatement = informixConnection.prepareStatement("{call addLogTrial(?, ?, ?, ?, ?, ?, ?, ?)}");
-            preparedStatement.setString(1, interventionStarted.getAggregateUid());
-            preparedStatement.setNull(2, java.sql.Types.INTEGER);
-            preparedStatement.setInt(3, 69);
-            preparedStatement.setString(4, dateTime.toString(hhmmFormat));
-            preparedStatement.setTimestamp(5, new Timestamp(dateTime.getMillis()));
-            preparedStatement.setInt(6, onum);
-            preparedStatement.setInt(7, 0);
-            preparedStatement.setInt(8, 0);
-            resultSet = preparedStatement.executeQuery();
-            if (resultSet.next()) {
-                sqlResults = new SqlResults(resultSet);
-                retcode = sqlResults.getRetcode();
-                nbTrials = sqlResults.getNbTrials();
+                preparedStatement = informixConnection.prepareStatement("{call addLogTrial(?, ?, ?, ?, ?, ?, ?, ?)}");
+                preparedStatement.setString(1, interventionStarted.getAggregateUid());
+                preparedStatement.setNull(2, java.sql.Types.INTEGER);
+                preparedStatement.setInt(3, 69);
+                preparedStatement.setString(4, dateTime.toString(hhmmFormat));
+                preparedStatement.setTimestamp(5, new Timestamp(dateTime.getMillis()));
+                preparedStatement.setInt(6, onum);
+                preparedStatement.setInt(7, 0);
+                preparedStatement.setInt(8, 0);
+                resultSet = preparedStatement.executeQuery();
+                if (resultSet.next()) {
+                    sqlResults = new SqlResults(resultSet);
+                    retcode = sqlResults.getRetcode();
+                    nbTrials = sqlResults.getNbTrials();
+                }
+                resultSet.close();
+
+                preparedStatement.close();
+            } catch (SQLException exception) {
+                Logger.getLogger(Bkgpi2a.class.getName()).log(Level.SEVERE, null, exception);
+                retcode = -1;
             }
-            resultSet.close();
-
-            preparedStatement.close();
-        } catch (SQLException exception) {
-            Logger.getLogger(Bkgpi2a.class.getName()).log(Level.SEVERE, null, exception);
-            retcode = -1;
+        } else {
+            System.out.println("    ERREUR : événement rejeté, raison : généré par Anstel");
+            retcode = -3;
         }
 
         System.out.println("      InterventionStarted:{retcode:" + retcode + ", nbTrials:" + nbTrials + "}");

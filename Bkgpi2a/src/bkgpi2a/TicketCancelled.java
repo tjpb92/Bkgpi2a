@@ -2,14 +2,13 @@ package bkgpi2a;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonTypeName;
-import static bkgpi2a.EventType.TICKET_CANCELED;
+import static bkgpi2a.EventType.TICKET_CANCELLED;
 
 /**
- * Classe décrivant un comment ajouté au journal d'un ticket :
- * TicketCancelled, #585
+ * Classe décrivant l'annuation d'un ticket : TicketCancelled, #585
  *
  * @author Thierry Baribaud
- * @version 0.34
+ * @version 0.40
  * @see http://performanceimmo.github.io/API/#ticketevent
  */
 @JsonIgnoreProperties({"_id", "date", "eventTypeUid"})
@@ -25,8 +24,8 @@ public class TicketCancelled extends Event {
      * Constructeur de la classe TicketCancelled
      */
     public TicketCancelled() {
-        setEventTypeUid(TICKET_CANCELED.getUid());
-        setEventType(TICKET_CANCELED.getName());
+        setEventTypeUid(TICKET_CANCELLED.getUid());
+        setEventType(TICKET_CANCELLED.getName());
     }
 
     /**

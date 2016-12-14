@@ -4,7 +4,7 @@ package bkgpi2a;
  * Enumération décrivant les identifiants et libellés des événements.
  *
  * @author Thierry Baribaud
- * @version 0.35
+ * @version 0.40
  */
 public enum EventType {
 
@@ -29,7 +29,7 @@ public enum EventType {
     TICKET_REOPENED("TicketReopened", 575),
     CALL_EMITTED_TO("CallEmittedTo", 580),
     CALL_RECEIVED("CallReceived", 582),
-    TICKET_CANCELED("TicketCanceled", 585),
+    TICKET_CANCELLED("TicketCancelled", 585),
     TICKET_ARCHIVED("TicketArchived", 590),
     CALL_ANSWERED_BY_PROVIDER("CallAnsweredByProvider", 600),
     CALL_NOT_ANSWERED_BY_PROVIDER("CallNotAnsweredByProvider", 605),
