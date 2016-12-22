@@ -4,13 +4,24 @@ package bkgpi2a;
  * Enumération décrivant les types d'opérateur.
  *
  * @author Thierry Baribaud
- * @version Octobre 2016
+ * @version 0.41
  * @see http://performanceimmo.github.io/API/#operator
  */
 public enum OperatorType {
 
+    /**
+     * Opérateur référencé en base de données
+     */
     REFERENCED_OPERATOR("ReferencedOperator"),
+
+    /**
+     * Opérateur non référencé en base de données
+     */
     ANONYMOUS_OPERATOR("AnonymousOperator"),
+
+    /**
+     * Utilisateur référencé en base de données
+     */
     REFERENCED_USER("ReferencedUser");
 
     /**

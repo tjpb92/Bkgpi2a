@@ -6,6 +6,7 @@ import com.mongodb.MongoClient;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
 import java.io.*;
 import java.sql.Connection;
@@ -30,7 +31,7 @@ import utils.DBServerException;
  * de données MongoDB par rapport à une base de données Informix
  *
  * @author Thierry Baribaud.
- * @version 0.40
+ * @version 0.41
  */
 public class Bkgpi2a {
 
@@ -348,6 +349,7 @@ public class Bkgpi2a {
                 if (updateResult.getMatchedCount() > 0) {
                     System.out.println("  updateResult:" + updateResult);
                 }
+                purgeEvents(collection);
             }
         } catch (IOException ex) {
             Logger.getLogger(Bkgpi2a.class.getName()).log(Level.SEVERE, null, ex);
@@ -355,6 +357,24 @@ public class Bkgpi2a {
 
     }
 
+    /**
+     * Méthode pour purger les événements plus anciens que retention jours
+     * @param collection dans laquelle réaliser la purge
+     */
+    private void purgeEvents(MongoCollection<Document> collection) {
+        DateTime dateTime;
+        BasicDBObject filter;
+        DeleteResult deleteResult;
+        int retention = 7;
+        
+        System.out.println("  purge des événements antérieurs à " + retention + " jour(s)");
+        dateTime = new DateTime().minusDays(retention);
+        filter = new BasicDBObject("sentDate", new BasicDBObject("$lt", dateTime.toString(isoDateTimeFormat)));
+        System.out.println("  filter:" + filter);
+        deleteResult = collection.deleteMany(filter);
+        System.out.println("  deleteResult:" + deleteResult);
+    }
+    
     /**
      * Traite l'événement CallReceived sur un ticket
      *
@@ -545,7 +565,6 @@ public class Bkgpi2a {
         if (interventionStarted.getOperator() instanceof ReferencedUser) {
             try {
                 dateTime = isoDateTimeFormat.parseDateTime(interventionStarted.getStartedDate());
-
                 preparedStatement = informixConnection.prepareStatement("{call addLogTrial(?, ?, ?, ?, ?, ?, ?, ?)}");
                 preparedStatement.setString(1, interventionStarted.getAggregateUid());
                 preparedStatement.setNull(2, java.sql.Types.INTEGER);

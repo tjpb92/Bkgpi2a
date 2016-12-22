@@ -4,12 +4,18 @@ package bkgpi2a;
  * Enumération décrivant les types d'assignation d'intervenant à un ticket.
  *
  * @author Thierry Baribaud
- * @version Octobre 2016
+ * @version 0.41
  * @see http://performanceimmo.github.io/API/#providerassignationpurpose
  */
 public enum ProviderAssignationPurposeType {
 
+    /**
+     * Changement de recours
+     */
     RECOURSE_CHANGED("RecourseChanged"),
+    /**
+     * Assignation initiale (à revoir)
+     */
     PURPOSE("Purpose");
 
     /**

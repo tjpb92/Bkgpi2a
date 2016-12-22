@@ -1,10 +1,10 @@
 package bkgpi2a;
 
-/*
+/**
  * Cette classe sert à vérifier et à récupérer les arguments passés en ligne de
  * commande au programme Bkgpi2a.
  * @author Thierry Baribaud
- * @version 0.28
+ * @version 0.41
  */
 public class GetArgs {
 

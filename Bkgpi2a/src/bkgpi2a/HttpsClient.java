@@ -145,8 +145,12 @@ public class HttpsClient {
         this.testMode = testMode;
     }
 
-    // HTTP GET request
-    public void sendGet(String Command) throws Exception {
+    /**
+     * Méthode pour envoyer une requête HTTPS GET
+     * @param Command commande à exécuter
+     * @throws Exception en cas d'erreur
+     */
+        public void sendGet(String Command) throws Exception {
 
         String commandUrl;
         URL url;
@@ -174,8 +178,12 @@ public class HttpsClient {
         connection.disconnect();
     }
 
-    // HTTP POST request
-    public void sendPost(String Command) throws Exception {
+    /**
+     * Méthode pour envoyer une requête HTTPS POST
+     * @param Command commande à exécuter
+     * @throws Exception en cas d'erreur
+     */
+        public void sendPost(String Command) throws Exception {
 
         String commandUrl;
         URL url;

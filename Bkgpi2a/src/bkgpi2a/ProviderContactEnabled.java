@@ -12,10 +12,14 @@ package bkgpi2a;
  * 460 = ActivityAdded
  * 
  * @author Thierry Baribaud
- * @version 0.23
+ * @version 0.41
  */
 public class ProviderContactEnabled extends Event {
     
+    /**
+     * Méthode servant à activer le statut d'un fournisseur
+     * @param date date d'activation
+     */
     public ProviderContactEnabled(String date)  {
         this.setDate(date);
         this.setEventType(this.getClass().getSimpleName());

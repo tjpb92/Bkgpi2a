@@ -4,13 +4,29 @@ package bkgpi2a;
  * Enumération sur les types de médium
  *
  * @author Thierry Baribaud
- * @version 0.18
+ * @version 0.41
  * @see http://performanceimmo.github.io/API/#contactmedium
  */
 public enum ContactMediumType {
+
+    /**
+     * Téléphone
+     */
     PHONE("Phone"),
+
+    /**
+     * Fax
+     */
     FAX("Fax"),
+
+    /**
+     * Email
+     */
     MAIL("Mail"),
+
+    /**
+     * SMS
+     */
     SMS("SMS");
 
     private String name = "";

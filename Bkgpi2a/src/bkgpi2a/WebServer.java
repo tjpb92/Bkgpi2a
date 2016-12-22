@@ -2,10 +2,10 @@ package bkgpi2a;
 
 import utils.ApplicationProperties;
 
-/*
+/**
  * Classe qui décrit un serveur Web
  * @author Thierry Baribaud
- * @version 0.38
+ * @version 0.41
  */
 public class WebServer {
 

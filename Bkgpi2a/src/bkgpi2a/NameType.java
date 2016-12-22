@@ -4,12 +4,19 @@ package bkgpi2a;
  * Enumération décrivant les types d'intervenant.
  *
  * @author Thierry Baribaud
- * @version Octobre 2016
+ * @version 0.41
  * @see http://performanceimmo.github.io/API/#name
  */
 public enum NameType {
 
+    /**
+     * Nom peu qualifié, pauvre en information
+     */
     POOR_NAME("PoorName"),
+
+    /**
+     * Nom bien qualifié, riche en informations
+     */
     CIVIL_NAME("CivilName");
 
     /**
