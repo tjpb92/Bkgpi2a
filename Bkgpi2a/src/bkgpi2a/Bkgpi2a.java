@@ -31,7 +31,7 @@ import utils.DBServerException;
  * de données MongoDB par rapport à une base de données Informix
  *
  * @author Thierry Baribaud.
- * @version 0.41
+ * @version 0.42
  */
 public class Bkgpi2a {
 
@@ -106,10 +106,11 @@ public class Bkgpi2a {
     }
 
     /**
-     * Pour convertir les datetimes du format texte au format DateTime
+     * Pour convertir les datetimes du format texte au format DateTime et vice
+     * versa
      */
-    private static final DateTimeFormatter isoDateTimeFormat = ISODateTimeFormat.dateTimeParser();
-//    private static final DateTimeFormatter format = DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ssZ");
+    private static final DateTimeFormatter isoDateTimeFormat1 = ISODateTimeFormat.dateTimeParser();
+    private static final DateTimeFormatter isoDateTimeFormat2 = DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
     private static final DateTimeFormatter hhmmFormat = DateTimeFormat.forPattern("HH:mm");
 
     /**
@@ -142,6 +143,12 @@ public class Bkgpi2a {
      * fichier MyDatabases.prop.
      */
     private Identifiants informixDbId;
+
+    /**
+     * retention : durée de rétention, exprimée en jours, des événements en base
+     * de données. Valeur par défaut : 7 jours.
+     */
+    private int retention = 7;
 
     /**
      * debugMode : fonctionnement du programme en mode debug (true/false).
@@ -202,6 +209,7 @@ public class Bkgpi2a {
 
         System.out.println("Lecture des paramètres d'exécution ...");
         applicationProperties = new ApplicationProperties("Bkgpi2a.prop");
+        setRetention(getMongoDbServerType(), "mgodb", applicationProperties);
 
         System.out.println("Lecture des paramètres du serveur MongoDb ...");
         mongoServer = new DBServer(getMongoDbServerType(), "mgodb", applicationProperties);
@@ -272,7 +280,7 @@ public class Bkgpi2a {
                         + ", aggregateUid:" + event.getAggregateUid());
                 nbError = event.getNbError();
 
-                retcode = -1;   // Tout va mal par défaut :-(
+                retcode = -4;   // Non géré par défaut.
                 if (event instanceof ProviderAssigned) {
                     retcode = processProviderAssigned(informixConnection, (ProviderAssigned) event);
                 } else if (event instanceof MessageAdded) {
@@ -299,6 +307,8 @@ public class Bkgpi2a {
                     retcode = processFormalNoticeForProviderReported(informixConnection, (FormalNoticeForProviderReported) event);
                 } else if (event instanceof InterventionDeadlineDefined) {
                     retcode = processInterventionDeadlineDefined(informixConnection, (InterventionDeadlineDefined) event);
+                } else if (event instanceof ClosedBeyondCallCenterScope) {
+                    retcode = processClosedBeyondCallCenterScope(informixConnection, (ClosedBeyondCallCenterScope) event);
 //                } else if (event instanceof LogTrialAdded) {
 //                    retcode = processLogTrialAdded(informixConnection, (LogTrialAdded) event);
 //                } else if (event instanceof TicketOpened) {
@@ -309,8 +319,6 @@ public class Bkgpi2a {
 //                    retcode = processTicketCancelled(informixConnection, (TicketCancelled) event);
 //                } else if (event instanceof ClosedAfterSeveralUnsuccessfulRecalls) {
 //                    retcode = processClosedAfterSeveralUnsuccessfulRecalls(informixConnection, (ClosedAfterSeveralUnsuccessfulRecalls) event);
-//                } else if (event instanceof ClosedBeyondCallCenterScope) {
-//                    retcode = processClosedBeyondCallCenterScope(informixConnection, (ClosedBeyondCallCenterScope) event);
 //                } else if (event instanceof CallAnsweredByProvider) {
 //                    retcode = processCallAnsweredByProvider(informixConnection, (CallAnsweredByProvider) event);
 //                } else if (event instanceof CallNotAnsweredByProvider) {
@@ -338,6 +346,10 @@ public class Bkgpi2a {
                         status = retcode;
                         nbError++;
                         break;
+                    case -4:        // rejet car non reconnu
+                        status = retcode;
+                        nbError++;
+                        break;
                     default:        // Erreur
                         status = -1;
                         nbError++;
@@ -349,8 +361,8 @@ public class Bkgpi2a {
                 if (updateResult.getMatchedCount() > 0) {
                     System.out.println("  updateResult:" + updateResult);
                 }
-                purgeEvents(collection);
             }
+            purgeEvents(collection);
         } catch (IOException ex) {
             Logger.getLogger(Bkgpi2a.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -359,22 +371,24 @@ public class Bkgpi2a {
 
     /**
      * Méthode pour purger les événements plus anciens que retention jours
+     *
      * @param collection dans laquelle réaliser la purge
      */
     private void purgeEvents(MongoCollection<Document> collection) {
         DateTime dateTime;
         BasicDBObject filter;
         DeleteResult deleteResult;
-        int retention = 7;
-        
-        System.out.println("  purge des événements antérieurs à " + retention + " jour(s)");
+
         dateTime = new DateTime().minusDays(retention);
-        filter = new BasicDBObject("sentDate", new BasicDBObject("$lt", dateTime.toString(isoDateTimeFormat)));
-        System.out.println("  filter:" + filter);
+        System.out.println("  purge des événements antérieurs à " + retention + " jour(s), soit antérieurs à " + dateTime);
+        filter = new BasicDBObject("sentDate", new BasicDBObject("$lt", dateTime.toString(isoDateTimeFormat2)));
+        if (debugMode) {
+            System.out.println("  filter:" + filter);
+        }
         deleteResult = collection.deleteMany(filter);
         System.out.println("  deleteResult:" + deleteResult);
     }
-    
+
     /**
      * Traite l'événement CallReceived sur un ticket
      *
@@ -477,18 +491,101 @@ public class Bkgpi2a {
      * @param closedBeyondCallCenterScope événement à traiter
      * @return code de retour : 1=Succès, 0=ne rien faire, -1=erreur
      */
-//    private int processClosedBeyondCallCenterScope(Connection informixConnection, ClosedBeyondCallCenterScope closedBeyondCallCenterScope) {
-//        int nbTrials = 0;
-//        int errno = 0;
-//        int isam = 0;
-//        String errmsg = null;
+    /**
+     * Traite l'événement PermanentlyFixed sur un ticket
+     *
+     * @param informixConnection connection à la base de données Informix locale
+     * @param permanentlyFixed événement à traiter
+     * @return code de retour : 1=Succès, 0=ne rien faire, -1=erreur
+     */
+    private int processClosedBeyondCallCenterScope(Connection informixConnection, ClosedBeyondCallCenterScope closedBeyondCallCenterScope) {
+        PreparedStatement preparedStatement;
+        ResultSet resultSet;
+        DateTime dateTime;
+        String message;
+        String stillOnSite;
+        int nbTrials = 0;
+        int errno = 0;
+        int isam = 0;
+        String errmsg = null;
+        SqlResults sqlResults = null;
+
+        int retcode = 0;
+
+        if (closedBeyondCallCenterScope.getOperator() instanceof ReferencedUser) {
+            try {
+                preparedStatement = informixConnection.prepareStatement("{call addLogTrial(?, ?, ?, ?, ?, ?, ?, ?)}");
+                preparedStatement.setString(1, closedBeyondCallCenterScope.getAggregateUid());
+                preparedStatement.setNull(2, java.sql.Types.INTEGER);
+                preparedStatement.setInt(3, ClosedBeyondCallCenterScope.code);
+                preparedStatement.setString(4, ClosedBeyondCallCenterScope.label);
+                dateTime = isoDateTimeFormat1.parseDateTime(closedBeyondCallCenterScope.getDate());
+                preparedStatement.setTimestamp(5, new Timestamp(dateTime.getMillis()));
+                preparedStatement.setInt(6, onum);
+                preparedStatement.setInt(7, 0);
+                preparedStatement.setInt(8, 1);
+                resultSet = preparedStatement.executeQuery();
+                if (resultSet.next()) {
+                    sqlResults = new SqlResults(resultSet);
+                    retcode = sqlResults.getRetcode();
+                    nbTrials = sqlResults.getNbTrials();
+                }
+                resultSet.close();
+
+//                if (retcode == 1) {
+//                    if ((message = closedBeyondCallCenterScope.getReport()) != null) {
+//                        preparedStatement.setInt(3, 72);
+//                        preparedStatement.setString(4, message);
+//                        resultSet = preparedStatement.executeQuery();
+//                        if (resultSet.next()) {
+//                            sqlResults.add(resultSet);
+//                            retcode = sqlResults.getRetcode();
+//                            nbTrials = sqlResults.getNbTrials();
+//                        }
+//                        resultSet.close();
+//                    }
+//                }
 //
-//        int retcode = -1;
-//
-//        System.out.println("      ClosedBeyondCallCenterScope:{retcode:" + retcode + ", nbTrials:" + nbTrials + "}");
-//
-//        return retcode;
-//    }
+//                if (retcode == 1) {
+//                    if ((stillOnSite = closedBeyondCallCenterScope.getStillOnSite()) != null) {
+//                        preparedStatement.setInt(3, 73);
+//                        if ("Yes".equals(stillOnSite)) {
+//                            message = "Oui";
+//                        } else if ("No".equals(stillOnSite)) {
+//                            message = "Non";
+//                        } else if ("NotAsked".equals(stillOnSite)) {
+//                            message = "Non demandée";
+//                        } else if ("ProviderRefuseToReply".equals(stillOnSite)) {
+//                            message = "Refus";
+//                        } else {
+//                            message = "Non disponible";
+//                        }
+//                        preparedStatement.setString(4, message);
+//                        resultSet = preparedStatement.executeQuery();
+//                        if (resultSet.next()) {
+//                            sqlResults.add(resultSet);
+//                            retcode = sqlResults.getRetcode();
+//                            nbTrials = sqlResults.getNbTrials();
+//                        }
+//                        resultSet.close();
+//                    }
+//                }
+
+                preparedStatement.close();
+            } catch (SQLException exception) {
+                Logger.getLogger(Bkgpi2a.class.getName()).log(Level.SEVERE, null, exception);
+                retcode = -1;
+            }
+        } else {
+            System.out.println("    ERREUR : événement rejeté, raison : généré par Anstel");
+            retcode = -3;
+        }
+
+        System.out.println("      ClosedBeyondCallCenterScope:{retcode:" + retcode + ", nbTrials:" + nbTrials + "}");
+
+        return retcode;
+    }
+
     /**
      * Traite l'événement TicketArchived sur un ticket
      *
@@ -564,7 +661,7 @@ public class Bkgpi2a {
 
         if (interventionStarted.getOperator() instanceof ReferencedUser) {
             try {
-                dateTime = isoDateTimeFormat.parseDateTime(interventionStarted.getStartedDate());
+                dateTime = isoDateTimeFormat1.parseDateTime(interventionStarted.getStartedDate());
                 preparedStatement = informixConnection.prepareStatement("{call addLogTrial(?, ?, ?, ?, ?, ?, ?, ?)}");
                 preparedStatement.setString(1, interventionStarted.getAggregateUid());
                 preparedStatement.setNull(2, java.sql.Types.INTEGER);
@@ -628,14 +725,14 @@ public class Bkgpi2a {
                     preparedStatement.setNull(2, java.sql.Types.INTEGER);
                 }
                 preparedStatement.setInt(3, 303);
-                dateTime = isoDateTimeFormat.parseDateTime(formalNoticeForProviderReported.getDeadline());
+                dateTime = isoDateTimeFormat1.parseDateTime(formalNoticeForProviderReported.getDeadline());
                 comment = new StringBuffer("Mise en demeure");
                 if ((ref = formalNoticeForProviderReported.getRef()) != null) {
                     comment.append(" no ").append(ref);
                 }
                 comment.append(" du ").append(dateTime.toString(ddmmyy));
                 preparedStatement.setString(4, comment.toString());
-                dateTime = isoDateTimeFormat.parseDateTime(formalNoticeForProviderReported.getReportDate());
+                dateTime = isoDateTimeFormat1.parseDateTime(formalNoticeForProviderReported.getReportDate());
                 preparedStatement.setTimestamp(5, new Timestamp(dateTime.getMillis()));
                 preparedStatement.setInt(6, onum);
                 preparedStatement.setInt(7, 0);
@@ -692,9 +789,9 @@ public class Bkgpi2a {
                     preparedStatement.setNull(2, java.sql.Types.INTEGER);
                 }
                 preparedStatement.setInt(3, 305);
-                dateTime = isoDateTimeFormat.parseDateTime(interventionDeadlineDefined.getDeadline());
+                dateTime = isoDateTimeFormat1.parseDateTime(interventionDeadlineDefined.getDeadline());
                 preparedStatement.setString(4, dateTime.toString(ddmmyy));
-                dateTime = isoDateTimeFormat.parseDateTime(interventionDeadlineDefined.getDate());
+                dateTime = isoDateTimeFormat1.parseDateTime(interventionDeadlineDefined.getDate());
                 preparedStatement.setTimestamp(5, new Timestamp(dateTime.getMillis()));
                 preparedStatement.setInt(6, onum);
                 preparedStatement.setInt(7, 0);
@@ -751,10 +848,10 @@ public class Bkgpi2a {
                     preparedStatement.setNull(2, java.sql.Types.INTEGER);
                 }
                 preparedStatement.setInt(3, 300);
-                dateTime = isoDateTimeFormat.parseDateTime(sendingServiceOrderReported.getSendingDate());
+                dateTime = isoDateTimeFormat1.parseDateTime(sendingServiceOrderReported.getSendingDate());
                 preparedStatement.setString(4, "OE no " + sendingServiceOrderReported.getRef()
                         + " du " + dateTime.toString(ddmmyy));
-                dateTime = isoDateTimeFormat.parseDateTime(sendingServiceOrderReported.getReportDate());
+                dateTime = isoDateTimeFormat1.parseDateTime(sendingServiceOrderReported.getReportDate());
                 preparedStatement.setTimestamp(5, new Timestamp(dateTime.getMillis()));
                 preparedStatement.setInt(6, onum);
                 preparedStatement.setInt(7, 0);
@@ -800,7 +897,7 @@ public class Bkgpi2a {
 
         if (interventionFinished.getOperator() instanceof ReferencedUser) {
             try {
-                dateTime = isoDateTimeFormat.parseDateTime(interventionFinished.getFinishedDate());
+                dateTime = isoDateTimeFormat1.parseDateTime(interventionFinished.getFinishedDate());
 
                 preparedStatement = informixConnection.prepareStatement("{call addLogTrial(?, ?, ?, ?, ?, ?, ?, ?)}");
                 preparedStatement.setString(1, interventionFinished.getAggregateUid());
@@ -900,7 +997,7 @@ public class Bkgpi2a {
                 preparedStatement.setNull(2, java.sql.Types.INTEGER);
                 preparedStatement.setInt(3, PermanentlyFixed.code);
                 preparedStatement.setString(4, PermanentlyFixed.label);
-                dateTime = isoDateTimeFormat.parseDateTime(permanentlyFixed.getDate());
+                dateTime = isoDateTimeFormat1.parseDateTime(permanentlyFixed.getDate());
                 preparedStatement.setTimestamp(5, new Timestamp(dateTime.getMillis()));
                 preparedStatement.setInt(6, onum);
                 preparedStatement.setInt(7, 0);
@@ -996,7 +1093,7 @@ public class Bkgpi2a {
                 preparedStatement.setNull(2, java.sql.Types.INTEGER);
                 preparedStatement.setInt(3, endOfMission.getCode());
                 preparedStatement.setString(4, endOfMission.getLabel());
-                dateTime = isoDateTimeFormat.parseDateTime(endOfMission.getDate());
+                dateTime = isoDateTimeFormat1.parseDateTime(endOfMission.getDate());
                 preparedStatement.setTimestamp(5, new Timestamp(dateTime.getMillis()));
                 preparedStatement.setInt(6, onum);
                 preparedStatement.setInt(7, 0);
@@ -1092,7 +1189,7 @@ public class Bkgpi2a {
                 preparedStatement.setNull(2, java.sql.Types.INTEGER);
                 preparedStatement.setInt(3, TicketClosedImpossibleRepair.code);
                 preparedStatement.setString(4, TicketClosedImpossibleRepair.label);
-                dateTime = isoDateTimeFormat.parseDateTime(ticketClosedImpossibleRepair.getDate());
+                dateTime = isoDateTimeFormat1.parseDateTime(ticketClosedImpossibleRepair.getDate());
                 preparedStatement.setTimestamp(5, new Timestamp(dateTime.getMillis()));
                 preparedStatement.setInt(6, onum);
                 preparedStatement.setInt(7, 0);
@@ -1185,7 +1282,7 @@ public class Bkgpi2a {
                 preparedStatement.setNull(2, java.sql.Types.INTEGER);
                 preparedStatement.setInt(3, PostponedFix.code);
                 preparedStatement.setString(4, PostponedFix.label);
-                dateTime = isoDateTimeFormat.parseDateTime(postponedFix.getDate());
+                dateTime = isoDateTimeFormat1.parseDateTime(postponedFix.getDate());
                 preparedStatement.setTimestamp(5, new Timestamp(dateTime.getMillis()));
                 preparedStatement.setInt(6, onum);
                 preparedStatement.setInt(7, 0);
@@ -1275,8 +1372,8 @@ public class Bkgpi2a {
 
         if (missionScheduled.getOperator() instanceof ReferencedUser) {
             try {
-                startDate = isoDateTimeFormat.parseDateTime(missionScheduled.getStartDate());
-                endDate = isoDateTimeFormat.parseDateTime(missionScheduled.getEndDate());
+                startDate = isoDateTimeFormat1.parseDateTime(missionScheduled.getStartDate());
+                endDate = isoDateTimeFormat1.parseDateTime(missionScheduled.getEndDate());
                 message = String.format("%-40s%s et le %s", "Intervention prévue entre le :",
                         startDate.toString(ddmmyy_hhmm), endDate.toString(ddmmyy_hhmm));
                 System.out.println("    message:" + message);
@@ -1285,7 +1382,7 @@ public class Bkgpi2a {
                 preparedStatement.setNull(2, java.sql.Types.INTEGER);
                 preparedStatement.setInt(3, -1);
                 preparedStatement.setString(4, message);
-                dateTime = isoDateTimeFormat.parseDateTime(missionScheduled.getDate());
+                dateTime = isoDateTimeFormat1.parseDateTime(missionScheduled.getDate());
                 preparedStatement.setTimestamp(5, new Timestamp(dateTime.getMillis()));
                 preparedStatement.setInt(6, onum);
                 preparedStatement.setInt(7, 0);
@@ -1342,7 +1439,7 @@ public class Bkgpi2a {
                 }
                 preparedStatement.setInt(3, 77);
                 preparedStatement.setString(4, missionAccepted.getComment());
-                dateTime = isoDateTimeFormat.parseDateTime(missionAccepted.getDate());
+                dateTime = isoDateTimeFormat1.parseDateTime(missionAccepted.getDate());
                 preparedStatement.setTimestamp(5, new Timestamp(dateTime.getMillis()));
                 preparedStatement.setInt(6, onum);
                 preparedStatement.setInt(7, 0);
@@ -1392,7 +1489,7 @@ public class Bkgpi2a {
                 preparedStatement.setNull(2, java.sql.Types.INTEGER);
                 preparedStatement.setInt(3, -1);
                 preparedStatement.setString(4, messageAdded.getMessage());
-                dateTime = isoDateTimeFormat.parseDateTime(messageAdded.getMessageAddedDate());
+                dateTime = isoDateTimeFormat1.parseDateTime(messageAdded.getMessageAddedDate());
                 preparedStatement.setTimestamp(5, new Timestamp(dateTime.getMillis()));
                 preparedStatement.setInt(6, onum);
                 preparedStatement.setInt(7, 0);
@@ -1465,7 +1562,7 @@ public class Bkgpi2a {
                 } else {
                     preparedStatement.setString(4, comment);
                 }
-                dateTime = isoDateTimeFormat.parseDateTime(providerAssigned.getDate());
+                dateTime = isoDateTimeFormat1.parseDateTime(providerAssigned.getDate());
                 preparedStatement.setTimestamp(5, new Timestamp(dateTime.getMillis()));
                 preparedStatement.setInt(6, onum);
                 preparedStatement.setInt(7, 0);
@@ -1522,6 +1619,51 @@ public class Bkgpi2a {
     }
 
     /**
+     * @return la durée de rétention, exprimée en jours, des événements en base
+     * de données.
+     */
+    public int getRetention() {
+        return retention;
+    }
+
+    /**
+     * @param retention définit la durée de rétention, exprimée en jours, des
+     * événements en base de données.
+     */
+    public void setRetention(int retention) {
+        this.retention = retention;
+    }
+
+    /**
+     * Définit la durée de rétention, exprimée en jours, des événements en base
+     * de données à partir des propriétés du programme.
+     *
+     * @param ServerType type of server : dev/pre-prod/prod.
+     * @param service service on server.
+     * @param applicationProperties Application properties.
+     */
+    public void setRetention(String ServerType, String service, ApplicationProperties applicationProperties) {
+        String value;
+        String errmsg;
+
+        value = applicationProperties.getProperty(ServerType + "." + service + ".retention");
+        if (value != null) {
+            try {
+                setRetention(Integer.parseInt(value));
+            } catch (Exception MyException) {
+                errmsg = "Mauvaise valeur du paramètre de retention:" + value
+                        + ", conservation de la valeur par défaut:"
+                        + retention + " jour(s), " + MyException;
+                Logger.getLogger(Bkgpi2a.class.getName()).log(Level.WARNING, errmsg);
+            }
+        } else {
+            errmsg = "Retention non définie dans le fichier des propriétés" + 
+                     ", conservation de la valeur par défaut:" + retention + " jour(s)";
+            Logger.getLogger(Bkgpi2a.class.getName()).log(Level.WARNING, errmsg);
+        }
+    }
+
+    /**
      * Retourne le contenu de Bkgpi2a
      *
      * @return retourne le contenu de Bkgpi2a
@@ -1529,7 +1671,8 @@ public class Bkgpi2a {
     @Override
     public String toString() {
         return "Bkgpi2a:{webServer=" + getMongoDbServerType()
-                + ", dbServer=" + getInformixDbServerType() + "}";
+                + ", dbServer=" + getInformixDbServerType()
+                + "}";
     }
 
     /**

@@ -22,7 +22,6 @@ dev.dbserver.passwd=passwd
 dev.dbserver.informixserver=bdd
 dev.dbserver.drivername=Informix
 dev.dbserver.driverclass=com.informix.jdbc.IfxDriver
-dev.dbserver.nb.thread=8
 
 # Properties for MySQL development environnement
 mysql.dbserver.name=vmsrv

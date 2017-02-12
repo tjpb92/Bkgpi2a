@@ -9,7 +9,7 @@ import static bkgpi2a.EventType.CLOSED_BEYOND_CALL_CENTER_SCOPE;
  * ClosedBeyondCallCenterScope, #555
  *
  * @author Thierry Baribaud
- * @version 0.34
+ * @version 0.42
  * @see http://performanceimmo.github.io/API/#ticketevent
  */
 @JsonIgnoreProperties({"_id", "date", "eventTypeUid"})
@@ -17,10 +17,26 @@ import static bkgpi2a.EventType.CLOSED_BEYOND_CALL_CENTER_SCOPE;
 public class ClosedBeyondCallCenterScope extends Event {
 
     /**
+     * Code de clôture d'appel
+     */
+    public static final int code = 71;
+
+    /**
+     * Libellé de clôture d'appel
+     */
+    public static final String label = "Cloture admin - appel hors périmètre";
+
+    /**
      * Opérateur ayant archivé le ticket
      */
     private Operator operator;
 
+    /**
+     * Rapport d'intervention. Non implémenté, mais souvent présent côté centre
+     * d'appel, TB, le 12/02/17.
+     */
+//    @JsonInclude(JsonInclude.Include.NON_NULL)
+//    private String report;
     /**
      * Constructeur de la classe ClosedBeyondCallCenterScope
      */
@@ -50,6 +66,19 @@ public class ClosedBeyondCallCenterScope extends Event {
         return getDate();
     }
 
+//    /**
+//     * @return le rapport d'intervention
+//     */
+//    public String getReport() {
+//        return report;
+//    }
+//
+//    /**
+//     * @param report définit le rapport d'intervention
+//     */
+//    public void setReport(String report) {
+//        this.report = report;
+//    }
     /**
      * @param closingDate définit la date à laquelle l'événement a eu lieu
      */
@@ -65,6 +94,7 @@ public class ClosedBeyondCallCenterScope extends Event {
         return "ClosedBeyondCallCenterScope:{"
                 + super.toString()
                 + ", " + getOperator()
+                //                + ", report:" + getReport()
                 + ", closingDate:" + getClosingDate()
                 + "}";
     }

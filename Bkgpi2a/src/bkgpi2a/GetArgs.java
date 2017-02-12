@@ -4,7 +4,7 @@ package bkgpi2a;
  * Cette classe sert à vérifier et à récupérer les arguments passés en ligne de
  * commande au programme Bkgpi2a.
  * @author Thierry Baribaud
- * @version 0.41
+ * @version 0.42
  */
 public class GetArgs {
 
@@ -20,6 +20,12 @@ public class GetArgs {
      */
     private String informixDbServerType = "pre-prod";
 
+    /**
+     * retention : durée de conservation des événements en base de données.
+     * Valeur par défaut : 7 jours.
+     */
+    private int retention = 7;
+    
     /**
      * debugMode : fonctionnement du programme en mode debug (true/false).
      * Valeur par défaut : false.
@@ -161,6 +167,20 @@ public class GetArgs {
                 + ", debugMode=" + debugMode
                 + ", testMode=" + testMode
                 + "}";
+    }
+
+    /**
+     * @return the retention
+     */
+    public int getRetention() {
+        return retention;
+    }
+
+    /**
+     * @param retention the retention to set
+     */
+    public void setRetention(int retention) {
+        this.retention = retention;
     }
 
 }
