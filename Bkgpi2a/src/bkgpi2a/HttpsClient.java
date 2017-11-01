@@ -16,7 +16,7 @@ import java.util.logging.Logger;
  * @see https://www.mkyong.com/java/how-to-send-http-request-getpost-in-java/
  *
  * @author Thierry Baribaud
- * @version 0.37
+ * @version 0.47
  */
 public class HttpsClient {
 
@@ -51,6 +51,11 @@ public class HttpsClient {
      * Commande pour accéder aux sociétés
      */
     public static final String COMPANIES_CMDE = "companies";
+
+    /**
+     * Commande pour accéder aux sociétés
+     */
+    public static final String CLIENT_COMPANIES_CMDE = "clientcompanies";
 
     /**
      * Commande pour accéder aux filiales

@@ -12,10 +12,10 @@ import com.fasterxml.jackson.annotation.JsonUnwrapped;
  * Classe décrivant un intervenant
  *
  * @author Thierry Baribaud
- * @version 0.20
+ * @version 0.47
  * @see http://performanceimmo.github.io/API/#providercontacts
  */
-@JsonPropertyOrder({"uid", "label", "phones", "fax", "emails", "active",})
+//@JsonPropertyOrder({"uid", "label", "phones", "fax", "emails", "active",})
 public class ProviderContact {
 
     /**
@@ -36,9 +36,14 @@ public class ProviderContact {
     private int id;
 
     /**
-     * Nom du contact.
+     * Nom du contact (ancienne représentation).
      */
     private String label;
+
+    /**
+     * Nom de l'appelant (nouvelle représentation).
+     */
+    private Name name;
 
     /**
      * Liste de numéros de téléphone pour joindre le contact
@@ -91,6 +96,20 @@ public class ProviderContact {
      */
     public void setLabel(String label) {
         this.label = label;
+    }
+
+    /**
+     * @return le nom du contact.
+     */
+    public Name getName() {
+        return name;
+    }
+
+    /**
+     * @param name définit le nom du contact.
+     */
+    public void setName(Name name) {
+        this.name = name;
     }
 
     /**
@@ -200,6 +219,7 @@ public class ProviderContact {
                 + ", _links:" + getLinks()
                 + ", uid:" + getUid()
                 + ", label:" + getLabel()
+                + ", name:" + getName()
                 + ", phones:" + getPhones()
                 + ", fax:" + getFax()
                 + ", emails:" + getEmails()

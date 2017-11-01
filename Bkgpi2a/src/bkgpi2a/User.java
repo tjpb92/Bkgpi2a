@@ -14,7 +14,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
  * Classe décrivant un utilisateur simple
  *
  * @author Thierry Baribaud
- * @version Octobre 2016
+ * @version 0.47
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME,
@@ -24,7 +24,8 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
     @Type(value = SuperUser.class, name = "superUser"),
     @Type(value = CallCenterUser.class, name = "callCenterUser"),
     @Type(value = ClientAccountManager.class, name = "clientAccountManager"),
-    @Type(value = Executive.class, name = "executive")
+    @Type(value = Executive.class, name = "executive"),
+    @Type(value = PatrimonyManager.class, name = "patrimonyManager")
 })
 public abstract class User {
 

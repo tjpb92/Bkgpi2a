@@ -7,7 +7,7 @@ import com.fasterxml.jackson.annotation.JsonTypeName;
  * Classe décrivant un nom non qualifié (pauvre)
  *
  * @author Thierry Baribaud
- * @version Octobre 2016
+ * @version 0.47
  */
 @JsonTypeName("PoorName")
 public class PoorName extends Name {
@@ -15,7 +15,7 @@ public class PoorName extends Name {
     /**
      * Nom
      */
-    private String name;
+    private String value;
 
     /**
      * Constructeur principal de la classe PoorName
@@ -27,15 +27,15 @@ public class PoorName extends Name {
     /**
      * @return le nom
      */
-    public String getName() {
-        return name;
+    public String getValue() {
+        return value;
     }
 
     /**
-     * @param name définit le nom
+     * @param value définit le nom
      */
-    public void setName(String name) {
-        this.name = name;
+    public void setValue(String value) {
+        this.value = value;
     }
     
     /**
@@ -45,7 +45,7 @@ public class PoorName extends Name {
     public String toString() {
         return "PoorName:{"
                 + super.toString()
-                + ", name:" + getName()
+                + ", value:" + getValue()
                 + "}";
     }
 }

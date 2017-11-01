@@ -4,14 +4,15 @@ package bkgpi2a;
  * Enumération sur les types d'utilisateur
  *
  * @author Thierry Baribaud
- * @version Octobre 2016
+ * @version 0.47
  */
 public enum UserType {
 
     SUPER_USER("superUser"),
     CALL_CENTER_USER("callCenterUser"),
     CLIENT_ACCOUNT_MANAGER("clientAccountManager"),
-    EXECUTIVE("executive");
+    EXECUTIVE("executive"),
+    PATRIMONY_MANAGER("patrimonyManager");
 
     private String name = "";
 
