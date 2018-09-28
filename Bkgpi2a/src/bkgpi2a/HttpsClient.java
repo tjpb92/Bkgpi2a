@@ -16,7 +16,7 @@ import java.util.logging.Logger;
  * @see https://www.mkyong.com/java/how-to-send-http-request-getpost-in-java/
  *
  * @author Thierry Baribaud
- * @version 0.47
+ * @version 0.48
  */
 public class HttpsClient {
 
@@ -81,6 +81,11 @@ public class HttpsClient {
      * Commande pour accéder aux intervenants/fournisseurs
      */
     public static final String PROVIDER_CONTACTS_CMDE = "providercontacts";
+
+    /**
+     * Commande pour accéder aux intervenants/fournisseurs
+     */
+    public static final String PROVIDER_COMPANIES_CMDE = "providercompanies";
 
     /**
      * Commande pour accéder aux événement des tickets
@@ -152,10 +157,11 @@ public class HttpsClient {
 
     /**
      * Méthode pour envoyer une requête HTTPS GET
+     *
      * @param Command commande à exécuter
      * @throws Exception en cas d'erreur
      */
-        public void sendGet(String Command) throws Exception {
+    public void sendGet(String Command) throws Exception {
 
         String commandUrl;
         URL url;
@@ -179,16 +185,19 @@ public class HttpsClient {
         System.out.println("Accept-Range : " + getAcceptRange());
         setContentRange(connection.getHeaderField("Content-Range"));
         System.out.println("Content-Range : " + getContentRange());
-        HttpsClient.this.getResponse(connection);
+        if (responseCode == 200 || responseCode == 206) {
+            HttpsClient.this.getResponse(connection);
+        }
         connection.disconnect();
     }
 
     /**
      * Méthode pour envoyer une requête HTTPS POST
+     *
      * @param Command commande à exécuter
      * @throws Exception en cas d'erreur
      */
-        public void sendPost(String Command) throws Exception {
+    public void sendPost(String Command) throws Exception {
 
         String commandUrl;
         URL url;
@@ -215,7 +224,9 @@ public class HttpsClient {
         dataOutputStream.close();
 
         System.out.println("Sending 'POST' request to URL : " + commandUrl);
-        if (debugMode) System.out.println("Post parameters : " + urlParameters);
+        if (debugMode) {
+            System.out.println("Post parameters : " + urlParameters);
+        }
         getResponseCode(connection);
         HttpsClient.this.getCookies(connection);
         HttpsClient.this.getResponse(connection);

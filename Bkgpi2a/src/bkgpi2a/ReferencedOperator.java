@@ -1,16 +1,18 @@
 package bkgpi2a;
 
 import static bkgpi2a.OperatorType.REFERENCED_OPERATOR;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 
 /**
  * Classe décrivant un opérateur référencé
  *
  * @author Thierry Baribaud
- * @version Octobre 2016
+ * @version 0.48
  * @see http://performanceimmo.github.io/API/#operator
  */
 @JsonTypeName("ReferencedOperator")
+@JsonPropertyOrder({"operatorUid", "assigneeType"})
 public class ReferencedOperator extends Operator {
 
     /**
@@ -19,7 +21,7 @@ public class ReferencedOperator extends Operator {
     private String operatorUid;
 
     /**
-     * Constructeur principal de la classe ReferencedUser
+     * Constructeur principal de la classe ReferencedOperator
      */
     public ReferencedOperator() {
         setOperatorType(REFERENCED_OPERATOR.getName());

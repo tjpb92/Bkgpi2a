@@ -6,7 +6,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
  * Classe décrivant une adresse basique
  *
  * @author Thierry Baribaud
- * @version 0.21
+ * @version 0.48
  * @see http://performanceimmo.github.io/API/#basicaddress
  */
 public class BasicAddress {
@@ -60,6 +60,18 @@ public class BasicAddress {
     public void setQuality(String quality) {
         this.quality = quality;
     }
+
+    /**
+     * recipientSupplement
+     */
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private RecipientIdentificationSupplement recipientSupplement;
+
+    /**
+     * geographicalSupplement
+     */
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private GeographicalIdentificationSupplement geographicalSupplement;
 
     /**
      * @return la voie
@@ -132,6 +144,42 @@ public class BasicAddress {
     }
 
     /**
+     * Get the value of recipientSupplement
+     *
+     * @return the value of recipientSupplement
+     */
+    public RecipientIdentificationSupplement getRecipientSupplement() {
+        return recipientSupplement;
+    }
+
+    /**
+     * Set the value of recipientSupplement
+     *
+     * @param recipientSupplement new value of recipientSupplement
+     */
+    public void setRecipientSupplement(RecipientIdentificationSupplement recipientSupplement) {
+        this.recipientSupplement = recipientSupplement;
+    }
+
+    /**
+     * Get the value of geographicalSupplement
+     *
+     * @return the value of geographicalSupplement
+     */
+    public GeographicalIdentificationSupplement getGeographicalSupplement() {
+        return geographicalSupplement;
+    }
+
+    /**
+     * Set the value of geographicalSupplement
+     *
+     * @param geographicalSupplement new value of geographicalSupplement
+     */
+    public void setGeographicalSupplement(GeographicalIdentificationSupplement geographicalSupplement) {
+        this.geographicalSupplement = geographicalSupplement;
+    }
+
+    /**
      * @return l'état
      */
     public String getState() {
@@ -154,6 +202,8 @@ public class BasicAddress {
                 + "quality:" + getQuality()
                 + ", street:" + getStreet()
                 + ", complement:" + getComplement()
+                + ", recipientSupplement:" + getRecipientSupplement()
+                + ", geographicalSupplement:" + getGeographicalSupplement()
                 + ", zipCode:" + getZipCode()
                 + ", city:" + getCity()
                 + ", state:" + getState()

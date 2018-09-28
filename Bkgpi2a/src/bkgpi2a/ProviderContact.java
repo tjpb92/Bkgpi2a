@@ -2,9 +2,9 @@ package bkgpi2a;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.annotation.JsonSetter;
 import com.fasterxml.jackson.annotation.JsonUnwrapped;
 
@@ -12,10 +12,11 @@ import com.fasterxml.jackson.annotation.JsonUnwrapped;
  * Classe décrivant un intervenant
  *
  * @author Thierry Baribaud
- * @version 0.47
+ * @version 0.48
  * @see http://performanceimmo.github.io/API/#providercontacts
  */
 //@JsonPropertyOrder({"uid", "label", "phones", "fax", "emails", "active",})
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class ProviderContact {
 
     /**
@@ -44,6 +45,29 @@ public class ProviderContact {
      * Nom de l'appelant (nouvelle représentation).
      */
     private Name name;
+
+    /**
+     * Référence de la société du prestataire
+     */
+    private ProviderCompanyQueryView providerCompany;
+
+    /**
+     * Retourne la société du prestataire
+     *
+     * @return la société du prestataire
+     */
+    public ProviderCompanyQueryView getProviderCompany() {
+        return providerCompany;
+    }
+
+    /**
+     * Définit la société du prestataire
+     *
+     * @param providerCompany la société du prestataire
+     */
+    public void setProviderCompany(ProviderCompanyQueryView providerCompany) {
+        this.providerCompany = providerCompany;
+    }
 
     /**
      * Liste de numéros de téléphone pour joindre le contact
@@ -220,6 +244,7 @@ public class ProviderContact {
                 + ", uid:" + getUid()
                 + ", label:" + getLabel()
                 + ", name:" + getName()
+                + ", providerCompany:" + getProviderCompany()
                 + ", phones:" + getPhones()
                 + ", fax:" + getFax()
                 + ", emails:" + getEmails()

@@ -6,14 +6,14 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.annotation.JsonSetter;
 
 /**
- * Classe décrivant un container permettant le transfert des contactProviders.
+ * Classe décrivant un container permettant le transfert de prestataires
  *
  * @author Thierry Baribaud
  * @version 0.48
- * @see http://performanceimmo.github.io/API/#providercontacts
+ * @see http://performanceimmo.github.io/API/#providercompanies
  */
 @JsonPropertyOrder({"_links", "result"})
-public class ProviderContactContainer {
+public class ProviderCompanyContainer {
 
     /**
      * Liste de liens entre entités
@@ -25,14 +25,14 @@ public class ProviderContactContainer {
      * Liste des sociétés
      */
     @JsonProperty("result")
-    private ProviderContactList providerContactList;
+    private ProviderCompanyList providerCompanyList;
 
     /**
-     * Constructeur de la classe ProviderContactContainer
+     * Constructeur de la classe ProviderCompanyContainer
      */
-    public ProviderContactContainer() {
+    public ProviderCompanyContainer() {
         this._links = new Links();
-        this.providerContactList = new ProviderContactList();
+        this.providerCompanyList = new ProviderCompanyList();
     }
 
     /**
@@ -52,28 +52,28 @@ public class ProviderContactContainer {
     }
 
     /**
-     * @return la liste des providerContacts
+     * @return la liste des prestataires
      */
     @JsonGetter("result")
-    public ProviderContactList getProviderContactList() {
-        return providerContactList;
+    public ProviderCompanyList getProviderCompanyList() {
+        return providerCompanyList;
     }
 
     /**
-     * @param providerContactList définit la liste des providerContacts
+     * @param providerCompanyList définit la liste des prestataires
      */
     @JsonSetter("result")
-    public void setProviderContactList(ProviderContactList providerContactList) {
-        this.providerContactList = providerContactList;
+    public void setProviderCompanyList(ProviderCompanyList providerCompanyList) {
+        this.providerCompanyList = providerCompanyList;
     }
 
     /**
-     * Ajoute un providerContact à la liste
+     * Ajoute un prestataire à la liste
      *
-     * @param providerContact providerContact à ajouter
+     * @param providerCompany prestataire à ajouter
      */
-    public void add(ProviderContact providerContact) {
-        providerContactList.add(providerContact);
+    public void add(ProviderCompany providerCompany) {
+        providerCompanyList.add(providerCompany);
     }
 
     /**
@@ -94,7 +94,7 @@ public class ProviderContactContainer {
     public String toString() {
         return "ProviderContactContainer:{"
                 + "_links:" + getLinks()
-                + ", providerContactList:" + getProviderContactList()
+                + ", providerCompanyList:" + getProviderCompanyList()
                 + "}";
     }
 }
