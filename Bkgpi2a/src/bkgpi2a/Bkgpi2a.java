@@ -31,7 +31,7 @@ import utils.DBServerException;
  * de données MongoDB par rapport à une base de données Informix
  *
  * @author Thierry Baribaud.
- * @version 0.42
+ * @version 0.49
  */
 public class Bkgpi2a {
 
@@ -1481,7 +1481,7 @@ public class Bkgpi2a {
         PreparedStatement preparedStatement;
         ResultSet resultSet;
         DateTime dateTime;
-        Provider provider;
+        ReferencedProviderContact referencedProviderContact;
         int nbTrials = 0;
         SqlResults sqlResults;
 
@@ -1491,12 +1491,12 @@ public class Bkgpi2a {
             try {
                 preparedStatement = informixConnection.prepareStatement("{call addLogTrial(?, ?, ?, ?, ?, ?, ?, ?)}");
                 preparedStatement.setString(1, interventionAccepted.getAggregateUid());
-//                provider = interventionAccepted.getProvider();
-//                if (provider instanceof ReferencedProvider) {
-//                    preparedStatement.setString(2, ((ReferencedProvider) provider).getProviderUid());
-//                } else {
+                if (interventionAccepted.getAssignee() instanceof ReferencedProviderContact) {
+                    referencedProviderContact = (ReferencedProviderContact)interventionAccepted.getAssignee();
+                    preparedStatement.setString(2, referencedProviderContact.getProviderContactUid());
+                }else {
                     preparedStatement.setNull(2, java.sql.Types.INTEGER);
-//                }
+                }
                 preparedStatement.setInt(3, 77);
                 preparedStatement.setString(4, interventionAccepted.getComment());
                 dateTime = isoDateTimeFormat1.parseDateTime(interventionAccepted.getDate());
@@ -1662,63 +1662,54 @@ public class Bkgpi2a {
         ResultSet resultSet;
         DateTime dateTime;
         int nbTrials = 0;
-        Provider provider;
-        ProviderAssignationPurpose providerAssignationPurpose;
+        ReferencedProviderContact referencedProviderContact;
         String comment;
 
         int retcode = 0;
         SqlResults sqlResults;
 
-//        if (assigneeIdentified.getOperator() instanceof ReferencedUser) {
-//            try {
-//                preparedStatement = informixConnection.prepareStatement("{call addLogTrial(?, ?, ?, ?, ?, ?, ?, ?)}");
-//                preparedStatement.setString(1, providerAssigned.getAggregateUid());
-//                provider = providerAssigned.getProvider();
-//                if (provider instanceof ReferencedProvider) {
-//                    preparedStatement.setString(2, ((ReferencedProvider) provider).getProviderUid());
-//                } else {
-//                    preparedStatement.setNull(2, java.sql.Types.INTEGER);
-//                }
-//                preparedStatement.setInt(3, 22);
-//                providerAssignationPurpose = providerAssigned.getProviderAssignationPurpose();
-//                if (providerAssignationPurpose instanceof RecourseChanged) {
-//                    comment = ((RecourseChanged) providerAssignationPurpose).getComment();
-//                } else if (providerAssignationPurpose instanceof Purpose) {
-//                    comment = ((Purpose) providerAssignationPurpose).getPurpose();
-//                } else {
-//                    comment = null;
-//                }
-//                if (comment == null) {
-//                    preparedStatement.setNull(4, java.sql.Types.CHAR);
-//                } else if ("comment".equals(comment)) {
-//                    preparedStatement.setNull(4, java.sql.Types.CHAR);
-//                } else {
-//                    preparedStatement.setString(4, comment);
-//                }
-//                dateTime = isoDateTimeFormat1.parseDateTime(providerAssigned.getDate());
-//                preparedStatement.setTimestamp(5, new Timestamp(dateTime.getMillis()));
-//                preparedStatement.setInt(6, onum);
-//                preparedStatement.setInt(7, 0);
-//                preparedStatement.setInt(8, 0);
-//                resultSet = preparedStatement.executeQuery();
-//                if (resultSet.next()) {
-//                    sqlResults = new SqlResults(resultSet);
-//                    retcode = sqlResults.getRetcode();
-//                    nbTrials = sqlResults.getNbTrials();
-//                }
-//                resultSet.close();
-//                preparedStatement.close();
-//            } catch (SQLException exception) {
-//                Logger.getLogger(Bkgpi2a.class.getName()).log(Level.SEVERE, null, exception);
-//                retcode = -1;
-//            }
-//
-//        } else {
-//            System.out.println("    ERREUR : événement rejeté, raison : généré par Anstel");
-//            retcode = -3;
-//        }
-//
-//        System.out.println("      ProviderAssigned:{retcode:" + retcode + ", nbTrials:" + nbTrials + "}");
+        if (assigneeIdentified.getOperator() instanceof ReferencedUser) {
+            try {
+                preparedStatement = informixConnection.prepareStatement("{call addLogTrial(?, ?, ?, ?, ?, ?, ?, ?)}");
+                if (assigneeIdentified.getAssignee() instanceof ReferencedProviderContact) {
+                    referencedProviderContact = (ReferencedProviderContact) assigneeIdentified.getAssignee();
+                    preparedStatement.setString(2, referencedProviderContact.getProviderContactUid());
+                }
+                else {
+                    preparedStatement.setNull(2, java.sql.Types.INTEGER);    
+                }
+                preparedStatement.setString(1, assigneeIdentified.getAggregateUid());
+                preparedStatement.setInt(3, 22);
+                comment = "Prestataire assigné";
+                if ("comment".equals(comment)) {
+                    preparedStatement.setNull(4, java.sql.Types.CHAR);
+                } else {
+                    preparedStatement.setString(4, comment);
+                }
+                dateTime = isoDateTimeFormat1.parseDateTime(assigneeIdentified.getDate());
+                preparedStatement.setTimestamp(5, new Timestamp(dateTime.getMillis()));
+                preparedStatement.setInt(6, onum);
+                preparedStatement.setInt(7, 0);
+                preparedStatement.setInt(8, 0);
+                resultSet = preparedStatement.executeQuery();
+                if (resultSet.next()) {
+                    sqlResults = new SqlResults(resultSet);
+                    retcode = sqlResults.getRetcode();
+                    nbTrials = sqlResults.getNbTrials();
+                }
+                resultSet.close();
+                preparedStatement.close();
+            } catch (SQLException exception) {
+                Logger.getLogger(Bkgpi2a.class.getName()).log(Level.SEVERE, null, exception);
+                retcode = -1;
+            }
+
+        } else {
+            System.out.println("    ERREUR : événement rejeté, raison : généré par Anstel");
+            retcode = -3;
+        }
+
+        System.out.println("      AssigneeIdentified:{retcode:" + retcode + ", nbTrials:" + nbTrials + "}");
 
         return retcode;
     }
