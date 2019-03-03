@@ -8,7 +8,7 @@ import com.fasterxml.jackson.annotation.JsonTypeName;
  * Classe décrivant un début d'intervention : InterventionStarted, #532
  *
  * @author Thierry Baribaud
- * @version 0.30
+ * @version 1.04
  * @see http://performanceimmo.github.io/API/#ticketevent
  */
 @JsonIgnoreProperties({"_id", "date", "eventTypeUid"})
@@ -23,7 +23,7 @@ public class InterventionStarted extends Event {
     /**
      * Intervenant courant sur l'essai
      */
-    private Provider provider;
+    private TicketAssignee assignee;
 
     /**
      * Constructeur de la classe InterventionStarted
@@ -64,15 +64,15 @@ public class InterventionStarted extends Event {
     /**
      * @return l'intervenant courant si présent
      */
-    public Provider getProvider() {
-        return provider;
+    public TicketAssignee getAssignee() {
+        return assignee;
     }
 
     /**
-     * @param provider définit l'intervenant courant
+     * @param assignee définit l'intervenant courant
      */
-    public void setProvider(Provider provider) {
-        this.provider = provider;
+    public void setAssignee(TicketAssignee assignee) {
+        this.assignee = assignee;
     }
 
     /**
@@ -83,7 +83,7 @@ public class InterventionStarted extends Event {
         return "InterventionStarted:{"
                 + super.toString()
                 + ", " + getOperator()
-                + ", " + getProvider()
+                + ", " + getAssignee()
                 + ", startedDate:" + getStartedDate()
                 + "}";
     }
