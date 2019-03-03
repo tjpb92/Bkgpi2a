@@ -4,14 +4,17 @@ package bkgpi2a;
  * Enumération décrivant les identifiants et libellés des événements.
  *
  * @author Thierry Baribaud
- * @version 0.40
+ * @version 1.00
  */
 public enum EventType {
 
     TICKET_OPENED("TicketOpened", 500),
     MISSION_ACCEPTED("MissionAccepted", 505),
     TICKET_UPDATED("TicketUpdated", 510),
-    PROVIDER_ASSIGNED("ProviderAssigned", 515),
+    
+    PROVIDER_ASSIGNED("ProviderAssigned", 515), // Deprecated on 2018, September 8th, see ASSIGNEE_IDENTIFIED
+    ASSIGNEE_IDENTIFIED("AssigneeIdentified", 515),
+    
     MISSION_REFUSED("MissionRefused", 520),
     ARRIVED_ON_SITE("ArrivedOnSite", 525),
     GONE_FROM_SITE("GoneFromSite", 530),

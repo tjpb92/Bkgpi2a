@@ -31,7 +31,7 @@ import utils.DBServerException;
  * de données MongoDB par rapport à une base de données Informix
  *
  * @author Thierry Baribaud.
- * @version 0.42
+ * @version 1.00
  */
 public class Bkgpi2a {
 
@@ -283,6 +283,8 @@ public class Bkgpi2a {
                 retcode = -4;   // Non géré par défaut.
                 if (event instanceof ProviderAssigned) {
                     retcode = processProviderAssigned(informixConnection, (ProviderAssigned) event);
+                } else if (event instanceof AssigneeIdentified) {
+                    retcode = processAssigneeIdentified(informixConnection, (AssigneeIdentified) event);
                 } else if (event instanceof MessageAdded) {
                     retcode = processMessageAdded(informixConnection, (MessageAdded) event);
                 } else if (event instanceof MissionAccepted) {
@@ -1586,6 +1588,72 @@ public class Bkgpi2a {
         }
 
         System.out.println("      ProviderAssigned:{retcode:" + retcode + ", nbTrials:" + nbTrials + "}");
+
+        return retcode;
+    }
+
+    /**
+     * Traite l'événement AssigneeIdentified
+     *
+     * @param informixConnection connection à la base de données Informix locale
+     * @param assigneeIdentified événement à traiter
+     * @return code de retour : 1=Succès, 0=ne rien faire, -1=erreur
+     */
+    private int processAssigneeIdentified(Connection informixConnection, AssigneeIdentified assigneeIdentified) {
+        PreparedStatement preparedStatement;
+        ResultSet resultSet;
+        DateTime dateTime;
+        int nbTrials = 0;
+        TicketAssignee ticketAssignee;
+        ProviderAssignationPurpose providerAssignationPurpose;
+        String comment;
+
+        int retcode = 0;
+        SqlResults sqlResults;
+
+        if (assigneeIdentified.getOperator() instanceof ReferencedUser) {
+            try {
+                preparedStatement = informixConnection.prepareStatement("{call addLogTrial(?, ?, ?, ?, ?, ?, ?, ?)}");
+                preparedStatement.setString(1, assigneeIdentified.getAggregateUid());
+                ticketAssignee = assigneeIdentified.getTicketAssignee();
+                if (ticketAssignee instanceof ReferencedProviderContact) {
+                    preparedStatement.setString(2, ((ReferencedProviderContact) ticketAssignee).getProviderContactUid());
+                } else {
+                    preparedStatement.setNull(2, java.sql.Types.INTEGER);
+                }
+                preparedStatement.setInt(3, 22);
+                comment = assigneeIdentified.getComment();
+                if (comment == null) {
+                    preparedStatement.setNull(4, java.sql.Types.CHAR);
+                } else if ("comment".equals(comment)) {
+                    preparedStatement.setNull(4, java.sql.Types.CHAR);
+                } else {
+                    preparedStatement.setString(4, comment);
+                }
+                dateTime = isoDateTimeFormat1.parseDateTime(assigneeIdentified.getDate());
+                preparedStatement.setTimestamp(5, new Timestamp(dateTime.getMillis()));
+                preparedStatement.setInt(6, onum);
+                preparedStatement.setInt(7, 0);
+                preparedStatement.setInt(8, 0);
+                resultSet = preparedStatement.executeQuery();
+                if (resultSet.next()) {
+                    sqlResults = new SqlResults(resultSet);
+                    retcode = sqlResults.getRetcode();
+                    nbTrials = sqlResults.getNbTrials();
+                }
+                resultSet.close();
+                preparedStatement.close();
+            } catch (SQLException exception) {
+                Logger.getLogger(Bkgpi2a.class.getName()).log(Level.SEVERE, null, exception);
+                retcode = -1;
+            }
+
+        } else {
+            System.out.println("    ERREUR : événement rejeté, raison : généré par Anstel");
+            retcode = -3;
+        }
+
+        System.out.println("      AssigneeIdentified:{retcode:" + retcode + ", nbTrials:" + nbTrials + "}");
 
         return retcode;
     }
