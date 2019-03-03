@@ -8,7 +8,7 @@ import java.util.Map;
  * Classe définissant les informations d'un ticket
  *
  * @author Thierry Baribaud
- * @version 0.21
+ * @version 1.02
  * @see http://performanceimmo.github.io/API/#ticketinfos
  */
 public class TicketInfos {
@@ -44,6 +44,11 @@ public class TicketInfos {
      */
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private String instructions;
+
+    /**
+     * Identifiant de la raison d'appel
+     */
+    private String callPurposeUid;
 
     /**
      * Raison de l'appel
@@ -154,6 +159,20 @@ public class TicketInfos {
     }
 
     /**
+     * @return l'identifiant de la raison de l'appel
+     */
+    public String getCallPurposeUid() {
+        return callPurposeUid;
+    }
+
+    /**
+     * @param callPurposeUid définit l'identifiant de la raison de l'appel
+     */
+    public void setCallPurposeUid(String callPurposeUid) {
+        this.callPurposeUid = callPurposeUid;
+    }
+
+    /**
      * @return la raison de l'appel
      */
     public String getCallPurposeLabel() {
@@ -227,6 +246,7 @@ public class TicketInfos {
                 + ", address:" + getAddress()
                 + ", request:" + getRequest()
                 + ", instructions:" + getInstructions()
+                + ", callPurposeUid :" + getCallPurposeUid()
                 + ", callPurposeLabel:" + getCallPurposeLabel()
                 + ", altCallPurpose:" + getAltCallPurpose()
                 + ", additionalData:" + getAdditionalData()
