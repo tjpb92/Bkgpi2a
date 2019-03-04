@@ -9,7 +9,7 @@ import static bkgpi2a.EventType.SENDING_SERVICE_ORDER_REPORTED;
  * #615
  *
  * @author Thierry Baribaud
- * @version 0.38
+ * @version 1.05
  * @see http://performanceimmo.github.io/API/#ticketevent
  */
 @JsonIgnoreProperties({"_id", "eventTypeUid"})
@@ -24,7 +24,7 @@ public class SendingServiceOrderReported extends Event {
     /**
      * Intervenant courant sur l'essai
      */
-    private Provider provider;
+    private TicketAssignee assignee;
 
     /**
      * Référence de l'ordre de service
@@ -75,15 +75,15 @@ public class SendingServiceOrderReported extends Event {
     /**
      * @return l'intervenant courant si présent
      */
-    public Provider getProvider() {
-        return provider;
+    public TicketAssignee getAssignee() {
+        return assignee;
     }
 
     /**
-     * @param provider définit l'intervenant courant
+     * @param assignee définit l'intervenant courant
      */
-    public void setProvider(Provider provider) {
-        this.provider = provider;
+    public void setAssignee(TicketAssignee assignee) {
+        this.assignee = assignee;
     }
 
     /**
@@ -123,7 +123,7 @@ public class SendingServiceOrderReported extends Event {
         return "SendingServiceOrderReported:{"
                 + super.toString()
                 + ", " + getOperator()
-                + ", " + getProvider()
+                + ", " + getAssignee()
                 + ", ref:" + getRef()
                 + ", reportDate:" + getReportDate()
                 + ", sendingDate:" + getSendingDate()

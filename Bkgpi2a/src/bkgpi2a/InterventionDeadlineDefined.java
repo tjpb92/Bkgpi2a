@@ -9,7 +9,7 @@ import static bkgpi2a.EventType.INTERVENTION_DEADLINE_DEFINED;
  * InterventionDeadlineDefined, #625
  *
  * @author Thierry Baribaud
- * @version 0.38
+ * @version 1.05
  * @see http://performanceimmo.github.io/API/#ticketevent
  */
 @JsonIgnoreProperties({"_id", "eventTypeUid"})
@@ -24,7 +24,7 @@ public class InterventionDeadlineDefined extends Event {
     /**
      * Intervenant courant sur l'essai
      */
-    private Provider provider;
+    private TicketAssignee assignee;
 
     /**
      * Date de fin des travaux
@@ -56,15 +56,15 @@ public class InterventionDeadlineDefined extends Event {
     /**
      * @return l'intervenant courant si présent
      */
-    public Provider getProvider() {
-        return provider;
+    public TicketAssignee getAssignee() {
+        return assignee;
     }
 
     /**
-     * @param provider définit l'intervenant courant
+     * @param assignee définit l'intervenant courant
      */
-    public void setProvider(Provider provider) {
-        this.provider = provider;
+    public void setAssignee(TicketAssignee assignee) {
+        this.assignee = assignee;
     }
 
     /**
@@ -89,7 +89,7 @@ public class InterventionDeadlineDefined extends Event {
         return "InterventionDeadlineDefined:{"
                 + super.toString()
                 + ", " + getOperator()
-                + ", " + getProvider()
+                + ", " + getAssignee()
                 + ", deadline:" + getDeadline()
                 + "}";
     }

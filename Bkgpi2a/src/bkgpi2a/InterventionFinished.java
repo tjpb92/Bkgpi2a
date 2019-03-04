@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 
 /**
- * Classe décrivant un fin d'intervention : InterventionFinished, #534
+ * Classe décrivant une fin d'intervention : InterventionFinished, #534
  *
  * @author Thierry Baribaud
  * @version 1.04

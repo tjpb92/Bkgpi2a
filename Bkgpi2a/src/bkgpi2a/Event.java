@@ -8,7 +8,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
  * Classe abstraite décrivant un événément.
  *
  * @author Thierry Baribaud
- * @version 1.00
+ * @version 1.05
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME,
@@ -16,6 +16,8 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
         property = "eventType")
 @JsonSubTypes({
     @JsonSubTypes.Type(value = TicketOpened.class, name = "TicketOpened"),
+    @JsonSubTypes.Type(value = InterventionRequested.class, name = "InterventionRequested"),
+    @JsonSubTypes.Type(value = TicketInformationsCorrected.class, name = "TicketInformationsCorrected"),
     @JsonSubTypes.Type(value = ProviderAssigned.class, name = "ProviderAssigned"),
     @JsonSubTypes.Type(value = AssigneeIdentified.class, name = "AssigneeIdentified"),
     @JsonSubTypes.Type(value = LogTrialAdded.class, name = "LogTrialAdded"),
@@ -25,13 +27,21 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
     @JsonSubTypes.Type(value = ClosedAfterSeveralUnsuccessfulRecalls.class, name = "ClosedAfterSeveralUnsuccessfulRecalls"),
     @JsonSubTypes.Type(value = ClosedBeyondCallCenterScope.class, name = "ClosedBeyondCallCenterScope"),
     @JsonSubTypes.Type(value = PostponedFix.class, name = "PostponedFix"),
-    @JsonSubTypes.Type(value = MissionAccepted.class, name = "MissionAccepted"),
-    @JsonSubTypes.Type(value = MissionRefused.class, name = "MissionRefused"),
+    
+    @JsonSubTypes.Type(value = MissionAccepted.class, name = "MissionAccepted"),    // Deprecated on 2018, September 8th.
+    @JsonSubTypes.Type(value = InterventionAccepted.class, name = "InterventionAccepted"),
+    
+    @JsonSubTypes.Type(value = MissionRefused.class, name = "MissionRefused"),  // Deprecated on 2018, September 8th.
+    @JsonSubTypes.Type(value = InterventionRefused.class, name = "InterventionRefused"),
+    
     @JsonSubTypes.Type(value = ArrivedOnSite.class, name = "ArrivedOnSite"),
     @JsonSubTypes.Type(value = GoneFromSite.class, name = "GoneFromSite"),
     @JsonSubTypes.Type(value = CallAnsweredByProvider.class, name = "CallAnsweredByProvider"),
     @JsonSubTypes.Type(value = CallNotAnsweredByProvider.class, name = "CallNotAnsweredByProvider"),
-    @JsonSubTypes.Type(value = MissionScheduled.class, name = "MissionScheduled"),
+    
+    @JsonSubTypes.Type(value = MissionScheduled.class, name = "MissionScheduled"),  // Deprecated on 2018, September 8th.
+    @JsonSubTypes.Type(value = InterventionScheduled.class, name = "InterventionScheduled"),
+    
     @JsonSubTypes.Type(value = InterventionStarted.class, name = "InterventionStarted"),
     @JsonSubTypes.Type(value = InterventionFinished.class, name = "InterventionFinished"),
     @JsonSubTypes.Type(value = ServiceOrderSent.class, name = "ServiceOrderSent"), // deprecated

@@ -31,7 +31,7 @@ import utils.DBServerException;
  * de données MongoDB par rapport à une base de données Informix
  *
  * @author Thierry Baribaud.
- * @version 1.00
+ * @version 1.05
  */
 public class Bkgpi2a {
 
@@ -289,6 +289,8 @@ public class Bkgpi2a {
                     retcode = processMessageAdded(informixConnection, (MessageAdded) event);
                 } else if (event instanceof MissionAccepted) {
                     retcode = processMissionAccepted(informixConnection, (MissionAccepted) event);
+                } else if (event instanceof InterventionAccepted) {
+                    retcode = processInterventionAccepted(informixConnection, (InterventionAccepted) event);    
                 } else if (event instanceof MissionScheduled) {
                     retcode = processMissionScheduled(informixConnection, (MissionScheduled) event);
                 } else if (event instanceof SendingServiceOrderReported) {
@@ -572,7 +574,6 @@ public class Bkgpi2a {
 //                        resultSet.close();
 //                    }
 //                }
-
                 preparedStatement.close();
             } catch (SQLException exception) {
                 Logger.getLogger(Bkgpi2a.class.getName()).log(Level.SEVERE, null, exception);
@@ -708,6 +709,7 @@ public class Bkgpi2a {
         ResultSet resultSet;
         DateTime dateTime;
         Provider provider;
+        TicketAssignee ticketAssignee;
         DateTimeFormatter ddmmyy = DateTimeFormat.forPattern("dd/MM/YY");
         StringBuffer comment;
         String ref;
@@ -720,9 +722,9 @@ public class Bkgpi2a {
             try {
                 preparedStatement = informixConnection.prepareStatement("{call addLogTrial(?, ?, ?, ?, ?, ?, ?, ?)}");
                 preparedStatement.setString(1, formalNoticeForProviderReported.getAggregateUid());
-                provider = formalNoticeForProviderReported.getProvider();
-                if (provider instanceof ReferencedProvider) {
-                    preparedStatement.setString(2, ((ReferencedProvider) provider).getProviderUid());
+                ticketAssignee = formalNoticeForProviderReported.getAssignee();
+                if (ticketAssignee instanceof ReferencedProviderContact) {
+                    preparedStatement.setString(2, ((ReferencedProviderContact) ticketAssignee).getProviderContactUid());
                 } else {
                     preparedStatement.setNull(2, java.sql.Types.INTEGER);
                 }
@@ -774,6 +776,7 @@ public class Bkgpi2a {
         ResultSet resultSet;
         DateTime dateTime;
         Provider provider;
+        TicketAssignee ticketAssignee;
         DateTimeFormatter ddmmyy = DateTimeFormat.forPattern("dd/MM/YY");
         int nbTrials = 0;
         SqlResults sqlResults;
@@ -784,9 +787,9 @@ public class Bkgpi2a {
             try {
                 preparedStatement = informixConnection.prepareStatement("{call addLogTrial(?, ?, ?, ?, ?, ?, ?, ?)}");
                 preparedStatement.setString(1, interventionDeadlineDefined.getAggregateUid());
-                provider = interventionDeadlineDefined.getProvider();
-                if (provider instanceof ReferencedProvider) {
-                    preparedStatement.setString(2, ((ReferencedProvider) provider).getProviderUid());
+                ticketAssignee = interventionDeadlineDefined.getAssignee();
+                if (ticketAssignee instanceof ReferencedProviderContact) {
+                    preparedStatement.setString(2, ((ReferencedProviderContact) ticketAssignee).getProviderContactUid());
                 } else {
                     preparedStatement.setNull(2, java.sql.Types.INTEGER);
                 }
@@ -833,6 +836,7 @@ public class Bkgpi2a {
         ResultSet resultSet;
         DateTime dateTime;
         Provider provider;
+        TicketAssignee ticketAssignee;
         DateTimeFormatter ddmmyy = DateTimeFormat.forPattern("dd/MM/YY");
         int nbTrials = 0;
         SqlResults sqlResults;
@@ -843,9 +847,9 @@ public class Bkgpi2a {
             try {
                 preparedStatement = informixConnection.prepareStatement("{call addLogTrial(?, ?, ?, ?, ?, ?, ?, ?)}");
                 preparedStatement.setString(1, sendingServiceOrderReported.getAggregateUid());
-                provider = sendingServiceOrderReported.getProvider();
-                if (provider instanceof ReferencedProvider) {
-                    preparedStatement.setString(2, ((ReferencedProvider) provider).getProviderUid());
+                ticketAssignee = sendingServiceOrderReported.getAssignee();
+                if (ticketAssignee instanceof ReferencedProviderContact) {
+                    preparedStatement.setString(2, ((ReferencedProviderContact) ticketAssignee).getProviderContactUid());
                 } else {
                     preparedStatement.setNull(2, java.sql.Types.INTEGER);
                 }
@@ -1469,6 +1473,62 @@ public class Bkgpi2a {
     }
 
     /**
+     * Traite l'événement InterventionAccepted sur un ticket
+     *
+     * @param informixConnection connection à la base de données Informix locale
+     * @param interventionAccepted événement à traiter
+     * @return code de retour : 1=Succès, 0=ne rien faire, -1=erreur
+     */
+    private int processInterventionAccepted(Connection informixConnection, InterventionAccepted interventionAccepted) {
+        PreparedStatement preparedStatement;
+        ResultSet resultSet;
+        DateTime dateTime;
+        ReferencedProviderContact referencedProviderContact;
+        int nbTrials = 0;
+        SqlResults sqlResults;
+
+        int retcode = 0;
+
+        if (interventionAccepted.getOperator() instanceof ReferencedUser) {
+            try {
+                preparedStatement = informixConnection.prepareStatement("{call addLogTrial(?, ?, ?, ?, ?, ?, ?, ?)}");
+                preparedStatement.setString(1, interventionAccepted.getAggregateUid());
+                if (interventionAccepted.getAssignee() instanceof ReferencedProviderContact) {
+                    referencedProviderContact = (ReferencedProviderContact)interventionAccepted.getAssignee();
+                    preparedStatement.setString(2, referencedProviderContact.getProviderContactUid());
+                }else {
+                    preparedStatement.setNull(2, java.sql.Types.INTEGER);
+                }
+                preparedStatement.setInt(3, 77);
+                preparedStatement.setString(4, interventionAccepted.getComment());
+                dateTime = isoDateTimeFormat1.parseDateTime(interventionAccepted.getDate());
+                preparedStatement.setTimestamp(5, new Timestamp(dateTime.getMillis()));
+                preparedStatement.setInt(6, onum);
+                preparedStatement.setInt(7, 0);
+                preparedStatement.setInt(8, 0);
+                resultSet = preparedStatement.executeQuery();
+                if (resultSet.next()) {
+                    sqlResults = new SqlResults(resultSet);
+                    retcode = sqlResults.getRetcode();
+                    nbTrials = sqlResults.getNbTrials();
+                }
+                resultSet.close();
+                preparedStatement.close();
+            } catch (SQLException exception) {
+                Logger.getLogger(Bkgpi2a.class.getName()).log(Level.SEVERE, null, exception);
+                retcode = -1;
+            }
+        } else {
+            System.out.println("    ERREUR : événement rejeté, raison : généré par Anstel");
+            retcode = -3;
+        }
+
+        System.out.println("      InterventionAccepted:{retcode:" + retcode + ", nbTrials:" + nbTrials + "}");
+
+        return retcode;
+    }
+    
+    /**
      * Traite l'événement MessageAdded
      *
      * @param informixConnection connection à la base de données Informix locale
@@ -1725,8 +1785,8 @@ public class Bkgpi2a {
                 Logger.getLogger(Bkgpi2a.class.getName()).log(Level.WARNING, errmsg);
             }
         } else {
-            errmsg = "Retention non définie dans le fichier des propriétés" + 
-                     ", conservation de la valeur par défaut:" + retention + " jour(s)";
+            errmsg = "Retention non définie dans le fichier des propriétés"
+                    + ", conservation de la valeur par défaut:" + retention + " jour(s)";
             Logger.getLogger(Bkgpi2a.class.getName()).log(Level.WARNING, errmsg);
         }
     }

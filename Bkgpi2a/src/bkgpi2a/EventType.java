@@ -4,18 +4,25 @@ package bkgpi2a;
  * Enumération décrivant les identifiants et libellés des événements.
  *
  * @author Thierry Baribaud
- * @version 1.00
+ * @version 1.05
  */
 public enum EventType {
 
     TICKET_OPENED("TicketOpened", 500),
-    MISSION_ACCEPTED("MissionAccepted", 505),
+    INTERVENTION_REQUESTED("InterventionRequested", 503),
+    TICKET_INFORMATIONS_CORRECTED("TicketInformationsCorrected", 504),
+    
+    MISSION_ACCEPTED("MissionAccepted", 505),   // Deprecated on 2018, September 8th, see INTERVENTION_ACCEPTED 
+    INTERVENTION_ACCEPTED("InterventionAccepted", 505),
+    
     TICKET_UPDATED("TicketUpdated", 510),
     
     PROVIDER_ASSIGNED("ProviderAssigned", 515), // Deprecated on 2018, September 8th, see ASSIGNEE_IDENTIFIED
     ASSIGNEE_IDENTIFIED("AssigneeIdentified", 515),
     
-    MISSION_REFUSED("MissionRefused", 520),
+    MISSION_REFUSED("MissionRefused", 520),     // Deprecated on 2018, September 8th, see INTERVENTION_REFUSED
+    INTERVENTION_REFUSED("InterventionRefused", 520),
+    
     ARRIVED_ON_SITE("ArrivedOnSite", 525),
     GONE_FROM_SITE("GoneFromSite", 530),
     INTERVENTION_STARTED("InterventionStarted", 532),
@@ -36,7 +43,10 @@ public enum EventType {
     TICKET_ARCHIVED("TicketArchived", 590),
     CALL_ANSWERED_BY_PROVIDER("CallAnsweredByProvider", 600),
     CALL_NOT_ANSWERED_BY_PROVIDER("CallNotAnsweredByProvider", 605),
-    MISSION_SCHEDULED("MissionScheduled", 610),
+    
+    MISSION_SCHEDULED("MissionScheduled", 610),     // Deprecated on 2018, September 8th, see INTERVENTION_SCHEDULED
+    INTERVENTION_SCHEDULED("InterventionScheduled", 610),
+    
     SERVICE_ORDER_SENT("ServiceOrderSent", 615), // deprecated
     SENDING_SERVICE_ORDER_REPORTED("SendingServiceOrderReported", 615),
     FORMAL_NOTICE_FOR_PROVIDER_REPORTED("FormalNoticeForProviderReported", 620),
