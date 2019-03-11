@@ -31,7 +31,7 @@ import utils.DBServerException;
  * de données MongoDB par rapport à une base de données Informix
  *
  * @author Thierry Baribaud.
- * @version 1.06
+ * @version 1.07
  */
 public class Bkgpi2a {
 
@@ -1670,6 +1670,7 @@ public class Bkgpi2a {
 
         int retcode = 0;
         SqlResults sqlResults;
+        int retcode2 = 0;
 
         if (assigneeIdentified.getOperator() instanceof ReferencedUser) {
             try {
@@ -1705,6 +1706,7 @@ public class Bkgpi2a {
                 preparedStatement.close();
                 
                 if (retcode ==1) {
+                    informixConnection.setAutoCommit(false);
                     preparedStatement = informixConnection.prepareStatement("{call restCall(?, ?, ?, ?)}");
                     preparedStatement.setString(1, assigneeIdentified.getAggregateUid());
                     dateTime = isoDateTimeFormat1.parseDateTime(assigneeIdentified.getDate());
@@ -1714,9 +1716,16 @@ public class Bkgpi2a {
                     resultSet = preparedStatement.executeQuery();
                     if (resultSet.next()) {
                         sqlResults = new SqlResults(resultSet);
-                        retcode = sqlResults.getRetcode();
+                        retcode2 = sqlResults.getRetcode();
                         nbTrials += sqlResults.getNbTrials();
                     }
+                    if (retcode2 == 1) {
+                        informixConnection.commit();
+                    }
+                    else {
+                        informixConnection.rollback();
+                    }
+                    informixConnection.setAutoCommit(true);
                     resultSet.close();
                     preparedStatement.close();
 
