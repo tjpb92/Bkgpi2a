@@ -3,13 +3,14 @@ package bkgpi2a;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import static bkgpi2a.EventType.CLOSED_BEYOND_CALL_CENTER_SCOPE;
+import com.fasterxml.jackson.annotation.JsonInclude;
 
 /**
  * Classe décrivant un comment ajouté au journal d'un ticket :
  * ClosedBeyondCallCenterScope, #555
  *
  * @author Thierry Baribaud
- * @version 0.42
+ * @version 1.08
  * @see http://performanceimmo.github.io/API/#ticketevent
  */
 @JsonIgnoreProperties({"_id", "date", "eventTypeUid"})
@@ -32,11 +33,11 @@ public class ClosedBeyondCallCenterScope extends Event {
     private Operator operator;
 
     /**
-     * Rapport d'intervention. Non implémenté, mais souvent présent côté centre
-     * d'appel, TB, le 12/02/17.
+     * Commentaire sur la clôture d'appel (optionnel)
      */
-//    @JsonInclude(JsonInclude.Include.NON_NULL)
-//    private String report;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private String comment;
+
     /**
      * Constructeur de la classe ClosedBeyondCallCenterScope
      */
@@ -66,19 +67,20 @@ public class ClosedBeyondCallCenterScope extends Event {
         return getDate();
     }
 
-//    /**
-//     * @return le rapport d'intervention
-//     */
-//    public String getReport() {
-//        return report;
-//    }
-//
-//    /**
-//     * @param report définit le rapport d'intervention
-//     */
-//    public void setReport(String report) {
-//        this.report = report;
-//    }
+    /**
+     * @return le commentaire sur la clôture d'appel
+     */
+    public String getComment() {
+        return comment;
+    }
+
+    /**
+     * @param comment définit le commentaire sur la clôture d'appel
+     */
+    public void setComment(String comment) {
+        this.comment = comment;
+    }
+
     /**
      * @param closingDate définit la date à laquelle l'événement a eu lieu
      */
@@ -94,7 +96,7 @@ public class ClosedBeyondCallCenterScope extends Event {
         return "ClosedBeyondCallCenterScope:{"
                 + super.toString()
                 + ", " + getOperator()
-                //                + ", report:" + getReport()
+                + ", comment:" + getComment()
                 + ", closingDate:" + getClosingDate()
                 + "}";
     }

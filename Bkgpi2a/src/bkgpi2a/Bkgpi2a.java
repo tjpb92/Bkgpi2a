@@ -31,7 +31,7 @@ import utils.DBServerException;
  * de données MongoDB par rapport à une base de données Informix
  *
  * @author Thierry Baribaud.
- * @version 1.07
+ * @version 1.08
  */
 public class Bkgpi2a {
 
@@ -506,12 +506,9 @@ public class Bkgpi2a {
         PreparedStatement preparedStatement;
         ResultSet resultSet;
         DateTime dateTime;
-        String message;
-        String stillOnSite;
+        StringBuffer message;
+        String comment;
         int nbTrials = 0;
-        int errno = 0;
-        int isam = 0;
-        String errmsg = null;
         SqlResults sqlResults = null;
 
         int retcode = 0;
@@ -522,7 +519,12 @@ public class Bkgpi2a {
                 preparedStatement.setString(1, closedBeyondCallCenterScope.getAggregateUid());
                 preparedStatement.setNull(2, java.sql.Types.INTEGER);
                 preparedStatement.setInt(3, ClosedBeyondCallCenterScope.code);
-                preparedStatement.setString(4, ClosedBeyondCallCenterScope.label);
+                message = new StringBuffer(ClosedBeyondCallCenterScope.label);
+                comment = closedBeyondCallCenterScope.getComment();
+                if (comment.length() > 0) {
+                    message.append(" ").append(comment);
+                }
+                preparedStatement.setString(4, message.toString());
                 dateTime = isoDateTimeFormat1.parseDateTime(closedBeyondCallCenterScope.getDate());
                 preparedStatement.setTimestamp(5, new Timestamp(dateTime.getMillis()));
                 preparedStatement.setInt(6, onum);
@@ -535,45 +537,6 @@ public class Bkgpi2a {
                     nbTrials = sqlResults.getNbTrials();
                 }
                 resultSet.close();
-
-//                if (retcode == 1) {
-//                    if ((message = closedBeyondCallCenterScope.getReport()) != null) {
-//                        preparedStatement.setInt(3, 72);
-//                        preparedStatement.setString(4, message);
-//                        resultSet = preparedStatement.executeQuery();
-//                        if (resultSet.next()) {
-//                            sqlResults.add(resultSet);
-//                            retcode = sqlResults.getRetcode();
-//                            nbTrials = sqlResults.getNbTrials();
-//                        }
-//                        resultSet.close();
-//                    }
-//                }
-//
-//                if (retcode == 1) {
-//                    if ((stillOnSite = closedBeyondCallCenterScope.getStillOnSite()) != null) {
-//                        preparedStatement.setInt(3, 73);
-//                        if ("Yes".equals(stillOnSite)) {
-//                            message = "Oui";
-//                        } else if ("No".equals(stillOnSite)) {
-//                            message = "Non";
-//                        } else if ("NotAsked".equals(stillOnSite)) {
-//                            message = "Non demandée";
-//                        } else if ("ProviderRefuseToReply".equals(stillOnSite)) {
-//                            message = "Refus";
-//                        } else {
-//                            message = "Non disponible";
-//                        }
-//                        preparedStatement.setString(4, message);
-//                        resultSet = preparedStatement.executeQuery();
-//                        if (resultSet.next()) {
-//                            sqlResults.add(resultSet);
-//                            retcode = sqlResults.getRetcode();
-//                            nbTrials = sqlResults.getNbTrials();
-//                        }
-//                        resultSet.close();
-//                    }
-//                }
                 preparedStatement.close();
             } catch (SQLException exception) {
                 Logger.getLogger(Bkgpi2a.class.getName()).log(Level.SEVERE, null, exception);
@@ -1667,13 +1630,18 @@ public class Bkgpi2a {
         TicketAssignee ticketAssignee;
         ProviderAssignationPurpose providerAssignationPurpose;
         String comment;
-
-        int retcode = 0;
         SqlResults sqlResults;
-        int retcode2 = 0;
 
+        int retcode;
+        
+        resultSet = null;
+        preparedStatement = null;
+        retcode = 0;
+        
         if (assigneeIdentified.getOperator() instanceof ReferencedUser) {
             try {
+                informixConnection.setAutoCommit(false);
+                
                 preparedStatement = informixConnection.prepareStatement("{call addLogTrial(?, ?, ?, ?, ?, ?, ?, ?)}");
                 preparedStatement.setString(1, assigneeIdentified.getAggregateUid());
                 ticketAssignee = assigneeIdentified.getTicketAssignee();
@@ -1705,8 +1673,7 @@ public class Bkgpi2a {
                 resultSet.close();
                 preparedStatement.close();
                 
-                if (retcode ==1) {
-                    informixConnection.setAutoCommit(false);
+                if (retcode == 1) {
                     preparedStatement = informixConnection.prepareStatement("{call restCall(?, ?, ?, ?)}");
                     preparedStatement.setString(1, assigneeIdentified.getAggregateUid());
                     dateTime = isoDateTimeFormat1.parseDateTime(assigneeIdentified.getDate());
@@ -1716,23 +1683,37 @@ public class Bkgpi2a {
                     resultSet = preparedStatement.executeQuery();
                     if (resultSet.next()) {
                         sqlResults = new SqlResults(resultSet);
-                        retcode2 = sqlResults.getRetcode();
+                        retcode = sqlResults.getRetcode();
                         nbTrials += sqlResults.getNbTrials();
                     }
-                    if (retcode2 == 1) {
+//                    resultSet.close();
+//                    preparedStatement.close();
+                }
+            } catch (SQLException exception) {
+                Logger.getLogger(Bkgpi2a.class.getName()).log(Level.SEVERE, null, exception);
+                retcode = -1;
+            }
+            finally {
+                try {
+                    if (retcode == 1) {
                         informixConnection.commit();
                     }
                     else {
                         informixConnection.rollback();
                     }
-                    informixConnection.setAutoCommit(true);
-                    resultSet.close();
-                    preparedStatement.close();
+                    
+                    if (resultSet != null) {
+                        resultSet.close();
+                    }
 
+                    if (preparedStatement != null) {
+                        preparedStatement.close();
+                    }
+                    
+                    informixConnection.setAutoCommit(true);
+                } catch (SQLException ex) {
+                    Logger.getLogger(Bkgpi2a.class.getName()).log(Level.SEVERE, null, ex);
                 }
-            } catch (SQLException exception) {
-                Logger.getLogger(Bkgpi2a.class.getName()).log(Level.SEVERE, null, exception);
-                retcode = -1;
             }
 
         } else {

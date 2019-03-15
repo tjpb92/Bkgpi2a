@@ -3,12 +3,13 @@ package bkgpi2a;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import static bkgpi2a.EventType.TICKET_CANCELLED;
+import com.fasterxml.jackson.annotation.JsonInclude;
 
 /**
  * Classe décrivant l'annuation d'un ticket : TicketCancelled, #585
  *
  * @author Thierry Baribaud
- * @version 0.40
+ * @version 1.08
  * @see http://performanceimmo.github.io/API/#ticketevent
  */
 @JsonIgnoreProperties({"_id", "date", "eventTypeUid"})
@@ -19,6 +20,12 @@ public class TicketCancelled extends Event {
      * Opérateur ayant archivé le ticket
      */
     private Operator operator;
+
+    /**
+     * Commentaire sur la clôture d'appel (optionnel)
+     */
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private String comment;
 
     /**
      * Constructeur de la classe TicketCancelled
@@ -43,6 +50,20 @@ public class TicketCancelled extends Event {
     }
 
     /**
+     * @return le commentaire sur la clôture d'appel
+     */
+    public String getComment() {
+        return comment;
+    }
+
+    /**
+     * @param comment définit le commentaire sur la clôture d'appel
+     */
+    public void setComment(String comment) {
+        this.comment = comment;
+    }
+
+    /**
      * @return la date à laquelle l'événement a eu lieu
      */
     public String getClosingDate() {
@@ -64,6 +85,7 @@ public class TicketCancelled extends Event {
         return "TicketCancelled:{"
                 + super.toString()
                 + ", " + getOperator()
+                + ", comment:" + getComment()
                 + ", closingDate:" + getClosingDate()
                 + "}";
     }

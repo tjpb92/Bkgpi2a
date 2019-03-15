@@ -3,13 +3,14 @@ package bkgpi2a;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import static bkgpi2a.EventType.CLOSED_AFTER_SEVERAL_UNSUCCESSFUL_RECALLS;
+import com.fasterxml.jackson.annotation.JsonInclude;
 
 /**
  * Classe décrivant un comment ajouté au journal d'un ticket :
  * ClosedAfterSeveralUnsuccessfulRecalls, #560
  *
  * @author Thierry Baribaud
- * @version 0.34
+ * @version 1.08
  * @see http://performanceimmo.github.io/API/#ticketevent
  */
 @JsonIgnoreProperties({"_id", "date", "eventTypeUid"})
@@ -20,6 +21,12 @@ public class ClosedAfterSeveralUnsuccessfulRecalls extends Event {
      * Opérateur ayant archivé le ticket
      */
     private Operator operator;
+
+    /**
+     * Commentaire sur la clôture d'appel (optionnel)
+     */
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private String comment;
 
     /**
      * Constructeur de la classe ClosedAfterSeveralUnsuccessfulRecalls
@@ -44,6 +51,20 @@ public class ClosedAfterSeveralUnsuccessfulRecalls extends Event {
     }
 
     /**
+     * @return le commentaire sur la clôture d'appel
+     */
+    public String getComment() {
+        return comment;
+    }
+
+    /**
+     * @param comment définit le commentaire sur la clôture d'appel
+     */
+    public void setComment(String comment) {
+        this.comment = comment;
+    }
+
+    /**
      * @return la date à laquelle l'événement a eu lieu
      */
     public String getClosingDate() {
@@ -65,6 +86,7 @@ public class ClosedAfterSeveralUnsuccessfulRecalls extends Event {
         return "ClosedAfterSeveralUnsuccessfulRecalls:{"
                 + super.toString()
                 + ", " + getOperator()
+                + ", comment:" + getComment()
                 + ", closingDate:" + getClosingDate()
                 + "}";
     }
