@@ -31,7 +31,7 @@ import utils.DBServerException;
  * de données MongoDB par rapport à une base de données Informix
  *
  * @author Thierry Baribaud.
- * @version 1.08
+ * @version 1.09
  */
 public class Bkgpi2a {
 
@@ -319,8 +319,8 @@ public class Bkgpi2a {
 //                    retcode = processTicketOpened(informixConnection, (TicketOpened) event);
 //                } else if (event instanceof TicketArchived) {
 //                    retcode = processTicketArchived(informixConnection, (TicketArchived) event);
-//                } else if (event instanceof TicketCancelled) {
-//                    retcode = processTicketCancelled(informixConnection, (TicketCancelled) event);
+                } else if (event instanceof TicketCancelled) {
+                    retcode = processTicketCancelled(informixConnection, (TicketCancelled) event);
 //                } else if (event instanceof ClosedAfterSeveralUnsuccessfulRecalls) {
 //                    retcode = processClosedAfterSeveralUnsuccessfulRecalls(informixConnection, (ClosedAfterSeveralUnsuccessfulRecalls) event);
 //                } else if (event instanceof CallAnsweredByProvider) {
@@ -1615,6 +1615,7 @@ public class Bkgpi2a {
         return retcode;
     }
 
+
     /**
      * Traite l'événement AssigneeIdentified
      *
@@ -1722,6 +1723,112 @@ public class Bkgpi2a {
         }
 
         System.out.println("      AssigneeIdentified:{retcode:" + retcode + ", nbTrials:" + nbTrials + "}");
+
+        return retcode;
+    }
+
+    /**
+     * Traite l'événement TicketCanceled
+     *
+     * @param informixConnection connection à la base de données Informix locale
+     * @param ticketCancelled événement à traiter
+     * @return code de retour : 1=Succès, 0=ne rien faire, -1=erreur
+     */
+    private int processTicketCancelled(Connection informixConnection, TicketCancelled ticketCancelled) {
+        PreparedStatement preparedStatement;
+        ResultSet resultSet;
+        DateTime dateTime;
+        int nbTrials = 0;
+        ProviderAssignationPurpose providerAssignationPurpose;
+        String comment;
+        SqlResults sqlResults;
+
+        int retcode;
+        
+        resultSet = null;
+        preparedStatement = null;
+        retcode = 0;
+        
+        if (ticketCancelled.getOperator() instanceof ReferencedUser) {
+            try {
+                informixConnection.setAutoCommit(false);
+                
+                preparedStatement = informixConnection.prepareStatement("{call addLogTrial(?, ?, ?, ?, ?, ?, ?, ?)}");
+                preparedStatement.setString(1, ticketCancelled.getAggregateUid());
+                preparedStatement.setNull(2, java.sql.Types.INTEGER);
+                preparedStatement.setInt(3, 10);
+                comment = ticketCancelled.getComment();
+                if (comment == null) {
+                    preparedStatement.setNull(4, java.sql.Types.CHAR);
+                } else if ("comment".equals(comment)) {
+                    preparedStatement.setNull(4, java.sql.Types.CHAR);
+                } else {
+                    preparedStatement.setString(4, comment);
+                }
+                dateTime = isoDateTimeFormat1.parseDateTime(ticketCancelled.getDate());
+                preparedStatement.setTimestamp(5, new Timestamp(dateTime.getMillis()));
+                preparedStatement.setInt(6, onum);
+                preparedStatement.setInt(7, 0);
+                preparedStatement.setInt(8, 0);
+                resultSet = preparedStatement.executeQuery();
+                if (resultSet.next()) {
+                    sqlResults = new SqlResults(resultSet);
+                    retcode = sqlResults.getRetcode();
+                    nbTrials = sqlResults.getNbTrials();
+                }
+                resultSet.close();
+                preparedStatement.close();
+                
+                if (retcode == 1) {
+                    preparedStatement = informixConnection.prepareStatement("{call archCall(?, ?, ?, ?, ?)}");
+                    preparedStatement.setString(1, ticketCancelled.getAggregateUid());
+                    dateTime = isoDateTimeFormat1.parseDateTime(ticketCancelled.getDate());
+                    preparedStatement.setTimestamp(2, new Timestamp(dateTime.getMillis()));
+                    preparedStatement.setInt(3, onum);
+                    preparedStatement.setInt(4, 0);
+                    preparedStatement.setInt(5, 1);
+                    resultSet = preparedStatement.executeQuery();
+                    if (resultSet.next()) {
+                        sqlResults = new SqlResults(resultSet);
+                        retcode = sqlResults.getRetcode();
+                        nbTrials += sqlResults.getNbTrials();
+                    }
+//                    resultSet.close();
+//                    preparedStatement.close();
+                }
+            } catch (SQLException exception) {
+                Logger.getLogger(Bkgpi2a.class.getName()).log(Level.SEVERE, null, exception);
+                retcode = -1;
+            }
+            finally {
+                try {
+                    if (retcode == 1) {
+                        informixConnection.commit();
+                    }
+                    else {
+                        informixConnection.rollback();
+                    }
+                    
+                    if (resultSet != null) {
+                        resultSet.close();
+                    }
+
+                    if (preparedStatement != null) {
+                        preparedStatement.close();
+                    }
+                    
+                    informixConnection.setAutoCommit(true);
+                } catch (SQLException ex) {
+                    Logger.getLogger(Bkgpi2a.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+
+        } else {
+            System.out.println("    ERREUR : événement rejeté, raison : généré par Anstel");
+            retcode = -3;
+        }
+
+        System.out.println("      TicketCanceled:{retcode:" + retcode + ", nbTrials:" + nbTrials + "}");
 
         return retcode;
     }

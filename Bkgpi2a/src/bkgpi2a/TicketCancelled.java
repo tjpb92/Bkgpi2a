@@ -9,10 +9,10 @@ import com.fasterxml.jackson.annotation.JsonInclude;
  * Classe décrivant l'annuation d'un ticket : TicketCancelled, #585
  *
  * @author Thierry Baribaud
- * @version 1.08
+ * @version 1.09
  * @see http://performanceimmo.github.io/API/#ticketevent
  */
-@JsonIgnoreProperties({"_id", "date", "eventTypeUid"})
+@JsonIgnoreProperties({"_id", "eventTypeUid"})
 @JsonTypeName("TicketCancelled")
 public class TicketCancelled extends Event {
 
@@ -64,20 +64,6 @@ public class TicketCancelled extends Event {
     }
 
     /**
-     * @return la date à laquelle l'événement a eu lieu
-     */
-    public String getClosingDate() {
-        return getDate();
-    }
-
-    /**
-     * @param closingDate définit la date à laquelle l'événement a eu lieu
-     */
-    public void setClosingDate(String closingDate) {
-        setDate(closingDate);
-    }
-
-    /**
      * @return Retourne l'objet sous forme textuelle
      */
     @Override
@@ -86,7 +72,6 @@ public class TicketCancelled extends Event {
                 + super.toString()
                 + ", " + getOperator()
                 + ", comment:" + getComment()
-                + ", closingDate:" + getClosingDate()
                 + "}";
     }
 }
