@@ -3,8 +3,9 @@ package bkgpi2a;
 /**
  * Cette classe sert à vérifier et à récupérer les arguments passés en ligne de
  * commande au programme Bkgpi2a.
+ *
  * @author Thierry Baribaud
- * @version 0.42
+ * @version 1.10
  */
 public class GetArgs {
 
@@ -25,7 +26,7 @@ public class GetArgs {
      * Valeur par défaut : 7 jours.
      */
     private int retention = 7;
-    
+
     /**
      * debugMode : fonctionnement du programme en mode debug (true/false).
      * Valeur par défaut : false.
@@ -111,7 +112,8 @@ public class GetArgs {
                 }
             } else if (args[i].equals("-ifxdb")) {
                 if (ip1 < n) {
-                    if (args[ip1].equals("pre-prod") || args[ip1].equals("prod")) {
+                    if (args[ip1].equals("pre-prod") || args[ip1].equals("prod")
+                            || args[ip1].equals("pre-prod2") || args[ip1].equals("prod2")) {
                         setInformixDbServerType(args[ip1]);
                     } else {
                         throw new GetArgsException("Mauvais serveur Informix : " + args[ip1]);

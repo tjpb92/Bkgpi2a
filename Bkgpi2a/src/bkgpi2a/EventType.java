@@ -4,7 +4,7 @@ package bkgpi2a;
  * Enumération décrivant les identifiants et libellés des événements.
  *
  * @author Thierry Baribaud
- * @version 1.05
+ * @version 1.10
  */
 public enum EventType {
 
@@ -34,6 +34,9 @@ public enum EventType {
     CLOSED_BEYOND_CALL_CENTER_SCOPE("ClosedBeyondCallCenterScope", 555),
     CLOSED_AFTER_SEVERAL_UNSUCCESSFUL_RECALLS("ClosedAfterSeveralUnsuccessfulRecalls", 560),
     TICKET_CLOSED("TicketClosed", 561),
+    
+    CLOSED_QUOTE_REQUESTED("ClosedQuoteRequested", 563),
+    
     LOG_TRIAL_ADDED("LogTrialAdded", 565),
     MESSAGE_ADDED("MessageAdded", 570),
     TICKET_REOPENED("TicketReopened", 575),

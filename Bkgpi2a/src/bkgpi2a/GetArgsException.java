@@ -5,7 +5,7 @@ package bkgpi2a;
  * arguments de ligne de commande.
  *
  * @author Thierry Baribaud
- * @version 0.28
+ * @version 1.10
  */
 public class GetArgsException extends Exception {
 
@@ -14,6 +14,7 @@ public class GetArgsException extends Exception {
      * message.
      */
     public GetArgsException() {
+        super();
     }
 
     /**

@@ -6,11 +6,11 @@ import static bkgpi2a.EventType.CLOSED_AFTER_SEVERAL_UNSUCCESSFUL_RECALLS;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 /**
- * Classe décrivant un comment ajouté au journal d'un ticket :
+ * Classe décrivant une clôture d'appel après plusieurs relances infructueuses :
  * ClosedAfterSeveralUnsuccessfulRecalls, #560
  *
  * @author Thierry Baribaud
- * @version 1.08
+ * @version 1.10
  * @see http://performanceimmo.github.io/API/#ticketevent
  */
 @JsonIgnoreProperties({"_id", "date", "eventTypeUid"})

@@ -1,11 +1,11 @@
 package bkgpi2a;
 
 /**
- * Class qui définit une Exception à lancer lorsque l'objet WebServer rencontre
+ * Classe qui définit une Exception à lancer lorsque l'objet WebServer rencontre
  * une erreur lors de son instanciation.
  *
  * @author Thierry Baribaud.
- * @version 0.41
+ * @version 1.10
  */
 public class WebServerException extends Exception {
 
@@ -16,7 +16,7 @@ public class WebServerException extends Exception {
      * Exception sans message d'information
      */
     public WebServerException() {
-        System.out.println(ERRMSG);
+        super(ERRMSG);
     }
 
     /**
@@ -25,6 +25,6 @@ public class WebServerException extends Exception {
      * @param ErrMsg message d'information
      */
     public WebServerException(String ErrMsg) {
-        System.out.println(ERRMSG + " : " + ErrMsg);
+        super(ERRMSG + " : " + ErrMsg);
     }
 }
