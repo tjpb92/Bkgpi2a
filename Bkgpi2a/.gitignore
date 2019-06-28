@@ -1,7 +1,10 @@
 # My .gitignore file
-.gitignore
+
 MyDatabases.prop
 Bkgpi2a.prop
 Tester.java
 *.json
 
+/nbproject/private/
+/build/
+/dist/
