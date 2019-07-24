@@ -4,7 +4,7 @@ package bkgpi2a;
  * Classe décrivant une adresse 
  * -- AddressReference à terme, hérite de RationalAddress --
  * @author Thierry Baribaud
- * @version Octobre 2016
+ * @version 1.11
  */
 public class Address {
     
@@ -15,7 +15,7 @@ public class Address {
     private String zipCode;
     private String country;
     private GeoLocation geoLocation;
-    private Checker checker;
+    private AddressChecker checker;
     private EntityAbstract building;
 
     /**
@@ -119,14 +119,14 @@ public class Address {
     /**
      * @return the checker
      */
-    public Checker getChecker() {
+    public AddressChecker getChecker() {
         return checker;
     }
 
     /**
      * @param checker the checker to set
      */
-    public void setChecker(Checker checker) {
+    public void setChecker(AddressChecker checker) {
         this.checker = checker;
     }
     

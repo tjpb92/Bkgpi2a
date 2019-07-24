@@ -11,7 +11,7 @@ import java.util.List;
  * Classe décrivant un patrimoine.
  *
  * @author Thierry Baribaud
- * @version 0.20
+ * @version 1.11
  * @see http://performanceimmo.github.io/API/#patrimonies
  */
 public class Patrimony {
@@ -43,6 +43,11 @@ public class Patrimony {
      */
     private String label;
 
+    /**
+     * Référence du client
+     */
+    private String companyUid;
+    
     /**
      * Agences dont dépend le patrimoine
      */
@@ -114,6 +119,20 @@ public class Patrimony {
      */
     public void setLabel(String label) {
         this.label = label;
+    }
+
+    /**
+     * @return la référene du client
+     */
+    public String getCompanyUid() {
+        return companyUid;
+    }
+
+    /**
+     * @param companyUid définit la référene du client
+     */
+    public void setCompanyUid(String companyUid) {
+        this.companyUid = companyUid;
     }
 
     /**
@@ -196,6 +215,7 @@ public class Patrimony {
                 + ", uid:" + getUid()
                 + ", ref:" + getRef()
                 + ", label:" + getLabel()
+                + ", companyUid:" + getCompanyUid()
                 + ", agencies:" + getAgencies()
                 + ", addresses:" + getAddresses()
                 + ", complementaryAddress:" + getComplementaryAddresses()
