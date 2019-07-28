@@ -2,6 +2,7 @@ package bkgpi2a;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSetter;
@@ -11,9 +12,10 @@ import java.util.List;
  * Classe décrivant un patrimoine.
  *
  * @author Thierry Baribaud
- * @version 1.11
+ * @version 1.12
  * @see http://performanceimmo.github.io/API/#patrimonies
  */
+@JsonIgnoreProperties(value = { "_id" })
 public class Patrimony {
 
     /**
