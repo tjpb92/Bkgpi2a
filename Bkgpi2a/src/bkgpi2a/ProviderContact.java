@@ -11,7 +11,7 @@ import com.fasterxml.jackson.annotation.JsonUnwrapped;
  * Classe décrivant un intervenant
  *
  * @author Thierry Baribaud
- * @version 0.47
+ * @version 1.13
  * @see http://performanceimmo.github.io/API/#providercontacts
  */
 //@JsonPropertyOrder({"uid", "label", "phones", "fax", "emails", "active",})
@@ -24,7 +24,7 @@ public class ProviderContact {
     private Links _links;
 
     /**
-     * Identifiant unique du contact.
+     * Identifiant unique de la société (ProviderContact).
      */
     private String uid;
 
@@ -35,35 +35,35 @@ public class ProviderContact {
     private int id;
 
     /**
-     * Nom du contact (ancienne représentation).
+     * Nom de la société (ancienne représentation).
      */
     private String label;
 
     /**
-     * Nom de l'appelant (nouvelle représentation).
+     * Nom de de la société (nouvelle représentation).
      */
     private Name name;
 
     /**
-     * Liste de numéros de téléphone pour joindre le contact
+     * Liste de numéros de téléphone pour joindre de la société
      */
     @JsonUnwrapped
     private PhoneList phones;
 
     /**
-     * Liste de numéros de fax pour joindre le contact
+     * Liste de numéros de fax pour joindre de la société
      */
     @JsonUnwrapped
     private FaxList fax;
 
     /**
-     * Liste de mails pour joindre le contact
+     * Liste de mails pour joindre de la société
      */
     @JsonUnwrapped
     private EmailList emails;
 
     /**
-     * Indique si le contact est actif ou pas.
+     * Indique si de la société est active ou pas.
      */
     private boolean active;
 
@@ -84,42 +84,42 @@ public class ProviderContact {
     }
 
     /**
-     * @return le nom du contact.
+     * @return le nom de la société
      */
     public String getLabel() {
         return label;
     }
 
     /**
-     * @param label définit le nom du contact.
+     * @param label définit le nom de la société
      */
     public void setLabel(String label) {
         this.label = label;
     }
 
     /**
-     * @return le nom du contact.
+     * @return le nom de la société
      */
     public Name getName() {
         return name;
     }
 
     /**
-     * @param name définit le nom du contact.
+     * @param name définit le nom de la société
      */
     public void setName(Name name) {
         this.name = name;
     }
 
     /**
-     * @return l'identifiant unique du contact.
+     * @return l'identifiant unique de la société
      */
     public String getUid() {
         return uid;
     }
 
     /**
-     * @param uid définit l'identifiant unique du contact.
+     * @param uid définit l'identifiant unique de la société
      */
     public void setUid(String uid) {
         this.uid = uid;
@@ -168,14 +168,14 @@ public class ProviderContact {
     }
 
     /**
-     * @return l'état d'activité du contact.
+     * @return l'état d'activité de la société
      */
     public boolean getActive() {
         return active;
     }
 
     /**
-     * @param active définit l'état d'activité du contact.
+     * @param active définit l'état d'activité de la société
      */
     public void setActive(boolean active) {
         this.active = active;
@@ -209,7 +209,7 @@ public class ProviderContact {
     }
 
     /**
-     * @return les informations sur la filiale.
+     * @return les informations sur la société.
      */
     @Override
     public String toString() {
