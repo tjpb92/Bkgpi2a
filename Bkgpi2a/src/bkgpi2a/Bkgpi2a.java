@@ -31,7 +31,7 @@ import utils.DBServerException;
  * de données MongoDB par rapport à une base de données Informix
  *
  * @author Thierry Baribaud.
- * @version 1.09
+ * @version 1.12
  */
 public class Bkgpi2a {
 
@@ -521,7 +521,7 @@ public class Bkgpi2a {
                 preparedStatement.setInt(3, ClosedBeyondCallCenterScope.code);
                 message = new StringBuffer(ClosedBeyondCallCenterScope.label);
                 comment = closedBeyondCallCenterScope.getComment();
-                if (comment.length() > 0) {
+                if (comment != null) {
                     message.append(" ").append(comment);
                 }
                 preparedStatement.setString(4, message.toString());

@@ -2,6 +2,7 @@ package bkgpi2a;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSetter;
@@ -11,9 +12,10 @@ import java.util.List;
  * Classe décrivant un patrimoine.
  *
  * @author Thierry Baribaud
- * @version 0.20
+ * @version 1.12
  * @see http://performanceimmo.github.io/API/#patrimonies
  */
+@JsonIgnoreProperties(value = { "_id" })
 public class Patrimony {
 
     /**
@@ -43,6 +45,11 @@ public class Patrimony {
      */
     private String label;
 
+    /**
+     * Référence du client
+     */
+    private String companyUid;
+    
     /**
      * Agences dont dépend le patrimoine
      */
@@ -114,6 +121,20 @@ public class Patrimony {
      */
     public void setLabel(String label) {
         this.label = label;
+    }
+
+    /**
+     * @return la référene du client
+     */
+    public String getCompanyUid() {
+        return companyUid;
+    }
+
+    /**
+     * @param companyUid définit la référene du client
+     */
+    public void setCompanyUid(String companyUid) {
+        this.companyUid = companyUid;
     }
 
     /**
@@ -196,6 +217,7 @@ public class Patrimony {
                 + ", uid:" + getUid()
                 + ", ref:" + getRef()
                 + ", label:" + getLabel()
+                + ", companyUid:" + getCompanyUid()
                 + ", agencies:" + getAgencies()
                 + ", addresses:" + getAddresses()
                 + ", complementaryAddress:" + getComplementaryAddresses()

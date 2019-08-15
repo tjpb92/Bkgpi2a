@@ -1,6 +1,7 @@
 package bkgpi2a;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.annotation.JsonSetter;
@@ -9,10 +10,11 @@ import com.fasterxml.jackson.annotation.JsonSetter;
  * Classe décrivant un container permettant le transfert des patrimoines.
  *
  * @author Thierry Baribaud
- * @version 0.20
+ * @version 1.11
  * @see http://performanceimmo.github.io/API/#patrimonies
  */
 @JsonPropertyOrder({"_links", "result"})
+@JsonIgnoreProperties(value = { "aggregations" })
 public class PatrimonyContainer {
 
     /**
