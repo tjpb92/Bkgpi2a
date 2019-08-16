@@ -9,7 +9,7 @@ import com.fasterxml.jackson.annotation.JsonSetter;
  * Classe décrivant un container permettant le transfert des sociétés (ProviderContact).
  *
  * @author Thierry Baribaud
- * @version 1.13
+ * @version 1.14
  * @see https://performanceimmo.github.io/API/#providercontactresultview
  */
 @JsonPropertyOrder({"_links", "result"})
@@ -25,14 +25,14 @@ public class ProviderContactResultView {
      * Liste des sociétés
      */
     @JsonProperty("result")
-    private ProviderContactQueryViewList providerContactQueryViewList;
+    private ProviderContactList providerContactList;
 
     /**
      * Constructeur de la classe ProviderContactResultView
      */
     public ProviderContactResultView() {
         setLinks(new Links());
-        setProviderContactQueryViewList(new ProviderContactQueryViewList());
+        setProviderContactList(new ProviderContactList());
     }
 
     /**
@@ -55,16 +55,16 @@ public class ProviderContactResultView {
      * @return la liste des providerContacts
      */
     @JsonGetter("result")
-    public ProviderContactQueryViewList getProviderContactQueryViewList() {
-        return providerContactQueryViewList;
+    public ProviderContactList getProviderContactList() {
+        return providerContactList;
     }
 
     /**
-     * @param providerContactQueryView définit la liste des providerContacts
+     * @param providerContactList définit la liste des providerContacts
      */
     @JsonSetter("result")
-    public void setProviderContactQueryViewList(ProviderContactQueryViewList providerContactQueryView) {
-        this.providerContactQueryViewList = providerContactQueryView;
+    public void setProviderContactList(ProviderContactList providerContactList) {
+        this.providerContactList = providerContactList;
     }
 
 //    /**
@@ -73,7 +73,7 @@ public class ProviderContactResultView {
 //     * @param providerContactQueryView providerContact à ajouter
 //     */
 //    public void add(ProviderContactQueryViewList providerContactQueryView) {
-//        providerContactQueryViewList.add(providerContactQueryView);
+//        providerContactList.add(providerContactQueryView);
 //    }
 
     /**
@@ -94,7 +94,7 @@ public class ProviderContactResultView {
     public String toString() {
         return "ProviderContactResultView:{"
                 + "_links:" + getLinks()
-                + ", result:" + getProviderContactQueryViewList()
+                + ", result:" + getProviderContactList()
                 + "}";
     }
 }

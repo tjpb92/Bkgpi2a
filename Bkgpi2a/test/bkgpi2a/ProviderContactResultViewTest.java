@@ -13,7 +13,7 @@ import static org.junit.Assert.*;
 /**
  * Programme de test de la classe ProviderContactResultView
  * @author Thierry Baribaud
- * @version 1.13
+ * @version 1.14
  */
 public class ProviderContactResultViewTest {
     
@@ -44,19 +44,25 @@ public class ProviderContactResultViewTest {
         String testFilename = "testProviderContactResultView.json";
         ProviderContactResultView providerContactResultView = null;
         ProviderContactResultView expProviderContactResultView = null;
-        ProviderContact providerContact;
+//        ProviderContact providerContact;
+        ProviderContactQueryView providerContactQueryView;
+        String json;
 
         try {
             providerContactResultView = objectMapper.readValue(new File(filename), ProviderContactResultView.class);
             System.out.println("providerContactResultView:"+providerContactResultView);
-            for (ProviderContactQueryView providerContactQueryView : providerContactResultView.getProviderContactQueryViewList()) {
-                System.out.println("  " + providerContactQueryView);
-                providerContact = providerContactQueryView;
-                System.out.println("    " + providerContact);
-            }
-//            for (ProviderContact providerContact: providerContactResultView.getProviderContactQueryViewList()) {
-//                System.out.println("  " + providerContact);
+//            for (ProviderContactQueryView providerContactQueryView : providerContactResultView.getProviderContactList()) {
+//                System.out.println("  " + providerContactQueryView);
+//                providerContact = providerContactQueryView;
+//                json = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(providerContact);
+//                System.out.println("    json(providerContact):" + json);
 //            }
+            for (ProviderContact providerContact: providerContactResultView.getProviderContactList()) {
+                System.out.println("  " + providerContact.getClass().getSimpleName()+", " + (providerContact instanceof ProviderContactQueryView));
+                providerContactQueryView = (ProviderContactQueryView) providerContact;
+                System.out.println("  " + providerContactQueryView);
+                System.out.println("  " + providerContact);
+            }
 
             objectMapper.writeValue(new File(testFilename), providerContactResultView);
             expProviderContactResultView = objectMapper.readValue(new File(filename), ProviderContactResultView.class);
