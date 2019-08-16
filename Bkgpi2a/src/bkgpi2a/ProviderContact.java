@@ -11,7 +11,7 @@ import com.fasterxml.jackson.annotation.JsonUnwrapped;
  * Classe décrivant un intervenant
  *
  * @author Thierry Baribaud
- * @version 1.13
+ * @version 1.15
  * @see http://performanceimmo.github.io/API/#providercontacts
  */
 //@JsonPropertyOrder({"uid", "label", "phones", "fax", "emails", "active",})
@@ -37,6 +37,7 @@ public class ProviderContact {
     /**
      * Nom de la société (ancienne représentation).
      */
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private String label;
 
     /**
