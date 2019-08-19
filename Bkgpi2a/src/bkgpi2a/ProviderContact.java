@@ -11,7 +11,7 @@ import com.fasterxml.jackson.annotation.JsonUnwrapped;
  * Classe décrivant un intervenant
  *
  * @author Thierry Baribaud
- * @version 1.15
+ * @version 1.17
  * @see http://performanceimmo.github.io/API/#providercontacts
  */
 //@JsonPropertyOrder({"uid", "label", "phones", "fax", "emails", "active",})
@@ -44,6 +44,29 @@ public class ProviderContact {
      * Nom de de la société (nouvelle représentation).
      */
     private Name name;
+    
+    /**
+     * Référence à la société (ProviderCompany)
+     */
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private ProviderCompanyInContact providerCompany;
+    
+    /**
+     * Liste des activité de la société (ProviderContact)
+     */
+    private ProviderContactActivityList activities;
+    
+    /**
+     * Références vers les patrimoines associés
+     */
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private ItemAbstractWithRefList patrimonies;
+    
+    /**
+     * Référence au client (ClientCompany)
+     */
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private ItemAbstract company;
 
     /**
      * Liste de numéros de téléphone pour joindre de la société
@@ -124,6 +147,62 @@ public class ProviderContact {
      */
     public void setUid(String uid) {
         this.uid = uid;
+    }
+
+    /**
+     * @return la référence à la société (ProviderCompany)
+     */
+    public ProviderCompanyInContact getProviderCompany() {
+        return providerCompany;
+    }
+
+    /**
+     * @param providerCompanyInContact définit la référence à la société (ProviderCompany)
+     */
+    public void setProviderCompany(ProviderCompanyInContact providerCompanyInContact) {
+        this.providerCompany = providerCompanyInContact;
+    }
+
+    /**
+     * @return the activities
+     */
+    public ProviderContactActivityList getActivities() {
+        return activities;
+    }
+
+    /**
+     * @param activities the activities to set
+     */
+    public void setActivities(ProviderContactActivityList activities) {
+        this.activities = activities;
+    }
+
+    /**
+     * @return la liste des réfences vers les patrimoines associés
+     */
+    public ItemAbstractWithRefList getPatrimonies() {
+        return patrimonies;
+    }
+
+    /**
+     * @param patrimonies définit la liste des réfences vers les patrimoines associés
+     */
+    public void setPatrimonies(ItemAbstractWithRefList patrimonies) {
+        this.patrimonies = patrimonies;
+    }
+
+    /**
+     * @return la référence au client (ClientCompany)
+     */
+    public ItemAbstract getCompany() {
+        return company;
+    }
+
+    /**
+     * @param company définit la référence au client (ClientCompany)
+     */
+    public void setCompany(ItemAbstract company) {
+        this.company = company;
     }
 
     /**
@@ -220,6 +299,10 @@ public class ProviderContact {
                 + ", uid:" + getUid()
                 + ", label:" + getLabel()
                 + ", name:" + getName()
+                + ", providerCompany:" + getProviderCompany()
+                + ", activities:" + getActivities()
+                + ", patrimonies:" + getPatrimonies()
+                + ", company:" + getCompany()
                 + ", phones:" + getPhones()
                 + ", fax:" + getFax()
                 + ", emails:" + getEmails()

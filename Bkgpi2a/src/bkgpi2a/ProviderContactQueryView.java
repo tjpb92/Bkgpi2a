@@ -1,14 +1,16 @@
 package bkgpi2a;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonUnwrapped;
 
 /**
  * Classe décrivant un ProviderContactQueryView
  *
  * @author Thierry Baribaud
- * @version 1.15
+ * @version 1.17
  * @see https://performanceimmo.github.io/API/#providercontactqueryview
  */
+@JsonIgnoreProperties(value = { "patrimonies", "company" })
 public class ProviderContactQueryView {
 
     /**
@@ -16,44 +18,6 @@ public class ProviderContactQueryView {
      */
     @JsonUnwrapped
     private ProviderContact providerContact;
-
-    /**
-     * Référence à la société (ProviderCompany)
-     */
-    private ProviderCompanyInContact providerCompany;
-
-    /**
-     * Liste des activité de la société (ProviderContact)
-     */
-    private ProviderContactActivityList activities;
-
-    /**
-     * @return the providerCompany
-     */
-    public ProviderCompanyInContact getProviderCompany() {
-        return providerCompany;
-    }
-
-    /**
-     * @param providerCompany the providerCompany to set
-     */
-    public void setProviderCompany(ProviderCompanyInContact providerCompany) {
-        this.providerCompany = providerCompany;
-    }
-
-    /**
-     * @return the activities
-     */
-    public ProviderContactActivityList getActivities() {
-        return activities;
-    }
-
-    /**
-     * @param activities the activities to set
-     */
-    public void setActivities(ProviderContactActivityList activities) {
-        this.activities = activities;
-    }
 
     /**
      * @return la société providerContact
@@ -76,8 +40,6 @@ public class ProviderContactQueryView {
     public String toString() {
         return "ProviderContactQueryView:{"
                 + " providerContact:" + getProviderContact()
-                + ", providerCompany:" + getProviderCompany()
-                + ", activities:" + getActivities()
                 + "}";
     }
 

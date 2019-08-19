@@ -12,11 +12,12 @@ import static org.junit.Assert.*;
 
 /**
  * Programme de test de la classe ProviderContactResultView
+ *
  * @author Thierry Baribaud
- * @version 1.15
+ * @version 1.17
  */
 public class ProviderContactTest {
-    
+
     /**
      * Common Jackson object mapper
      */
@@ -24,17 +25,18 @@ public class ProviderContactTest {
 
     public ProviderContactTest() {
     }
-    
+
     @BeforeClass
     public static void setUpClass() {
     }
-    
+
     @AfterClass
     public static void tearDownClass() {
     }
 
     /**
-     * Test of serialization from and to a file in Json format, of class ProviderContact.
+     * Test of serialization from and to a file in Json format, of class
+     * ProviderContact.
      */
     @Test
     public void testProviderContactJsonSerialization() {
@@ -47,10 +49,12 @@ public class ProviderContactTest {
 
         try {
             providerContact = objectMapper.readValue(new File(filename), ProviderContact.class);
-            System.out.println("providerContact:"+providerContact);
+            System.out.println("providerContact:" + providerContact.getName() + ", " + providerContact.getCompany() + ", " + providerContact.getProviderCompany());
+            System.out.println("  " + providerContact.getPatrimonies().size()+ " patrimonies");
             objectMapper.writeValue(new File(testFilename), providerContact);
             expProviderContact = objectMapper.readValue(new File(filename), ProviderContact.class);
-            System.out.println("expProviderContact:"+expProviderContact);
+            System.out.println("expProviderContact:" + expProviderContact.getName() + ", " + expProviderContact.getCompany() + ", " + expProviderContact.getProviderCompany());
+            System.out.println("  " + expProviderContact.getPatrimonies().size()+ " patrimonies");
         } catch (IOException ex) {
             Logger.getLogger(ProviderContactResultViewTest.class.getName()).log(Level.SEVERE, null, ex);
             fail(ex.getMessage());
@@ -59,5 +63,5 @@ public class ProviderContactTest {
         assertNotNull(expProviderContact);
         assertEquals(providerContact.toString(), expProviderContact.toString());
     }
-   
+
 }
