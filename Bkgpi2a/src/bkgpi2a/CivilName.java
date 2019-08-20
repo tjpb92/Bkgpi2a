@@ -8,7 +8,7 @@ import com.fasterxml.jackson.annotation.JsonTypeName;
  * Classe décrivant un nom qualifié
  *
  * @author Thierry Baribaud
- * @version 1.18
+ * @version 1.19
  */
 @JsonTypeName("CivilName")
 public class CivilName extends Name {
@@ -16,6 +16,7 @@ public class CivilName extends Name {
     /**
      * Genre
      */
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private String gender;
 
     /**

@@ -1,7 +1,6 @@
 package bkgpi2a;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSetter;
 import com.fasterxml.jackson.annotation.JsonUnwrapped;
@@ -13,8 +12,7 @@ import com.fasterxml.jackson.annotation.JsonUnwrapped;
  * @version 1.19
  * @see https://performanceimmo.github.io/API/#providercontactqueryview
  */
-@JsonIgnoreProperties(value = {"patrimonies", "company"})
-public class ProviderContactQueryView {
+public class ProviderContactDetailedQueryView {
 
     /**
      * La société ProviderContact
@@ -72,7 +70,7 @@ public class ProviderContactQueryView {
      */
     @Override
     public String toString() {
-        return "ProviderContactQueryView:{"
+        return "ProviderContactDetailedQueryView:{"
                 + " providerContact:" + getProviderContact()
                 + ", _links:" + getLinks()
                 + "}";

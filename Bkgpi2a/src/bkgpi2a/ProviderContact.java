@@ -11,17 +11,11 @@ import com.fasterxml.jackson.annotation.JsonUnwrapped;
  * Classe décrivant un intervenant
  *
  * @author Thierry Baribaud
- * @version 1.17
+ * @version 1.19
  * @see http://performanceimmo.github.io/API/#providercontacts
  */
 //@JsonPropertyOrder({"uid", "label", "phones", "fax", "emails", "active",})
 public class ProviderContact {
-
-    /**
-     * Liens entre entités
-     */
-    @JsonProperty("_links")
-    private Links _links;
 
     /**
      * Identifiant unique de la société (ProviderContact).
@@ -44,24 +38,24 @@ public class ProviderContact {
      * Nom de de la société (nouvelle représentation).
      */
     private Name name;
-    
+
     /**
      * Référence à la société (ProviderCompany)
      */
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private ProviderCompanyInContact providerCompany;
-    
+
     /**
      * Liste des activité de la société (ProviderContact)
      */
     private ProviderContactActivityList activities;
-    
+
     /**
      * Références vers les patrimoines associés
      */
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private ItemAbstractWithRefList patrimonies;
-    
+
     /**
      * Référence au client (ClientCompany)
      */
@@ -90,22 +84,6 @@ public class ProviderContact {
      * Indique si de la société est active ou pas.
      */
     private boolean active;
-
-    /**
-     * @return la liste de liens entre entités
-     */
-    @JsonGetter("_links")
-    public Links getLinks() {
-        return _links;
-    }
-
-    /**
-     * @param _links définit une liste de liens entre entités
-     */
-    @JsonSetter("_links")
-    public void setLinks(Links _links) {
-        this._links = _links;
-    }
 
     /**
      * @return le nom de la société
@@ -157,7 +135,8 @@ public class ProviderContact {
     }
 
     /**
-     * @param providerCompanyInContact définit la référence à la société (ProviderCompany)
+     * @param providerCompanyInContact définit la référence à la société
+     * (ProviderCompany)
      */
     public void setProviderCompany(ProviderCompanyInContact providerCompanyInContact) {
         this.providerCompany = providerCompanyInContact;
@@ -185,7 +164,8 @@ public class ProviderContact {
     }
 
     /**
-     * @param patrimonies définit la liste des réfences vers les patrimoines associés
+     * @param patrimonies définit la liste des réfences vers les patrimoines
+     * associés
      */
     public void setPatrimonies(ItemAbstractWithRefList patrimonies) {
         this.patrimonies = patrimonies;
@@ -262,15 +242,6 @@ public class ProviderContact {
     }
 
     /**
-     * Ajoute un lien à la liste
-     *
-     * @param link lien à ajouter
-     */
-    public void add(Link link) {
-        _links.add(link);
-    }
-
-    /**
      * @return l'identifiant unique de la base de données Anstel
      */
     @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -295,7 +266,6 @@ public class ProviderContact {
     public String toString() {
         return "ProviderContact:{"
                 + "id:" + getId()
-                + ", _links:" + getLinks()
                 + ", uid:" + getUid()
                 + ", label:" + getLabel()
                 + ", name:" + getName()
