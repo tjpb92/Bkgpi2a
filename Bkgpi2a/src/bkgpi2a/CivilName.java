@@ -1,13 +1,14 @@
 package bkgpi2a;
 
 import static bkgpi2a.NameType.CIVIL_NAME;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 
 /**
  * Classe décrivant un nom qualifié
  *
  * @author Thierry Baribaud
- * @version Octobre 2016
+ * @version 1.18
  */
 @JsonTypeName("CivilName")
 public class CivilName extends Name {
@@ -26,6 +27,12 @@ public class CivilName extends Name {
      * Prénom
      */
     private String firstName;
+
+    /**
+     * Société (optionnel)
+     */
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private String company;
 
     /**
      * @return le genre
@@ -77,6 +84,20 @@ public class CivilName extends Name {
     }
 
     /**
+     * @return la société
+     */
+    public String getCompany() {
+        return company;
+    }
+
+    /**
+     * @param company définit la société
+     */
+    public void setCompany(String company) {
+        this.company = company;
+    }
+
+    /**
      * @return Retourne l'objet sous forme textuelle
      */
     @Override
@@ -86,7 +107,7 @@ public class CivilName extends Name {
                 + ", gender:" + getGender()
                 + ", lastName:" + getLastName()
                 + ", firstName:" + getFirstName()
+                + ", company:" + getCompany()
                 + "}";
     }
-
 }

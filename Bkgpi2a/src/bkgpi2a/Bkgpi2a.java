@@ -31,7 +31,7 @@ import utils.DBServerException;
  * de données MongoDB par rapport à une base de données Informix
  *
  * @author Thierry Baribaud.
- * @version 1.12
+ * @version 1.18
  */
 public class Bkgpi2a {
 
@@ -59,6 +59,9 @@ public class Bkgpi2a {
                 nbTrials = resultSet.getInt(2);
                 isam = resultSet.getInt(4);
                 errmsg = resultSet.getString(5);
+                if (retcode != 1) {
+                    System.out.println("ERROR : SqlResult, retcode:" + retcode + ", nbTrials:" + nbTrials + ", errno:" + errno + ", isam:" + isam + ", errmsg:" + errmsg);
+                }
             } catch (SQLException exception) {
 //                Logger.getLogger(Bkgpi2a.class.getName()).log(Level.SEVERE, null, ex);
                 System.out.println("ERROR : erreur dans la récupération des résultats de la requête SQL " + exception);
@@ -290,7 +293,7 @@ public class Bkgpi2a {
                 } else if (event instanceof MissionAccepted) {
                     retcode = processMissionAccepted(informixConnection, (MissionAccepted) event);
                 } else if (event instanceof InterventionAccepted) {
-                    retcode = processInterventionAccepted(informixConnection, (InterventionAccepted) event);    
+                    retcode = processInterventionAccepted(informixConnection, (InterventionAccepted) event);
                 } else if (event instanceof MissionScheduled) {
                     retcode = processMissionScheduled(informixConnection, (MissionScheduled) event);
                 } else if (event instanceof SendingServiceOrderReported) {
@@ -1457,9 +1460,9 @@ public class Bkgpi2a {
                 preparedStatement = informixConnection.prepareStatement("{call addLogTrial(?, ?, ?, ?, ?, ?, ?, ?)}");
                 preparedStatement.setString(1, interventionAccepted.getAggregateUid());
                 if (interventionAccepted.getAssignee() instanceof ReferencedProviderContact) {
-                    referencedProviderContact = (ReferencedProviderContact)interventionAccepted.getAssignee();
+                    referencedProviderContact = (ReferencedProviderContact) interventionAccepted.getAssignee();
                     preparedStatement.setString(2, referencedProviderContact.getProviderContactUid());
-                }else {
+                } else {
                     preparedStatement.setNull(2, java.sql.Types.INTEGER);
                 }
                 preparedStatement.setInt(3, 77);
@@ -1490,7 +1493,7 @@ public class Bkgpi2a {
 
         return retcode;
     }
-    
+
     /**
      * Traite l'événement MessageAdded
      *
@@ -1615,7 +1618,6 @@ public class Bkgpi2a {
         return retcode;
     }
 
-
     /**
      * Traite l'événement AssigneeIdentified
      *
@@ -1634,15 +1636,15 @@ public class Bkgpi2a {
         SqlResults sqlResults;
 
         int retcode;
-        
+
         resultSet = null;
         preparedStatement = null;
         retcode = 0;
-        
+
         if (assigneeIdentified.getOperator() instanceof ReferencedUser) {
             try {
                 informixConnection.setAutoCommit(false);
-                
+
                 preparedStatement = informixConnection.prepareStatement("{call addLogTrial(?, ?, ?, ?, ?, ?, ?, ?)}");
                 preparedStatement.setString(1, assigneeIdentified.getAggregateUid());
                 ticketAssignee = assigneeIdentified.getTicketAssignee();
@@ -1673,7 +1675,7 @@ public class Bkgpi2a {
                 }
                 resultSet.close();
                 preparedStatement.close();
-                
+
                 if (retcode == 1) {
                     preparedStatement = informixConnection.prepareStatement("{call restCall(?, ?, ?, ?)}");
                     preparedStatement.setString(1, assigneeIdentified.getAggregateUid());
@@ -1693,16 +1695,14 @@ public class Bkgpi2a {
             } catch (SQLException exception) {
                 Logger.getLogger(Bkgpi2a.class.getName()).log(Level.SEVERE, null, exception);
                 retcode = -1;
-            }
-            finally {
+            } finally {
                 try {
                     if (retcode == 1) {
                         informixConnection.commit();
-                    }
-                    else {
+                    } else {
                         informixConnection.rollback();
                     }
-                    
+
                     if (resultSet != null) {
                         resultSet.close();
                     }
@@ -1710,7 +1710,7 @@ public class Bkgpi2a {
                     if (preparedStatement != null) {
                         preparedStatement.close();
                     }
-                    
+
                     informixConnection.setAutoCommit(true);
                 } catch (SQLException ex) {
                     Logger.getLogger(Bkgpi2a.class.getName()).log(Level.SEVERE, null, ex);
@@ -1744,15 +1744,15 @@ public class Bkgpi2a {
         SqlResults sqlResults;
 
         int retcode;
-        
+
         resultSet = null;
         preparedStatement = null;
         retcode = 0;
-        
+
         if (ticketCancelled.getOperator() instanceof ReferencedUser) {
             try {
                 informixConnection.setAutoCommit(false);
-                
+
                 preparedStatement = informixConnection.prepareStatement("{call addLogTrial(?, ?, ?, ?, ?, ?, ?, ?)}");
                 preparedStatement.setString(1, ticketCancelled.getAggregateUid());
                 preparedStatement.setNull(2, java.sql.Types.INTEGER);
@@ -1778,7 +1778,7 @@ public class Bkgpi2a {
                 }
                 resultSet.close();
                 preparedStatement.close();
-                
+
                 if (retcode == 1) {
                     preparedStatement = informixConnection.prepareStatement("{call archCall(?, ?, ?, ?, ?)}");
                     preparedStatement.setString(1, ticketCancelled.getAggregateUid());
@@ -1799,16 +1799,14 @@ public class Bkgpi2a {
             } catch (SQLException exception) {
                 Logger.getLogger(Bkgpi2a.class.getName()).log(Level.SEVERE, null, exception);
                 retcode = -1;
-            }
-            finally {
+            } finally {
                 try {
                     if (retcode == 1) {
                         informixConnection.commit();
-                    }
-                    else {
+                    } else {
                         informixConnection.rollback();
                     }
-                    
+
                     if (resultSet != null) {
                         resultSet.close();
                     }
@@ -1816,7 +1814,7 @@ public class Bkgpi2a {
                     if (preparedStatement != null) {
                         preparedStatement.close();
                     }
-                    
+
                     informixConnection.setAutoCommit(true);
                 } catch (SQLException ex) {
                     Logger.getLogger(Bkgpi2a.class.getName()).log(Level.SEVERE, null, ex);

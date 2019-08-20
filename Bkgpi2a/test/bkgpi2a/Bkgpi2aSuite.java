@@ -11,12 +11,13 @@ import org.junit.runners.Suite;
  * Jeux de tests pour tester toute les classes du projet
  *
  * @author Thierry Baribaud
- * @version 1.16
+ * @version 1.18
  */
 @RunWith(Suite.class)
-@Suite.SuiteClasses({DataGouvAPIIdCheckerTest.class, EventTypeTest.class,
+@Suite.SuiteClasses({CivilName.class, DataGouvAPIIdCheckerTest.class, 
+    EventTypeTest.class,
     GooglePlaceIdCheckerTest.class, ItemAbstractTest.class,
-    ItemAbstractWithRefTest.class,
+    ItemAbstractWithRefTest.class, PoorName.class,
     ProviderCompanyInContactTest.class, ProviderContactActivityTest.class,
     ProviderContactQueryViewTest.class, ProviderContactResultViewTest.class,
     ProviderContactTest.class})
