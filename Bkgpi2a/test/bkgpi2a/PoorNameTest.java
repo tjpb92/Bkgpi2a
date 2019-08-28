@@ -15,7 +15,7 @@ import static org.junit.Assert.*;
 /**
  * Programme de test de la classe PoorName
  * @author Thierry Baribaud
- * @version 1.18
+ * @version 1.20
  */
 public class PoorNameTest {
     
@@ -44,10 +44,10 @@ public class PoorNameTest {
     }
     
     /**
-     * Test of serialization from and to a file in Json format, of class ItemAbstract.
+     * Test of serialization from and to a file in Json format, of class PoorName.
      */
     @Test
-    public void testItemAbstractJsonSerialization() {
+    public void testPoorNameJsonSerialization() {
         System.out.println("PoorNameJsonSerialization");
 
         String filename = "PoorName.json";

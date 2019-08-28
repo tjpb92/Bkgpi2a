@@ -15,7 +15,7 @@ import static org.junit.Assert.*;
 /**
  * Programme de test de la classe CivilName
  * @author Thierry Baribaud
- * @version 1.18
+ * @version 1.20
  */
 public class CivilNameTest {
     
@@ -44,10 +44,10 @@ public class CivilNameTest {
     }
     
     /**
-     * Test of serialization from and to a file in Json format, of class ItemAbstract.
+     * Test of serialization from and to a file in Json format, of class CivilName.
      */
     @Test
-    public void testItemAbstractJsonSerialization() {
+    public void testCivilNameJsonSerialization() {
         System.out.println("CivilNameJsonSerialization");
 
         String filename = "CivilName.json";

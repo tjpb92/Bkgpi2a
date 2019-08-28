@@ -11,12 +11,12 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * Classe réalisant des requetes GET/POST en HTTPS.
+ * Classe réalisant des requetes GET/POST/PATCH en HTTPS.
  *
  * @see https://www.mkyong.com/java/how-to-send-http-request-getpost-in-java/
  *
  * @author Thierry Baribaud
- * @version 0.47
+ * @version 1.20
  */
 public class HttpsClient {
 
@@ -218,6 +218,46 @@ public class HttpsClient {
         if (debugMode) System.out.println("Post parameters : " + urlParameters);
         getResponseCode(connection);
         HttpsClient.this.getCookies(connection);
+        HttpsClient.this.getResponse(connection);
+        connection.disconnect();
+    }
+
+    /**
+     * Méthode pour envoyer une requête HTTPS PATCH
+     * @param Command commande à exécuter
+     * @throws Exception en cas d'erreur
+     */
+        public void sendPatch(String Command) throws Exception {
+
+        String commandUrl;
+        URL url;
+        HttpsURLConnection connection;
+        DataOutputStream dataOutputStream;
+        String urlParameters;
+
+        commandUrl = baseUrl + Command;
+        urlParameters = identifiants.toJson();
+
+        url = new URL(commandUrl);
+        connection = (HttpsURLConnection) url.openConnection();
+
+        //add request header
+        connection.setRequestMethod("PATCH");
+        connection.setRequestProperty("User-Agent", USER_AGENT);
+        connection.setRequestProperty("Content-Type", "application/json");
+        connection.addRequestProperty("Cookie", getCookies());
+
+        // Send post request
+        connection.setDoOutput(true);
+        dataOutputStream = new DataOutputStream(connection.getOutputStream());
+        dataOutputStream.writeBytes(urlParameters);
+        dataOutputStream.flush();
+        dataOutputStream.close();
+
+        System.out.println("Sending 'PATCH' request to URL : " + commandUrl);
+        if (debugMode) System.out.println("Patch parameters : " + urlParameters);
+        getResponseCode(connection);
+//        HttpsClient.this.getCookies(connection);
         HttpsClient.this.getResponse(connection);
         connection.disconnect();
     }
