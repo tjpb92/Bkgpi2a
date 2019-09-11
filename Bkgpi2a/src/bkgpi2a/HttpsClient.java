@@ -16,7 +16,7 @@ import java.util.logging.Logger;
  * @see https://www.mkyong.com/java/how-to-send-http-request-getpost-in-java/
  *
  * @author Thierry Baribaud
- * @version 1.20
+ * @version 1.23
  */
 public class HttpsClient {
 
@@ -225,28 +225,31 @@ public class HttpsClient {
     /**
      * Méthode pour envoyer une requête HTTPS PATCH
      * @param Command commande à exécuter
+     * @param urlParameters paramètres au format Json
      * @throws Exception en cas d'erreur
      */
-        public void sendPatch(String Command) throws Exception {
+        public void sendPatch(String Command, String urlParameters) throws Exception {
 
         String commandUrl;
         URL url;
         HttpsURLConnection connection;
         DataOutputStream dataOutputStream;
-        String urlParameters;
 
         commandUrl = baseUrl + Command;
-        urlParameters = identifiants.toJson();
+//        commandUrl = "https://anstel-dev.performance-immo.com" + Command;
 
         url = new URL(commandUrl);
         connection = (HttpsURLConnection) url.openConnection();
 
         //add request header
-        connection.setRequestMethod("PATCH");
+//        connection.setRequestMethod("PATCH");
+        connection.setRequestProperty("X-HTTP-Method-Override", "PATCH");
+        connection.setRequestMethod("POST");
+        
         connection.setRequestProperty("User-Agent", USER_AGENT);
         connection.setRequestProperty("Content-Type", "application/json");
         connection.addRequestProperty("Cookie", getCookies());
-
+        if (debugMode) System.out.println("Cooekies : " + getCookies());
         // Send post request
         connection.setDoOutput(true);
         dataOutputStream = new DataOutputStream(connection.getOutputStream());

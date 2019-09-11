@@ -11,7 +11,7 @@ import org.junit.runners.Suite;
  * Jeux de tests pour tester toute les classes du projet
  *
  * @author Thierry Baribaud
- * @version 1.21
+ * @version 1.23
  */
 @RunWith(Suite.class)
 @Suite.SuiteClasses({CivilName.class, DataGouvAPIIdCheckerTest.class,
@@ -20,7 +20,8 @@ import org.junit.runners.Suite;
     ItemAbstractWithRefTest.class, PoorName.class,
     ProviderCompanyInContactTest.class, ProviderContactActivityTest.class,
     ProviderContactQueryViewTest.class, ProviderContactResultViewTest.class,
-    ProviderContactTest.class})
+    ProviderContactTest.class, DissociateProviderContactFromPatrimonyTest.class,
+    ProviderContactDissociatedFromPatrimonyTest.class})
 public class Bkgpi2aSuite {
 
     @BeforeClass

@@ -2,17 +2,19 @@ package bkgpi2a;
 
 import static bkgpi2a.CommandType.DISSOCIATE_PROVIDER_CONTACT_FROM_PATRIMONY;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 
 /**
  * Classe décrivant la dissociation de la relation entre un prestataire (ProviderContact) et d'un patrimoine (Patrimony) : DissociateProviderContactFromPatrimony, #1475
  *
  * @author Thierry Baribaud
- * @version 1.20
- * @see http://performanceimmo.github.io/API/#...
+ * @version 1.23
+ * @see http://performanceimmo.github.io/API/#providercontactevent
  */
 @JsonIgnoreProperties({"_id", "sentDate", "commandTypeUid", "status", "nbError"})
 @JsonTypeName("DissociateProviderContactFromPatrimony")
+@JsonPropertyOrder({ "processUid", "patrimonyUid", "date", "commandType" })
 public class DissociateProviderContactFromPatrimony extends Command {
 
     /**
@@ -28,6 +30,19 @@ public class DissociateProviderContactFromPatrimony extends Command {
         setCommandType(DISSOCIATE_PROVIDER_CONTACT_FROM_PATRIMONY.getName());
     }
 
+    /**
+     * Constructeur secondaire de la classe DissociateProviderContactFromPatrimony
+     * Construit la commande à partir de l'événement
+     * @param providerContactDissociatedFromPatrimony événement associer à la commande.
+     */
+    public DissociateProviderContactFromPatrimony(ProviderContactDissociatedFromPatrimony providerContactDissociatedFromPatrimony) {
+        this();
+        setProcessUid(providerContactDissociatedFromPatrimony.getProcessUid());
+        setPatrimonyUid(providerContactDissociatedFromPatrimony.getPatrimonyUid());
+        setDate(providerContactDissociatedFromPatrimony.getDate());
+        setSentDate(providerContactDissociatedFromPatrimony.getSentDate());
+    }
+    
     /**
      * @return l'identifiant unique du patrimoine
      */
