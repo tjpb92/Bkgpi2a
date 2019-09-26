@@ -11,10 +11,10 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 /**
- * Programme de test de la classe ProviderContactResultView
+ * Programme de test de la classe ProviderContact
  *
  * @author Thierry Baribaud
- * @version 1.17
+ * @version 1.24
  */
 public class ProviderContactTest {
 
@@ -56,7 +56,7 @@ public class ProviderContactTest {
             System.out.println("expProviderContact:" + expProviderContact.getName() + ", " + expProviderContact.getCompany() + ", " + expProviderContact.getProviderCompany());
             System.out.println("  " + expProviderContact.getPatrimonies().size()+ " patrimonies");
         } catch (IOException ex) {
-            Logger.getLogger(ProviderContactResultViewTest.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ProviderContact.class.getName()).log(Level.SEVERE, null, ex);
             fail(ex.getMessage());
         }
         assertNotNull(providerContact);
