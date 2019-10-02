@@ -8,20 +8,22 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
 /**
- * Jeux de tests pour tester toute les classes du projet
+ * Jeux de tests pour tester toutes les classes du projet
  *
  * @author Thierry Baribaud
- * @version 1.23
+ * @version 1.25
  */
 @RunWith(Suite.class)
-@Suite.SuiteClasses({CivilName.class, DataGouvAPIIdCheckerTest.class,
+@Suite.SuiteClasses({CivilNameTest.class, DataGouvAPIIdCheckerTest.class,
+    DissociateProviderContactFromPatrimonyTest.class,
     EventTypeTest.class,
     GooglePlaceIdCheckerTest.class, ItemAbstractTest.class,
-    ItemAbstractWithRefTest.class, PoorName.class,
+    ItemAbstractWithRefTest.class, PoorNameTest.class,
     ProviderCompanyInContactTest.class, ProviderContactActivityTest.class,
+    ProviderContactDissociatedFromPatrimonyTest.class,
     ProviderContactQueryViewTest.class, ProviderContactResultViewTest.class,
-    ProviderContactTest.class, DissociateProviderContactFromPatrimonyTest.class,
-    ProviderContactDissociatedFromPatrimonyTest.class})
+    ProviderContactTest.class, TicketOpenedTest.class
+})
 public class Bkgpi2aSuite {
 
     @BeforeClass
