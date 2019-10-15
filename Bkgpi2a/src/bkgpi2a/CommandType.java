@@ -4,11 +4,11 @@ package bkgpi2a;
  * Enumération décrivant les identifiants et libellés des commandes.
  *
  * @author Thierry Baribaud
- * @version 1.20
+ * @version 1.26
  */
 public enum CommandType {
 
-    ASSOCIATE_PROVIDER_CONTACT_WITH_PATRIMONY("AssociateProviderContactWithPatrimony ", 1470),
+    ASSOCIATE_PROVIDER_CONTACT_WITH_PATRIMONY("AssociateProviderContactWithPatrimony", 1470),
     DISSOCIATE_PROVIDER_CONTACT_FROM_PATRIMONY("DissociateProviderContactFromPatrimony", 1475)
 
 //    TICKET_OPENED("TicketOpened", 500),

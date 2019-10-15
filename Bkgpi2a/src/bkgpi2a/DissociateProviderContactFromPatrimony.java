@@ -9,7 +9,7 @@ import com.fasterxml.jackson.annotation.JsonTypeName;
  * Classe décrivant la dissociation de la relation entre un prestataire (ProviderContact) et d'un patrimoine (Patrimony) : DissociateProviderContactFromPatrimony, #1475
  *
  * @author Thierry Baribaud
- * @version 1.23
+ * @version 1.26
  * @see http://performanceimmo.github.io/API/#providercontactevent
  */
 @JsonIgnoreProperties({"_id", "sentDate", "commandTypeUid", "status", "nbError"})
@@ -23,7 +23,7 @@ public class DissociateProviderContactFromPatrimony extends Command {
     private String patrimonyUid;
 
     /**
-     * Constructeur de la classe DissociateProviderContactFromPatrimony
+     * Constructeur principal de la classe DissociateProviderContactFromPatrimony
      */
     public DissociateProviderContactFromPatrimony() {
         setCommandTypeUid(DISSOCIATE_PROVIDER_CONTACT_FROM_PATRIMONY.getUid());
@@ -33,7 +33,7 @@ public class DissociateProviderContactFromPatrimony extends Command {
     /**
      * Constructeur secondaire de la classe DissociateProviderContactFromPatrimony
      * Construit la commande à partir de l'événement
-     * @param providerContactDissociatedFromPatrimony événement associer à la commande.
+     * @param providerContactDissociatedFromPatrimony événement associé à la commande.
      */
     public DissociateProviderContactFromPatrimony(ProviderContactDissociatedFromPatrimony providerContactDissociatedFromPatrimony) {
         this();
