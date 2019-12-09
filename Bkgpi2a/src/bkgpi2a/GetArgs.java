@@ -1,11 +1,13 @@
 package bkgpi2a;
 
+import utils.ValidServers;
+
 /**
  * Cette classe sert à vérifier et à récupérer les arguments passés en ligne de
  * commande au programme Bkgpi2a.
  *
  * @author Thierry Baribaud
- * @version 1.10
+ * @version 1.26
  */
 public class GetArgs {
 
@@ -101,7 +103,7 @@ public class GetArgs {
             ip1 = i + 1;
             if (args[i].equals("-mgodb")) {
                 if (ip1 < n) {
-                    if (args[ip1].equals("pre-prod") || args[ip1].equals("prod")) {
+                    if (ValidServers.isAValidServer(args[ip1])) {
                         setMongoDbServerType(args[ip1]);
                     } else {
                         throw new GetArgsException("Mauvais serveur MongoDb : " + args[ip1]);
@@ -112,8 +114,7 @@ public class GetArgs {
                 }
             } else if (args[i].equals("-ifxdb")) {
                 if (ip1 < n) {
-                    if (args[ip1].equals("pre-prod") || args[ip1].equals("prod")
-                            || args[ip1].equals("pre-prod2") || args[ip1].equals("prod2")) {
+                    if (ValidServers.isAValidServer(args[ip1])) {
                         setInformixDbServerType(args[ip1]);
                     } else {
                         throw new GetArgsException("Mauvais serveur Informix : " + args[ip1]);
@@ -137,7 +138,7 @@ public class GetArgs {
      * Affiche le mode d'utilisation du programme.
      */
     public static void usage() {
-        System.out.println("Usage : java Bkgpi2a -mgodb prod -ifxdb prod"
+        System.out.println("Usage : java Bkgpi2a -mgodb mgodb -ifxdb ifxdb"
                 + " [-d] [-t]");
     }
 
