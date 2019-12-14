@@ -16,7 +16,7 @@ import java.util.logging.Logger;
  * @see https://www.mkyong.com/java/how-to-send-http-request-getpost-in-java/
  *
  * @author Thierry Baribaud
- * @version 1.23
+ * @version 1.28
  */
 public class HttpsClient {
 
@@ -86,6 +86,11 @@ public class HttpsClient {
      * Commande pour accéder aux événement des tickets
      */
     public static final String TICKETS_CMDE = "tickets";
+
+    /**
+     * Commande pour accéder aux demandes d'intervention émises depuis l'application mobile
+     */
+    public static final String REQUESTS_CMDE = "simplifiedrequests";
 
     /**
      * Cookie pour l'authentification
