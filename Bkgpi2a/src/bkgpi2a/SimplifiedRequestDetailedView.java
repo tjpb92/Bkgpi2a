@@ -9,38 +9,44 @@ import com.fasterxml.jackson.annotation.JsonSetter;
  * Classe décrivant un SimplifiedRequestDetailedView
  *
  * @author Thierry Baribaud
- * @version 1.29
+ * @version 1.30
  * @see https://performanceimmo.github.io/API/#simplifiedrequestdetailedview
  */
-@JsonIgnoreProperties(value = {"linkedEntities", "seen", "qualified"})
+@JsonIgnoreProperties(value = {"seen", "qualified"})
 public class SimplifiedRequestDetailedView {
 
     /**
-     * Identifiant unique de la demande d'intervention émise depuis l'application mobile
+     * Identifiant unique de la demande d'intervention émise depuis
+     * l'application mobile
      */
     private String uid;
 
     /**
-     * Etat de la demande d'intervention émise depuis l'application mobile. 
+     * Etat de la demande d'intervention émise depuis l'application mobile.
      * Declared ou Seen ou Qualified
      */
     private String state;
-    
+
     /**
      * Catégorie de la demande d'intervention émise depuis l'application mobile
      */
     private OtpCategory category;
-    
+
+    /**
+     * Entitées chainées
+     */
+    private LinkedEntities linkedEntities;
+
     /**
      * Date de la demande d'intervention
      */
     private String requestDate;
-    
+
     /**
      * Description de la demande
      */
     private String description;
-    
+
     /**
      * Contact ayant émis la demande d'intervention depuis l'application mobile
      */
@@ -51,49 +57,69 @@ public class SimplifiedRequestDetailedView {
      */
     @JsonProperty("_links")
     private Links _links;
-    
+
     /**
-     * @return l'identifiant unique de la demande d'intervention émise depuis l'application mobile
+     * @return l'identifiant unique de la demande d'intervention émise depuis
+     * l'application mobile
      */
     public String getUid() {
         return uid;
     }
 
     /**
-     * @param uid définit l'identifiant unique de la demande d'intervention émise depuis l'application mobile
+     * @param uid définit l'identifiant unique de la demande d'intervention
+     * émise depuis l'application mobile
      */
     public void setUid(String uid) {
         this.uid = uid;
     }
-    
+
     /**
-     * @return l'état de la demande d'intervention émise depuis l'application mobile
+     * @return l'état de la demande d'intervention émise depuis l'application
+     * mobile
      */
     public String getState() {
         return state;
     }
 
     /**
-     * @param state définit l'état de la demande d'intervention émise depuis l'application mobile
+     * @param state définit l'état de la demande d'intervention émise depuis
+     * l'application mobile
      */
     public void setState(String state) {
         this.state = state;
     }
-    
+
     /**
-     * @return la catégorie de la demande d'intervention émise depuis l'application mobile
+     * @return la catégorie de la demande d'intervention émise depuis
+     * l'application mobile
      */
     public OtpCategory getCategory() {
         return category;
     }
 
     /**
-     * @param category définit la catégorie de la demande d'intervention émise depuis l'application mobile
+     * @param category définit la catégorie de la demande d'intervention émise
+     * depuis l'application mobile
      */
     public void setTicketUid(OtpCategory category) {
         this.category = category;
     }
-    
+
+    /**
+     * @return les entitées liées
+     */
+    public LinkedEntities getLinkedEntities() {
+        return linkedEntities;
+    }
+
+    /**
+     * @param linkedEntities les entitées liées
+     */
+    public void setLinkedEntities(LinkedEntities linkedEntities) {
+        this.linkedEntities = linkedEntities;
+    }
+
     /**
      * @return la date de la demande d'intervention
      */
@@ -107,7 +133,7 @@ public class SimplifiedRequestDetailedView {
     public void setRequestDate(String requestDate) {
         this.requestDate = requestDate;
     }
-    
+
     /**
      * @return le descriptif de la demande
      */
@@ -121,7 +147,7 @@ public class SimplifiedRequestDetailedView {
     public void setDescription(String description) {
         this.description = description;
     }
-    
+
     /**
      * @return le contact à l'origine de la demande
      */
@@ -170,6 +196,7 @@ public class SimplifiedRequestDetailedView {
                 + " uid:" + getUid()
                 + ", state:" + getState()
                 + ", category:" + getCategory()
+                + ", linkedEntities:" + getLinkedEntities()
                 + ", requestDate:" + getRequestDate()
                 + ", description:" + getDescription()
                 + ", requester:" + getRequester()

@@ -3,13 +3,14 @@ package bkgpi2a;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 /**
- * Classe décrivant le contact ayant émis la demande d'intervention depuis l'application mobile
+ * Classe décrivant le contact ayant émis la demande d'intervention depuis
+ * l'application mobile
  *
  * @author Thierry Baribaud
- * @version 1.29
+ * @version 1.30
  * @see https://performanceimmo.github.io/API/#callerticketqueryview
  */
-@JsonIgnoreProperties(value = {"medium", "category", "callerInfos", "status"})
+@JsonIgnoreProperties(value = {"category", "callerInfos", "status"})
 public class CallerTicketQueryView {
 
     /**
@@ -18,9 +19,14 @@ public class CallerTicketQueryView {
     private String uid;
 
     /**
-     * Nom du contact 
+     * Nom du contact
      */
     private String name;
+
+    /**
+     * Liste des moyens de liaison
+     */
+    private ContactMediumViewList medium;
 
     /**
      * Commentaire
@@ -56,6 +62,20 @@ public class CallerTicketQueryView {
     }
 
     /**
+     * @return the medium
+     */
+    public ContactMediumViewList getMedium() {
+        return medium;
+    }
+
+    /**
+     * @param medium the medium to set
+     */
+    public void setMedium(ContactMediumViewList medium) {
+        this.medium = medium;
+    }
+
+    /**
      * @return le commentaire
      */
     public String getComment() {
@@ -77,6 +97,7 @@ public class CallerTicketQueryView {
         return ("CallerTicketQueryView:{"
                 + "uid:" + getUid()
                 + ", name:" + getName()
+                + ", medium:" + getMedium()
                 + ", comment:" + getComment()
                 + "}");
     }
