@@ -8,7 +8,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
  * Classe abstraite décrivant un événément.
  *
  * @author Thierry Baribaud
- * @version 1.26
+ * @version 1.31
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME,
@@ -57,7 +57,8 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
     @JsonSubTypes.Type(value = TicketReopened.class, name = "TicketReopened"),    
     @JsonSubTypes.Type(value = TicketClosed.class, name = "TicketClosed"),
     @JsonSubTypes.Type(value = TicketCancelled.class, name = "TicketCancelled"),
-    @JsonSubTypes.Type(value = TicketUpdated.class, name = "TicketUpdated")
+    @JsonSubTypes.Type(value = TicketUpdated.class, name = "TicketUpdated"),
+    @JsonSubTypes.Type(value = SimplifiedRequestQualified.class, name = "SimplifiedRequestQualified")
     })
 public abstract class Event {
 

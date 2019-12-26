@@ -8,7 +8,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
  * Classe abstraite décrivant une commande.
  *
  * @author Thierry Baribaud
- * @version 1.20
+ * @version 1.31
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME,
@@ -16,7 +16,8 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
         property = "commandType")
 @JsonSubTypes({
     @JsonSubTypes.Type(value = AssociateProviderContactWithPatrimony.class, name = "AssociateProviderContactWithPatrimony"),
-    @JsonSubTypes.Type(value = DissociateProviderContactFromPatrimony.class, name = "DissociateProviderContactFromPatrimony")
+    @JsonSubTypes.Type(value = DissociateProviderContactFromPatrimony.class, name = "DissociateProviderContactFromPatrimony"),
+    @JsonSubTypes.Type(value = QualifySimplifiedRequest.class, name = "QualifySimplifiedRequest")
         
 //    @JsonSubTypes.Type(value = InterventionRequested.class, name = "InterventionRequested"),
 //    @JsonSubTypes.Type(value = TicketInformationsCorrected.class, name = "TicketInformationsCorrected"),

@@ -4,7 +4,7 @@ package bkgpi2a;
  * Classe décrivant le résumé d'un client : son id et son nom.
  *
  * @author Thierry Baribaud
- * @version 1.30
+ * @version 1.31
  * @see https://performanceimmo.github.io/API/#clientcompanyabstract
  */
 public class ClientCompanyAbstract {
@@ -19,6 +19,11 @@ public class ClientCompanyAbstract {
      */
     private String name;
 
+    /**
+     * Holding (Uuid)
+     */
+    private String holding;
+    
     /**
      * @return l'identifiant unique du client
      */
@@ -48,6 +53,20 @@ public class ClientCompanyAbstract {
     }
 
     /**
+     * @return le Uuid de la holding
+     */
+    public String getHolding() {
+        return holding;
+    }
+
+    /**
+     * holding holding définit le Uuid de la holding
+     */
+    public void setHolding(String holding) {
+        this.holding = holding;
+    }
+
+    /**
      * @return Retourne l'objet sous forme textuelle
      */
     @Override
@@ -55,6 +74,7 @@ public class ClientCompanyAbstract {
         return ("ClientCompanyAbstract:{"
                 + "uid:" + getUid()
                 + ", name:" + getName()
+                + ", holding:" + getHolding()
                 + "}");
     }
 }
