@@ -1,6 +1,7 @@
 package bkgpi2a;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSetter;
 
@@ -8,9 +9,10 @@ import com.fasterxml.jackson.annotation.JsonSetter;
  * Classe décrivant un SimplifiedRequestSearchView
  *
  * @author Thierry Baribaud
- * @version 1.28
+ * @version 1.32
  * @see https://performanceimmo.github.io/API/#simplifiedrequestsearchview
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class SimplifiedRequestSearchView {
 
     /**

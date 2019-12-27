@@ -10,21 +10,21 @@ import java.util.logging.Logger;
 import org.bson.Document;
 
 /**
- * Classe qui implémente le pattern DAO pour la classe Event
+ * Classe qui implémente le pattern DAO pour la classe SimplifiedRequestSearchView
  *
  * @author Thierry Baribaud
  * @version 1.32
  */
-public class EventDAO extends MongoPatternDAO {
+public class SimplifiedRequestDAO extends MongoPatternDAO {
 
     /**
      * Contructeur principal
      *
      * @param mongoDatabase connexion à la base MongoDB
      */
-    public EventDAO(MongoDatabase mongoDatabase) {
+    public SimplifiedRequestDAO(MongoDatabase mongoDatabase) {
         this.mongoDatabase = mongoDatabase;
-        this.collection = mongoDatabase.getCollection("events");
+        this.collection = mongoDatabase.getCollection("simplifiedRequests");
     }
 
     @Override
@@ -33,27 +33,27 @@ public class EventDAO extends MongoPatternDAO {
     }
 
     /**
-     * Retrouve un événement par son identifiant
+     * Retrouve une demande d'intervention par son identifiant
      *
-     * @param processUid identifiant unique de l'événement
-     * @return l'événement correspondant ou null s'il n'existe pas
+     * @param uid identifiant unique de la demande d'intervention
+     * @return la demande d'intervention correspondante ou null si elle n'existe pas
      */
-    public Event findOne(String processUid) {
-        Event event = null;
+    public SimplifiedRequestSearchView findOne(String uid) {
+        SimplifiedRequestSearchView simplifiedRequestSearchView = null;
         MongoCursor<Document> cursor;
 
-        cursor = collection.find(new BasicDBObject("processUid", processUid)).iterator();
+        cursor = collection.find(new BasicDBObject("uid", uid)).iterator();
         if (cursor.hasNext()) {
             try {
-                event = objectMapper.readValue(cursor.next().toJson(), Event.class);
+                simplifiedRequestSearchView = objectMapper.readValue(cursor.next().toJson(), SimplifiedRequestSearchView.class);
             } catch (IOException exception) {
-//            Logger.getLogger(EventDAO.class.getName()).log(Level.SEVERE, null, ex);
-                System.out.println("ERROR : impossible de convertir un événement de Json en objet " + exception);
+//            Logger.getLogger(SimplifiedRequestDAO.class.getName()).log(Level.SEVERE, null, ex);
+                System.out.println("ERROR : impossible de convertir une demande d'intervention de Json en objet " + exception);
             }
         }
         cursor.close();
 
-        return event;
+        return simplifiedRequestSearchView;
     }
 
     @Override
@@ -67,17 +67,17 @@ public class EventDAO extends MongoPatternDAO {
     }
 
     /**
-     * Ajoute un événement à la collection
+     * Ajoute une demande simplifiée à la collection
      *
-     * @param event événément à ajouter à la collection
+     * @param simplifiedRequestSearchView demande simplifée à ajouter à la collection
      */
-    public void insert(Event event) {
+    public void insert(SimplifiedRequestSearchView simplifiedRequestSearchView) {
         try {
-            this.collection.insertOne(Document.parse(objectMapper.writeValueAsString(event)));
+            this.collection.insertOne(Document.parse(objectMapper.writeValueAsString(simplifiedRequestSearchView)));
         } catch (IllegalArgumentException ex) {
-            Logger.getLogger(EventDAO.class.getName()).log(Level.SEVERE, "ERROR : insertion impossible, erreur dans un champ" + ex.toString());
+            Logger.getLogger(SimplifiedRequestDAO.class.getName()).log(Level.SEVERE, "ERROR : insertion impossible, erreur dans un champ" + ex.toString());
         } catch (JsonProcessingException ex) {
-            Logger.getLogger(EventDAO.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(SimplifiedRequestDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
