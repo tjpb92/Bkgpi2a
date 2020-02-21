@@ -9,7 +9,7 @@ import com.fasterxml.jackson.annotation.JsonSetter;
  * Classe décrivant un SimplifiedRequestSearchView
  *
  * @author Thierry Baribaud
- * @version 1.32
+ * @version 1.33
  * @see https://performanceimmo.github.io/API/#simplifiedrequestsearchview
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -104,7 +104,7 @@ public class SimplifiedRequestSearchView {
     /**
      * @param category définit la catégorie de la demande d'intervention émise depuis l'application mobile
      */
-    public void setTicketUid(OtpCategory category) {
+    public void setCategory(OtpCategory category) {
         this.category = category;
     }
     
@@ -118,7 +118,7 @@ public class SimplifiedRequestSearchView {
     /**
      * @param patrimony définit le patrimoine d'où provient la demande d'intervention
      */
-    public void setTicketUid(PatrimonyAbstract patrimony) {
+    public void setPatrimony(PatrimonyAbstract patrimony) {
         this.patrimony = patrimony;
     }
     

@@ -9,10 +9,10 @@ import com.fasterxml.jackson.annotation.JsonSetter;
  * Classe décrivant un SimplifiedRequestDetailedView
  *
  * @author Thierry Baribaud
- * @version 1.30
+ * @version 1.33
  * @see https://performanceimmo.github.io/API/#simplifiedrequestdetailedview
  */
-@JsonIgnoreProperties(value = {"seen", "qualified"})
+@JsonIgnoreProperties(value = {"seen", "qualified", "contactToCallback"})
 public class SimplifiedRequestDetailedView {
 
     /**
