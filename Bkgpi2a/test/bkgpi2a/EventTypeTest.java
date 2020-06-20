@@ -12,7 +12,7 @@ import static org.junit.Assert.*;
 /**
  * Jeux de tests pour tester l'enum EventType
  * @author Thierry Baribaud
- * @version 1.23
+ * @version 1.34
  */
 public class EventTypeTest {
 
@@ -54,7 +54,7 @@ public class EventTypeTest {
 //            System.out.println("  name:"+eventType.getName() + ", uid:" + eventType.getUid());
 //        }
         
-        int expResult = 39;
+        int expResult = 43;
         int result = EventType.values().length;
         
         assertEquals(expResult, result);

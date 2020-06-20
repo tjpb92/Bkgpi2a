@@ -4,7 +4,7 @@ package bkgpi2a;
  * Enumération décrivant les identifiants et libellés des événements.
  *
  * @author Thierry Baribaud
- * @version 1.31
+ * @version 1.34
  */
 public enum EventType {
 
@@ -57,6 +57,9 @@ public enum EventType {
     SENDING_SERVICE_ORDER_REPORTED("SendingServiceOrderReported", 615),
     FORMAL_NOTICE_FOR_PROVIDER_REPORTED("FormalNoticeForProviderReported", 620),
     INTERVENTION_DEADLINE_DEFINED("InterventionDeadlineDefined", 625),
+    NOTIFICATION_FOR_INTERVENTION_ACCEPTED_REQUESTED("NotificationForInterventionAcceptedRequested", 630),
+    DOCUMENT_ATTACHED("DocumentAttached", 635),
+    INSTRUCTIONS_FOR_ASSIGNEE_DEFINED("InstructionsForAssigneeDefined", 640),
     
     SIMPLIFIED_REQUEST_QUALIFIED("SimplifiedRequestQualified", 805)
     ;

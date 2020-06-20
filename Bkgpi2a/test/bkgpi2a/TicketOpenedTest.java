@@ -14,7 +14,7 @@ import static org.junit.Assert.*;
  * Programme de test de la classe TicketOpened
  *
  * @author Thierry Baribaud
- * @version 1.24
+ * @version 1.34
  */
 public class TicketOpenedTest {
 
@@ -36,7 +36,7 @@ public class TicketOpenedTest {
 
     /**
      * Test of serialization from and to a file in Json format, of class
-     * ProviderContact.
+     * TicketOpened.
      */
     @Test
     public void testTicketOpenedJsonSerialization() {
@@ -56,7 +56,7 @@ public class TicketOpenedTest {
             System.out.println("ticketOpened:" + ticketOpened);
             objectMapper.writeValue(new File(testFilename), ticketOpened);
             expTicketOpened = objectMapper.readValue(new File(filename), TicketOpened.class);
-            System.out.println("expProviderContact:" + expTicketOpened);
+            System.out.println("expTicketOpened:" + expTicketOpened);
         } catch (IOException ex) {
             Logger.getLogger(TicketOpened.class.getName()).log(Level.SEVERE, null, ex);
             fail(ex.getMessage());

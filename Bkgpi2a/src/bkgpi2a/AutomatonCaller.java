@@ -7,8 +7,8 @@ import com.fasterxml.jackson.annotation.JsonTypeName;
  * Classe décrivant un appelant de type automate
  *
  * @author Thierry Baribaud
- * @version 0.18
- * @see http://performanceimmo.github.io/API/#callertype
+ * @version 1.34
+ * @see <A href="http://performanceimmo.github.io/API/#callertype">CallerType</A>
  */
 @JsonTypeName("AutomatonCaller")
 public class AutomatonCaller extends Caller {

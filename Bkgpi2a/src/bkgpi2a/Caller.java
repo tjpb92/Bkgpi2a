@@ -8,8 +8,8 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
  * Classe abstraite décrivant un appelant
  *
  * @author Thierry Baribaud
- * @version 0.19
- * @see http://performanceimmo.github.io/API/#callertype
+ * @version 1.34
+ * @see <A href="http://performanceimmo.github.io/API/#callertype">CallerType</A>
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME,
@@ -17,7 +17,8 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
         property = "callerType")
 @JsonSubTypes({
     @JsonSubTypes.Type(value = HumanCaller.class, name = "HumanCaller"),
-    @JsonSubTypes.Type(value = AutomatonCaller.class, name = "AutomatonCaller")
+    @JsonSubTypes.Type(value = AutomatonCaller.class, name = "AutomatonCaller"),
+    @JsonSubTypes.Type(value = ReferencedContactCaller.class, name = "ReferencedContactCaller")
 })
 public abstract class Caller {
 

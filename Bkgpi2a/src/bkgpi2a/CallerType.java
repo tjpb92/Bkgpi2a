@@ -4,8 +4,8 @@ package bkgpi2a;
  * Enumération sur les types d'appelant
  *
  * @author Thierry Baribaud
- * @version 0.41
- * @see http://performanceimmo.github.io/API/#callertype
+ * @version 1.34
+ * @see <A href="http://performanceimmo.github.io/API/#callertype">CallerType</A>
  */
 public enum CallerType {
 
@@ -13,11 +13,14 @@ public enum CallerType {
      * L'appelant est un être humain
      */
     HUMAN_CALLER("HumanCaller"),
-
     /**
      * L'appelant est un automate
      */
-    AUTOMATON_CALLER("AutomatonCaller");
+    AUTOMATON_CALLER("AutomatonCaller"),
+    /**
+     * L'appelant est déjà référencé comme PatrimonyContact
+     */
+    REFERENCED_CONTACT_CALLER("ReferencedContactCaller");
 
     private String name = "";
 
