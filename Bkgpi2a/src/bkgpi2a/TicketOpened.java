@@ -9,8 +9,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * Classe décrivant l'événement ouverture de ticket : TicketOpened, #500
  *
  * @author Thierry Baribaud
- * @version 0.28
- * @see http://performanceimmo.github.io/API/#ticketevent
+ * @version 1.34
+ * @see
+ * <A href="http://performanceimmo.github.io/API/#ticketevent">TicketOpenedFromSimplifiedRequest</A>
  */
 @JsonIgnoreProperties({"_id", "date", "eventTypeUid"})
 @JsonTypeName("TicketOpened")
@@ -20,7 +21,7 @@ public class TicketOpened extends Event {
      * Référence à l'agence ou au patrimoine
      */
     private LocationReference locationRef;
-    
+
     /**
      * Opérateur ayant ajouté le ticketInfos
      */
@@ -33,7 +34,7 @@ public class TicketOpened extends Event {
     private TicketInfos ticketInfos;
 
     /**
-     * Constructeur de la classe MessageAdded
+     * Constructeur de la classe TicketOpened
      */
     public TicketOpened() {
         setEventTypeUid(TICKET_OPENED.getUid());

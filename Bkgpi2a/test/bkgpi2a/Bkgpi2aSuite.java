@@ -11,10 +11,11 @@ import org.junit.runners.Suite;
  * Jeux de tests pour tester toutes les classes du projet
  *
  * @author Thierry Baribaud
- * @version 1.34
+ * @version 1.35
  */
 @RunWith(Suite.class)
-@Suite.SuiteClasses({CivilNameTest.class, DataGouvAPIIdCheckerTest.class,
+@Suite.SuiteClasses({CivilNameTest.class, ContextualCommentDisplayedOnTicketTest.class,
+    DataGouvAPIIdCheckerTest.class,
     DissociateProviderContactFromPatrimonyTest.class,
     DocumentAttachedTest.class,
     EventTypeTest.class,
@@ -29,7 +30,9 @@ import org.junit.runners.Suite;
     ProviderContactTest.class, 
     ReferencedContactCallerTest.class,
     SimplifiedRequestResultViewTest.class, SimplifiedRequestSearchViewTest.class,
-    TicketOpenedTest.class
+    TicketOpenedTest.class, TicketOpenedFromSimplifiedRequestTest.class,
+    TicketQualifiedByCriteriaTest.class,
+    WorkflowAppliedToTicketTest.class
 })
 public class Bkgpi2aSuite {
 
