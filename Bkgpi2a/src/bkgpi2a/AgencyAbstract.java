@@ -4,8 +4,8 @@ package bkgpi2a;
  * Classe décrivant le résumé d'une agence : son id et son nom.
  *
  * @author Thierry Baribaud
- * @version 1.30
- * @see https://performanceimmo.github.io/API/#agencyabstract
+ * @version 1.36
+ * @see <A href="https://performanceimmo.github.io/API/#agencyabstract">AgencyAbstract</A>
  */
 public class AgencyAbstract {
 

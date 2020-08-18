@@ -9,7 +9,7 @@ import static bkgpi2a.EventType.TICKET_QUALIFIED_BY_CRITERIA;
  * TicketQualifiedByCriteria, #650
  *
  * @author Thierry Baribaud
- * @version 1.35
+ * @version 1.36
  * @see
  * <A href="http://performanceimmo.github.io/API/#ticketevent">TicketQualifiedByCriteria</A>
  */
@@ -22,11 +22,17 @@ public class TicketQualifiedByCriteria extends Event {
      * Opérateur ayant géré le ticket
      */
     private Operator operator;
+    
+    /**
+     * Liste de critères de choix
+     */
+    private CriterionChoiceList choices;
 
     /**
      * Constructeur de la classe TicketQualifiedByCriteria
      */
     public TicketQualifiedByCriteria() {
+        setChoices(new CriterionChoiceList());
         setEventTypeUid(TICKET_QUALIFIED_BY_CRITERIA.getUid());
         setEventType(TICKET_QUALIFIED_BY_CRITERIA.getName());
     }
@@ -46,6 +52,20 @@ public class TicketQualifiedByCriteria extends Event {
     }
 
     /**
+     * @return la liste des critères de choix
+     */
+    public CriterionChoiceList getChoices() {
+        return choices;
+    }
+
+    /**
+     * @param choices définit la liste des critères de choix
+     */
+    public void setChoices(CriterionChoiceList choices) {
+        this.choices = choices;
+    }
+
+    /**
      * @return Retourne l'objet sous forme textuelle
      */
     @Override
@@ -53,6 +73,7 @@ public class TicketQualifiedByCriteria extends Event {
         return "TicketQualifiedByCriteria:{"
                 + super.toString()
                 + ", " + getOperator()
+                + ", choices:" + getChoices()
                 + "}";
     }
 

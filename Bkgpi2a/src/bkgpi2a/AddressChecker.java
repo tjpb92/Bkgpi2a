@@ -6,8 +6,8 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
  * Classe abstraite décrivant un vérificateur d'adresses
  *
  * @author Thierry Baribaud
- * @version 1.11
- * @see http://performanceimmo.github.io/API/#addresschecker
+ * @version 1.36
+ * @see <A href="http://performanceimmo.github.io/API/#addresschecker">AddressChecker</A>
  */
 //@JsonSubTypes({
 //    @JsonSubTypes.Type(value = DataGouvAPIIdChecker.class, name = "DataGouvAPIIdChecker"),

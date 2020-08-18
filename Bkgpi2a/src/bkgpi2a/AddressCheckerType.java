@@ -4,8 +4,8 @@ package bkgpi2a;
  * Enumération décrivant les types de vérificateurs d'adresses.
  *
  * @author Thierry Baribaud
- * @version 1.11
- * @see http://performanceimmo.github.io/API/#addresschecker
+ * @version 1.36
+ * @see <A href="http://performanceimmo.github.io/API/#addresschecker">AddressCheckerType</A>
  */
 public enum AddressCheckerType {
 

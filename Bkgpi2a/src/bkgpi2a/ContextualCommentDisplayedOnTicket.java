@@ -9,7 +9,7 @@ import static bkgpi2a.EventType.CONTEXTUAL_COMMENT_DISPLAYED_ON_TICKET;
  * ticket : ContextualCommentDisplayedOnTicket, #660
  *
  * @author Thierry Baribaud
- * @version 1.35
+ * @version 1.36
  * @see
  * <A href="http://performanceimmo.github.io/API/#ticketevent">ContextualCommentDisplayedOnTicket</A>
  */
@@ -26,7 +26,8 @@ public class ContextualCommentDisplayedOnTicket extends Event {
     /**
      * Commentaire contextuel
      */
-//    private ContextualComment comment;
+    private ContextualComment comment;
+    
     /**
      * Constructeur de la classe ContextualCommentDisplayedOnTicket
      */
@@ -52,15 +53,17 @@ public class ContextualCommentDisplayedOnTicket extends Event {
     /**
      * @return le commentaire contextuel
      */
-//    public String getComment() {
-//        return comment;
-//    }
+    public ContextualComment getComment() {
+        return comment;
+    }
+
     /**
      * @param comment définit le commentaire contextuel
      */
-//    public void setComment(String comment) {
-//        this.comment = comment;
-//    }
+    public void setComment(ContextualComment comment) {
+        this.comment = comment;
+    }
+
     /**
      * @return Retourne l'objet sous forme textuelle
      */
@@ -69,7 +72,7 @@ public class ContextualCommentDisplayedOnTicket extends Event {
         return "ContextualCommentDisplayedOnTicket:{"
                 + super.toString()
                 + ", " + getOperator()
-                //                + ", " + getComment()
+                + ", " + getComment()
                 + "}";
     }
 

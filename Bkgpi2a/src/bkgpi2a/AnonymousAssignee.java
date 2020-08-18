@@ -9,8 +9,8 @@ import com.fasterxml.jackson.annotation.JsonUnwrapped;
  * Classe décrivant un individu non référencé
  *
  * @author Thierry Baribaud
- * @version 1.00
- * @see http://performanceimmo.github.io/API/#assigneetype
+ * @version 1.36
+ * @see <A href="http://performanceimmo.github.io/API/#assigneetype">AnonymousAssignee</A>
  */
 @JsonTypeName("AnonymousAssignee")
 @JsonPropertyOrder({"name", "phones", "fax", "emails", "tiketAssigneeType"})

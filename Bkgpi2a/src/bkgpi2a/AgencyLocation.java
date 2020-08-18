@@ -7,8 +7,8 @@ import com.fasterxml.jackson.annotation.JsonTypeName;
  * Classe décrivant une localisation par agence
  *
  * @author Thierry Baribaud
- * @version 0.18
- * @see http://performanceimmo.github.io/API/#locationreference
+ * @version 1.36
+ * @see <A href="http://performanceimmo.github.io/API/#locationreference">AgencyLocation</A>
  */
 @JsonTypeName("AgencyLocation")
 public class AgencyLocation extends LocationReference {
