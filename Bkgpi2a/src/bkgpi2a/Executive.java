@@ -10,7 +10,9 @@ import java.util.List;
  * Classe décrivant un utilisateur d'une agence
  *
  * @author Thierry Baribaud
- * @version Octobre 2016
+ * @version 1.37
+ * @see
+ * <A href="http://performanceimmo.github.io/API/#userqueryview">UserQueryView</A>
  */
 @JsonTypeName("executive")
 public class Executive extends User {

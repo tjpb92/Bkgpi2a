@@ -11,8 +11,9 @@ import static bkgpi2a.EventType.CALL_EMITTED_TO;
  * ATTENTION : à finaliser
  *
  * @author Thierry Baribaud
- * @version 0.34
- * @see http://performanceimmo.github.io/API/#ticketevent
+ * @version 1.37
+ * @see
+ * <A href="http://performanceimmo.github.io/API/#ticketevent">CallEmittedTo</A>
  */
 @JsonIgnoreProperties({"_id", "date", "eventTypeUid", "recipient", "medium"})
 @JsonTypeName("CallEmittedTo")

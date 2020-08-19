@@ -10,12 +10,13 @@ import com.fasterxml.jackson.annotation.JsonSetter;
 
 /**
  * Classe décrivant l'affectation d'un individu à un ticket :
- * AssigneeIdentified, #515.
- * Remplace ProviderAssigned à compter de septembre 2018.
+ * AssigneeIdentified, #515. Remplace ProviderAssigned à compter de septembre
+ * 2018.
  *
  * @author Thierry Baribaud
- * @version 1.00
- * @see http://performanceimmo.github.io/API/#ticketevent
+ * @version 1.37
+ * @see
+ * <A href="http://performanceimmo.github.io/API/#ticketevent">AssigneeIdentified</A>
  */
 @JsonIgnoreProperties({"_id", "eventTypeUid"})
 @JsonTypeName("AssigneeIdentified")

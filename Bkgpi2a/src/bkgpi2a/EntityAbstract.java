@@ -1,14 +1,16 @@
 package bkgpi2a;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonTypeName;
 
 /**
  * Classe décrivant le résumé d'une entité : son id et son nom.
  *
  * @author Thierry Baribaud
- * @version Octobre 2016
+ * @version 1.37
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
+@JsonTypeName("EntityAbstract")
 public class EntityAbstract {
 
     /**
@@ -17,23 +19,28 @@ public class EntityAbstract {
     private String uid;
 
     /**
-     * Nom de l'entité
+     * Nom de l'entité (ancienne version)
      */
     private String label;
 
-    /**
-     * Constructeur principal de la classe
-     * @param uid Identifiant unique de l'entité
-     * @param label Nom de l'entité
-     */
-    @JsonCreator
-    public EntityAbstract(
-            @JsonProperty("uid") String uid, 
-            @JsonProperty("label") String label) {
-        this.uid = uid;
-        this.label = label;
-    }
-    
+//    /**
+//     * Nom de l'entité (nouvelle version)
+//     */
+//    private String name;
+
+//    /**
+//     * Constructeur principal de la classe
+//     *
+//     * @param uid Identifiant unique de l'entité
+//     * @param label Nom de l'entité
+//     */
+//    @JsonCreator
+//    public EntityAbstract(
+//            @JsonProperty("uid") String uid,
+//            @JsonProperty("label") String label) {
+//        this.uid = uid;
+//        this.label = label;
+//    }
     /**
      * @return l'identifiant unique de l'entité
      */
@@ -49,18 +56,32 @@ public class EntityAbstract {
     }
 
     /**
-     * @return le nom de l'entité
+     * @return le nom de l'entité (ancienne version)
      */
     public String getLabel() {
         return label;
     }
 
     /**
-     * @param label définit le nom de l'entité
+     * @param label définit le nom de l'entité (ancienne version)
      */
     public void setLabel(String label) {
         this.label = label;
     }
+
+//    /**
+//     * @return le nom de l'entité (nouvelle version)
+//     */
+//    public String getName() {
+//        return name;
+//    }
+//
+//    /**
+//     * @param name définit le nom de l'entité (nouvelle version)
+//     */
+//    public void setName(String name) {
+//        this.name = name;
+//    }
 
     /**
      * @return Retourne l'objet sous forme textuelle
@@ -70,6 +91,7 @@ public class EntityAbstract {
         return (this.getClass().getName()
                 + ":{uid:" + getUid()
                 + ", label:" + getLabel()
+//                + ", name:" + getName()
                 + "}");
     }
 }

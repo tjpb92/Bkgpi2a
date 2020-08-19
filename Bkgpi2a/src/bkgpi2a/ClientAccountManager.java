@@ -9,7 +9,9 @@ import com.fasterxml.jackson.annotation.JsonTypeName;
  * Classe décrivant client de type administrateur de compte
  *
  * @author Thierry Baribaud
- * @version Octobre 2016
+ * @version 1.37
+ * @see
+ * <A href="http://performanceimmo.github.io/API/#userqueryview">UserQueryView</A>
  */
 @JsonTypeName("clientAccountManager")
 public class ClientAccountManager extends User {

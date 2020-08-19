@@ -7,15 +7,19 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSetter;
+import com.fasterxml.jackson.annotation.JsonTypeName;
 
 /**
  * Classe décrivant une société (company). Remplace la classe Company.
  *
  * @author Thierry Baribaud
- * @version 0.47
- * @see http://performanceimmo.github.io/API/#clientcompanies
+ * @version 1.37
+ * @see
+ * <A href="http://performanceimmo.github.io/API/#clientcompanies">ClientCompany</A>
  */
-@JsonIgnoreProperties({"_id"})
+//@JsonIgnoreProperties({"_id"})
+@JsonIgnoreProperties(ignoreUnknown = true)
+@JsonTypeName("ClientCompany")
 public class ClientCompany {
 
     /**

@@ -6,7 +6,9 @@ import com.fasterxml.jackson.annotation.JsonTypeName;
  * Classe décrivant un super utilisateur
  *
  * @author Thierry Baribaud
- * @version Octobre 2016
+ * @version 1.37
+ * @see
+ * <A href="http://performanceimmo.github.io/API/#userqueryview">UserQueryView</A>
  */
 @JsonTypeName("superUser")
 public class SuperUser extends User {

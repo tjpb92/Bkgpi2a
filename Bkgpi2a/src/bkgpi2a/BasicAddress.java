@@ -1,14 +1,17 @@
 package bkgpi2a;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonTypeName;
 
 /**
  * Classe décrivant une adresse basique
  *
  * @author Thierry Baribaud
- * @version 1.03
- * @see http://performanceimmo.github.io/API/#basicaddress
+ * @version 1.37
+ * @see
+ * <A href="http://performanceimmo.github.io/API/#basicaddress">BasicAddress</A>
  */
+@JsonTypeName("BasicAddress")
 public class BasicAddress {
 
     @JsonInclude(JsonInclude.Include.NON_NULL)

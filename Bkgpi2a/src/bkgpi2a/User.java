@@ -14,7 +14,9 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
  * Classe décrivant un utilisateur simple
  *
  * @author Thierry Baribaud
- * @version 0.47
+ * @version 1.37
+ * @see
+ * <A href="http://performanceimmo.github.io/API/#userqueryview">UserQueryView</A>
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME,
@@ -23,6 +25,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 @JsonSubTypes({
     @Type(value = SuperUser.class, name = "superUser"),
     @Type(value = CallCenterUser.class, name = "callCenterUser"),
+    @Type(value = CallCenterOperator.class, name = "callCenterOperator"),
     @Type(value = ClientAccountManager.class, name = "clientAccountManager"),
     @Type(value = Executive.class, name = "executive"),
     @Type(value = PatrimonyManager.class, name = "patrimonyManager")

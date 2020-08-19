@@ -8,8 +8,9 @@ import com.fasterxml.jackson.annotation.JsonTypeName;
  * Classe décrivant une arrivée sur site : ArrivedOnSite, #525
  *
  * @author Thierry Baribaud
- * @version 1.04
- * @see http://performanceimmo.github.io/API/#ticketevent
+ * @version 1.37
+ * @see
+ * <A href="http://performanceimmo.github.io/API/#ticketevent">ArrivedOnSite</A>
  */
 @JsonIgnoreProperties({"_id", "eventTypeUid"})
 @JsonTypeName("ArrivedOnSite")

@@ -10,7 +10,9 @@ import java.util.List;
  * Classe décrivant un utilisateur d'un patrimoine.
  *
  * @author Thierry Baribaud
- * @version 0.47
+ * @version 1.37
+ * @see
+ * <A href="http://performanceimmo.github.io/API/#userqueryview">UserQueryView</A>
  */
 @JsonTypeName("patrimonyManager")
 public class PatrimonyManager extends User {
@@ -74,7 +76,8 @@ public class PatrimonyManager extends User {
     }
 
     /**
-     * @param managedPatrimonies définit les agences supervisées par l'utilisateur
+     * @param managedPatrimonies définit les agences supervisées par
+     * l'utilisateur
      */
     @JsonSetter("managedPatrimonies")
     public void setManagedPatrimonies(List<PatrimonyUserQueryView> managedPatrimonies) {

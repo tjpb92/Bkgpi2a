@@ -1,14 +1,20 @@
 package bkgpi2a;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonSetter;
+import com.fasterxml.jackson.annotation.JsonTypeName;
 
 /**
  * Classe décrivant une vue réduite d'une Holding
  *
  * @author Thierry Baribaud
- * @version Octobre 2016
+ * @version 1.37
+ * @see
+ * <A href="http://performanceimmo.github.io/API/#holdingqueryview">HoldingQueryView</A>
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
+@JsonTypeName("HoldingQueryView")
 public class HoldingQueryView {
 
     /**
