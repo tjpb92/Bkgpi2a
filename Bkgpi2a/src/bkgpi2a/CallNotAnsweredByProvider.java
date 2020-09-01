@@ -5,14 +5,16 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 
 /**
- * Classe décrivant la programmation d'une intervention :
- * CallNotAnsweredByProvider, #600
+ * Classe décrivant l'événement de non réponse d'un intervenant à une
+ * sollicitation : CallNotAnsweredByProvider, #605
  *
  * @author Thierry Baribaud
- * @version 0.38
- * @see http://performanceimmo.github.io/API/#ticketevent
+ * @version 1.38
+ * @see
+ * <A href="http://performanceimmo.github.io/API/#ticketevent">CallNotAnsweredByProvider</A>
  */
-@JsonIgnoreProperties({"_id", "eventTypeUid"})
+//@JsonIgnoreProperties({"_id", "eventTypeUid"})
+@JsonIgnoreProperties(ignoreUnknown = true)
 @JsonTypeName("CallNotAnsweredByProvider")
 public class CallNotAnsweredByProvider extends Event {
 

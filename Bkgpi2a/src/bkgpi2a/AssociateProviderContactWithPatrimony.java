@@ -6,15 +6,19 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 
 /**
- * Classe décrivant la relation d'association entre un prestataire (ProviderContact) et d'un patrimoine (Patrimony) : AssociateProviderContactWithPatrimony, #1470
+ * Classe décrivant la relation d'association entre un prestataire
+ * (ProviderContact) et d'un patrimoine (Patrimony) :
+ * AssociateProviderContactWithPatrimony, #1470
  *
  * @author Thierry Baribaud
- * @version 1.26
- * @see http://performanceimmo.github.io/API/#providercontactevent
+ * @version 1.38
+ * @see
+ * <A href="http://performanceimmo.github.io/API/#incrementprovidercontact">AssociateProviderContactWithPatrimony</A>
  */
-@JsonIgnoreProperties({"_id", "sentDate", "commandTypeUid", "status", "nbError"})
+//@JsonIgnoreProperties({"_id", "sentDate", "commandTypeUid", "status", "nbError"})
+@JsonIgnoreProperties(ignoreUnknown = true)
 @JsonTypeName("AssociateProviderContactWithPatrimony")
-@JsonPropertyOrder({ "processUid", "patrimonyUid", "date", "commandType" })
+@JsonPropertyOrder({"processUid", "patrimonyUid", "date", "commandType"})
 public class AssociateProviderContactWithPatrimony extends Command {
 
     /**
@@ -31,9 +35,12 @@ public class AssociateProviderContactWithPatrimony extends Command {
     }
 
     /**
-     * Constructeur secondaire de la classe AssociateProviderContactWithPatrimony
-     * Construit la commande à partir de l'événement
-     * @param providerContactAssociatedWithPatrimony événement associé à la commande.
+     * Constructeur secondaire de la classe
+     * AssociateProviderContactWithPatrimony Construit la commande à partir de
+     * l'événement
+     *
+     * @param providerContactAssociatedWithPatrimony événement associé à la
+     * commande.
      */
     public AssociateProviderContactWithPatrimony(ProviderContactAssociatedWithPatrimony providerContactAssociatedWithPatrimony) {
         this();
@@ -42,7 +49,7 @@ public class AssociateProviderContactWithPatrimony extends Command {
         setDate(providerContactAssociatedWithPatrimony.getDate());
         setSentDate(providerContactAssociatedWithPatrimony.getSentDate());
     }
-    
+
     /**
      * @return l'identifiant unique du patrimoine
      */

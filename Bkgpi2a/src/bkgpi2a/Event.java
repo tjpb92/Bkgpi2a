@@ -8,7 +8,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
  * Classe abstraite décrivant un événément.
  *
  * @author Thierry Baribaud
- * @version 1.35
+ * @version 1.38
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME,
@@ -65,6 +65,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
     @JsonSubTypes.Type(value = TicketQualifiedByCriteria.class, name = "TicketQualifiedByCriteria"),
     @JsonSubTypes.Type(value = WorkflowAppliedToTicket.class, name = "WorkflowAppliedToTicket"),
     @JsonSubTypes.Type(value = ContextualCommentDisplayedOnTicket.class, name = "ContextualCommentDisplayedOnTicket"),
+    @JsonSubTypes.Type(value = AccessRestrictedToTicket.class, name = "AccessRestrictedToTicket"),
     
     @JsonSubTypes.Type(value = SimplifiedRequestQualified.class, name = "SimplifiedRequestQualified")
     })

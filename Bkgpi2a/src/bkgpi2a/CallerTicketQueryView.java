@@ -7,10 +7,12 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
  * l'application mobile
  *
  * @author Thierry Baribaud
- * @version 1.30
- * @see https://performanceimmo.github.io/API/#callerticketqueryview
+ * @version 1.38
+ * @see
+ * <A href="https://performanceimmo.github.io/API/#callerticketqueryview">CallerTicketQueryView</A>
  */
-@JsonIgnoreProperties(value = {"category", "callerInfos", "status"})
+//@JsonIgnoreProperties(value = {"category", "callerInfos", "status"})
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class CallerTicketQueryView {
 
     /**

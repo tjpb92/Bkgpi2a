@@ -5,16 +5,17 @@ import com.fasterxml.jackson.annotation.JsonTypeName;
 import static bkgpi2a.EventType.CALL_RECEIVED;
 
 /**
- * Classe décrivant un comment ajouté au journal d'un ticket : CallReceived,
- * #582
+ * Classe décrivant un événement de réception d'appel : CallReceived, #582
  *
  * ATTENTION : à finaliser
  *
  * @author Thierry Baribaud
- * @version 0.34
- * @see http://performanceimmo.github.io/API/#ticketevent
+ * @version 1.38
+ * @see
+ * <A href="http://performanceimmo.github.io/API/#ticketevent">CallReceived</A>
  */
-@JsonIgnoreProperties({"_id", "date", "eventTypeUid", "callPurpose", "caller", "medium"})
+//@JsonIgnoreProperties({"_id", "date", "eventTypeUid", "callPurpose", "caller", "medium"})
+@JsonIgnoreProperties(ignoreUnknown = true)
 @JsonTypeName("CallReceived")
 public class CallReceived extends Event {
 
