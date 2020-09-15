@@ -11,11 +11,12 @@ import org.junit.runners.Suite;
  * Jeux de tests pour tester toutes les classes du projet
  *
  * @author Thierry Baribaud
- * @version 1.38
+ * @version 1.39
  */
 @RunWith(Suite.class)
 @Suite.SuiteClasses({AccessRestrictedToTicketTest.class,
-    CivilNameTest.class, ContextualCommentTest.class,
+    Bug200910TOTest.class,
+    CivilNameTest.class, ContactToCallbackTest.class, ContextualCommentTest.class,
     ContextualCommentDisplayedOnTicketTest.class,
     CriterionChoiceTest.class, CriterionChoiceListTest.class, CriterionValueTest.class,
     DataGouvAPIIdCheckerTest.class,

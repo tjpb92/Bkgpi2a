@@ -10,10 +10,12 @@ import com.fasterxml.jackson.annotation.JsonInclude;
  * ClosedBeyondCallCenterScope, #555
  *
  * @author Thierry Baribaud
- * @version 1.08
- * @see http://performanceimmo.github.io/API/#ticketevent
+ * @version 1.39
+ * @see
+ * <A href="http://performanceimmo.github.io/API/#ticketevent">ClosedBeyondCallCenterScope</A>
  */
-@JsonIgnoreProperties({"_id", "date", "eventTypeUid"})
+//@JsonIgnoreProperties({"_id", "date", "eventTypeUid"})
+@JsonIgnoreProperties(ignoreUnknown = true)
 @JsonTypeName("ClosedBeyondCallCenterScope")
 public class ClosedBeyondCallCenterScope extends Event {
 

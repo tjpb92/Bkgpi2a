@@ -7,8 +7,9 @@ import com.fasterxml.jackson.annotation.JsonTypeName;
  * Classe décrivant le contact à rappeler
  *
  * @author Thierry Baribaud
- * @version 0.18
- * @see http://performanceimmo.github.io/API/#contacttocallback
+ * @version 1.39
+ * @see
+ * <A href="http://performanceimmo.github.io/API/#contacttocallback">ContactToCallback</A>
  */
 @JsonTypeName("ContactToCallback")
 public class ContactToCallback {
@@ -16,7 +17,7 @@ public class ContactToCallback {
     /**
      * Nom du contact à rappeler
      */
-    private Name name;
+    private String name;
 
     /**
      * Type de medium
@@ -43,14 +44,14 @@ public class ContactToCallback {
     /**
      * @return le nom du contact à rappeler
      */
-    public Name getName() {
+    public String getName() {
         return name;
     }
 
     /**
      * @param name définit le nom du contact à rappeler
      */
-    public void setName(Name name) {
+    public void setName(String name) {
         this.name = name;
     }
 
@@ -102,7 +103,6 @@ public class ContactToCallback {
     @Override
     public String toString() {
         return "ContactToCallback:{"
-                + super.toString()
                 + ", name:" + getName()
                 + ", medium:" + getMedium()
                 + ", availability:" + getAvailability()

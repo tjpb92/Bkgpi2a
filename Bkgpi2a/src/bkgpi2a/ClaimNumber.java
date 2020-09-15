@@ -6,8 +6,9 @@ import com.fasterxml.jackson.annotation.JsonInclude;
  * Classe décrivant deux représentations possibles de numéros d'appel
  *
  * @author Thierry Baribaud
- * @version 0.19
- * @see http://performanceimmo.github.io/API/#claimnumber
+ * @version 1.39
+ * @see
+ * <A href="http://performanceimmo.github.io/API/#claimnumber">ClaimNumber</A>
  */
 public class ClaimNumber {
 

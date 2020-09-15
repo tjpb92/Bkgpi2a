@@ -6,11 +6,11 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.annotation.JsonSetter;
 
 /**
- * Classe décrivant un container permettant le transfert des sociétés.
- * Remplace CompanyContainer.
+ * Classe décrivant un container permettant le transfert des sociétés. Remplace
+ * CompanyContainer.
  *
  * @author Thierry Baribaud
- * @version 0.47
+ * @version 1.39
  */
 @JsonPropertyOrder({"_links", "result"})
 public class ClientCompanyContainer {
@@ -60,7 +60,7 @@ public class ClientCompanyContainer {
     }
 
     /**
-     * @param companyList définit la liste des compagnies
+     * @param clientCompanyList définit la liste des compagnies
      */
     @JsonSetter("result")
     public void setClientCompanyList(ClientCompanyList clientCompanyList) {
@@ -70,7 +70,7 @@ public class ClientCompanyContainer {
     /**
      * Ajoute une compagnie à la liste
      *
-     * @param clientompany société à ajouter
+     * @param clientCompany société à ajouter
      */
     public void add(ClientCompany clientCompany) {
         clientCompanyList.add(clientCompany);
