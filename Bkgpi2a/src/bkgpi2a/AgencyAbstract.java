@@ -1,12 +1,17 @@
 package bkgpi2a;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
+
 /**
  * Classe décrivant le résumé d'une agence : son id et son nom.
  *
  * @author Thierry Baribaud
- * @version 1.36
- * @see <A href="https://performanceimmo.github.io/API/#agencyabstract">AgencyAbstract</A>
+ * @version 1.40
+ * @see
+ * <A href="https://performanceimmo.github.io/API/#agencyabstract">AgencyAbstract</A>
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class AgencyAbstract {
 
     /**
@@ -15,9 +20,22 @@ public class AgencyAbstract {
     private String uid;
 
     /**
+     * Référence de l'agence (optionnel)
+     */
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private String ref;
+
+    /**
      * Nom du agence
      */
     private String name;
+
+    /**
+     * @return la référence de l'agence
+     */
+    public String getRef() {
+        return ref;
+    }
 
     /**
      * @return l'identifiant unique de l'agence
@@ -31,6 +49,13 @@ public class AgencyAbstract {
      */
     public void setUid(String uid) {
         this.uid = uid;
+    }
+
+    /**
+     * @param ref définit la référence de l'agence
+     */
+    public void setRef(String ref) {
+        this.ref = ref;
     }
 
     /**
@@ -54,6 +79,7 @@ public class AgencyAbstract {
     public String toString() {
         return ("AgencyAbstract:{"
                 + "uid:" + getUid()
+                + ", ref:" + getRef()
                 + ", name:" + getName()
                 + "}");
     }
