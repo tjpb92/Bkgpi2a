@@ -1,12 +1,15 @@
 package bkgpi2a;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 /**
  * Classe décrivant le résumé d'un moyen de liaison : son type et sa valeur.
  *
  * @author Thierry Baribaud
- * @version 1.30
+ * @version 1.42
  * @see https://performanceimmo.github.io/API/#contactmediumview
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class ContactMediumView {
 
     /**
@@ -53,7 +56,7 @@ public class ContactMediumView {
      */
     @Override
     public String toString() {
-        return ("AgencyAbstract:{"
+        return ("ContactMediumView:{"
                 + "mediumType:" + getMediumType()
                 + ", identifier:" + getIdentifier()
                 + "}");
