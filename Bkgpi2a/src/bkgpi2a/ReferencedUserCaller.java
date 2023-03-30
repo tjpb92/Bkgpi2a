@@ -1,11 +1,11 @@
 package bkgpi2a;
 
-import static bkgpi2a.CallerType.REFERENCED_CONTACT_CALLER;
+import static bkgpi2a.CallerType.REFERENCED_USER_CALLER;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 
 /**
- * Classe décrivant un appelant référencé
+ * Classe décrivant un ??? référencé
  *
  * @author Thierry Baribaud
  * @version 1.42.1
@@ -13,8 +13,8 @@ import com.fasterxml.jackson.annotation.JsonTypeName;
  * <A href="https://declarimmo-org.github.io/API/#callertype">CallerType</A>
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
-@JsonTypeName("ReferencedContactCaller")
-public class ReferencedContactCaller extends Caller {
+@JsonTypeName("ReferencedUserCaller ")
+public class ReferencedUserCaller extends Caller {
 
     /**
      * Identifiant de l'appelant
@@ -22,10 +22,10 @@ public class ReferencedContactCaller extends Caller {
     private String uid;
 
     /**
-     * Constructeur principal de la classe ReferencedContactCaller
+     * Constructeur principal de la classe ReferencedUserCaller
      */
-    public ReferencedContactCaller() {
-        setCallerType(REFERENCED_CONTACT_CALLER.getName());
+    public ReferencedUserCaller() {
+        setCallerType(REFERENCED_USER_CALLER.getName());
     }
 
     /**
@@ -47,7 +47,7 @@ public class ReferencedContactCaller extends Caller {
      */
     @Override
     public String toString() {
-        return "ReferencedContactCaller:{"
+        return "ReferencedUserCaller :{"
                 + super.toString()
                 + ", uid:" + getUid()
                 + "}";

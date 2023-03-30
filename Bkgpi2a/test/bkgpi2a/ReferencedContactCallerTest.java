@@ -14,7 +14,7 @@ import static org.junit.Assert.*;
  * Programme de test de la classe ReferencedContactCaller
  *
  * @author Thierry Baribaud
- * @version 1.34
+ * @version 1.42.1
  */
 public class ReferencedContactCallerTest {
 
@@ -57,13 +57,13 @@ public class ReferencedContactCallerTest {
             objectMapper.writeValue(new File(testFilename), referencedContactCaller);
             expReferencedContactCaller = objectMapper.readValue(new File(filename), ReferencedContactCaller.class);
             System.out.println("expReferencedContactCaller:" + expReferencedContactCaller);
+            assertNotNull(referencedContactCaller);
+            assertNotNull(expReferencedContactCaller);
+            assertEquals(referencedContactCaller.toString(), expReferencedContactCaller.toString());
         } catch (IOException ex) {
             Logger.getLogger(ReferencedContactCaller.class.getName()).log(Level.SEVERE, null, ex);
             fail(ex.getMessage());
         }
-        assertNotNull(referencedContactCaller);
-        assertNotNull(expReferencedContactCaller);
-        assertEquals(referencedContactCaller.toString(), expReferencedContactCaller.toString());
     }
 
 }

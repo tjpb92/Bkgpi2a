@@ -11,7 +11,7 @@ import org.junit.runners.Suite;
  * Jeux de tests pour tester toutes les classes du projet
  *
  * @author Thierry Baribaud
- * @version 1.41
+ * @version 1.42.1
  */
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
@@ -36,10 +36,14 @@ import org.junit.runners.Suite;
     ProviderContactQueryViewTest.class, ProviderContactResultViewTest.class,
     ProviderContactTest.class,
     ReferencedContactCallerTest.class,
+    ReferencedUserCallerTest.class,
     SimplifiedRequestDetailedView_bug230321Test.class,
     SimplifiedRequestResultViewTest.class, 
     SimplifiedRequestSearchViewTest.class,
-    TicketOpenedTest.class, TicketOpenedFromSimplifiedRequestTest.class,
+    TicketOpenedTest.class, 
+    TicketOpenedV1Test.class, 
+    TicketOpenedV2Test.class,
+    TicketOpenedFromSimplifiedRequestTest.class,
     TicketQualifiedByCriteriaTest.class,
     WorkflowAppliedToTicketTest.class
 })

@@ -11,19 +11,19 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 /**
- * Programme de test de la classe TicketOpened
+ * Programme de test de la classe TicketOpened version V1 before issue#42
  *
  * @author Thierry Baribaud
  * @version 1.42.1
  */
-public class TicketOpenedTest {
+public class TicketOpenedV1Test {
 
     /**
      * Common Jackson object mapper
      */
     private static final ObjectMapper objectMapper = new ObjectMapper();
 
-    public TicketOpenedTest() {
+    public TicketOpenedV1Test() {
     }
 
     @BeforeClass
@@ -36,14 +36,15 @@ public class TicketOpenedTest {
 
     /**
      * Test of serialization from and to a file in Json format, of class
-     * TicketOpened.
+     * TicketOpened.Works only with TicketOpened V1 version (before
+     * issue#42).
      */
     @Test
-    public void testTicketOpenedJsonSerialization() {
-        System.out.println("TicketOpenedJsonSerialization");
+    public void testTicketOpenedV1JsonSerialization() {
+        System.out.println("TicketOpenedV1JsonSerialization");
 
         String filename = "TicketOpened.json";
-        String testFilename = "testTicketOpened.json";
+        String testFilename = "testTicketOpened_V1.json";
         TicketOpened ticketOpened = null;
         TicketOpened expTicketOpened = null;
         Event event;
@@ -66,4 +67,34 @@ public class TicketOpenedTest {
         }
     }
 
+    /**
+     * Test of serialization from and to a file in Json format, of class
+     * TicketOpened.Works only with TicketOpened V1 version with V2 json file 
+     * (before issue#42).
+     */
+    @Test
+    public void testTicketOpenedV1vsV2JsonSerialization() {
+        System.out.println("TicketOpenedV1vsV2JsonSerialization");
+
+        String filename = "TicketOpened_bug230321.json";
+        String testFilename = "testTicketOpened_V1vsV2.json";
+        TicketOpened ticketOpened = null;
+        TicketOpened expTicketOpened = null;
+        Event event;
+
+        try {
+            event = objectMapper.readValue(new File(filename), Event.class);
+            System.out.println("event:" + event);
+
+            ticketOpened = objectMapper.readValue(new File(filename), TicketOpened.class);
+            System.out.println("ticketOpened:" + ticketOpened);
+            fail("Une exception était attendue");
+            objectMapper.writeValue(new File(testFilename), ticketOpened);
+            expTicketOpened = objectMapper.readValue(new File(filename), TicketOpened.class);
+            System.out.println("expTicketOpened:" + expTicketOpened);
+        } catch (IOException ex) {
+            Logger.getLogger(TicketOpened.class.getName()).log(Level.SEVERE, null, ex);
+            assertNotNull(ex);
+        }
+    }
 }
