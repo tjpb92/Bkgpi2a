@@ -1,5 +1,6 @@
 package bkgpi2a;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 
@@ -7,10 +8,10 @@ import com.fasterxml.jackson.annotation.JsonTypeName;
  * Classe décrivant le contact à rappeler
  *
  * @author Thierry Baribaud
- * @version 1.39
- * @see
- * <A href="http://performanceimmo.github.io/API/#contacttocallback">ContactToCallback</A>
+ * @version 1.42.2
+ * @see <A href="https://declarimmo-org.github.io/API/#contacttocallback">ContactToCallback</A>
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 @JsonTypeName("ContactToCallback")
 public class ContactToCallback {
 

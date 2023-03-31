@@ -9,10 +9,10 @@ import com.fasterxml.jackson.annotation.JsonSetter;
  * Classe décrivant un SimplifiedRequestDetailedView
  *
  * @author Thierry Baribaud
- * @version 1.33
- * @see https://performanceimmo.github.io/API/#simplifiedrequestdetailedview
+ * @version 1.42.2
+ * @see <A href="https://declarimmo-org.github.io/API/#simplifiedrequestdetailedview">SimplifiedRequestDetailedView</A>
  */
-@JsonIgnoreProperties(value = {"seen", "qualified", "contactToCallback"})
+@JsonIgnoreProperties(value = {"seen", "qualified"}, ignoreUnknown = true)
 public class SimplifiedRequestDetailedView {
 
     /**
@@ -51,6 +51,11 @@ public class SimplifiedRequestDetailedView {
      * Contact ayant émis la demande d'intervention depuis l'application mobile
      */
     private CallerTicketQueryView requester;
+
+    /**
+     * Personne à rappeler si différente de l'appelant
+     */
+//    private ContactToCallback contactToCallback;
 
     /**
      * Liens entre entités
@@ -163,6 +168,21 @@ public class SimplifiedRequestDetailedView {
     }
 
     /**
+     * @return la personne à rappeler si différente de l'appelant
+     */
+//    public ContactToCallback getContactToCallback() {
+//        return contactToCallback;
+//    }
+
+    /**
+     * @param contactToCallback définit la personne à rappeler si différente de
+     * l'appelant
+     */
+//    public void setContactToCallback(ContactToCallback contactToCallback) {
+//        this.contactToCallback = contactToCallback;
+//    }
+
+    /**
      * @return la liste de liens entre entités
      */
     @JsonGetter("_links")
@@ -200,6 +220,7 @@ public class SimplifiedRequestDetailedView {
                 + ", requestDate:" + getRequestDate()
                 + ", description:" + getDescription()
                 + ", requester:" + getRequester()
+//                + ", contactToCallback:" + getContactToCallback()
                 + ", _links:" + getLinks()
                 + "}";
     }

@@ -14,7 +14,7 @@ import static org.junit.Assert.*;
  * Programme de test de la classe ContactToCallback
  *
  * @author Thierry Baribaud
- * @version 1.39
+ * @version 1.42.2
  */
 public class ContactToCallbackTest {
 
@@ -53,13 +53,13 @@ public class ContactToCallbackTest {
             objectMapper.writeValue(new File(testFilename), contactToCallback);
             expContactToCallback = objectMapper.readValue(new File(filename), ContactToCallback.class);
             System.out.println("expContactToCallback:" + expContactToCallback);
+            assertNotNull(contactToCallback);
+            assertNotNull(expContactToCallback);
+            assertEquals(contactToCallback.toString(), expContactToCallback.toString());
         } catch (IOException ex) {
             Logger.getLogger(ContactToCallback.class.getName()).log(Level.SEVERE, null, ex);
             fail(ex.getMessage());
         }
-        assertNotNull(contactToCallback);
-        assertNotNull(expContactToCallback);
-        assertEquals(contactToCallback.toString(), expContactToCallback.toString());
     }
 
 }
