@@ -8,8 +8,8 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
  * Classe abstraite décrivant un moyen de liaision
  *
  * @author Thierry Baribaud
- * @version 0.18
- * @see http://performanceimmo.github.io/API/#contactmedium
+ * @version 1.43
+* @see <A href="https://declarimmo-org.github.io/API/#contactmedium">ContactMedium</A>
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME,
@@ -29,7 +29,7 @@ public abstract class ContactMedium {
     private String contactMediumType;
 
     /**
-     * Constructeur principal de la classe Operator
+     * Constructeur principal de la classe ContactMedium
      */
     public ContactMedium() {
     }

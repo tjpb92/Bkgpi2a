@@ -1,5 +1,6 @@
 package bkgpi2a;
 
+import com.anstel.simplifiedrequest.QualifySimplifiedRequest;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
@@ -8,7 +9,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
  * Classe abstraite décrivant une commande.
  *
  * @author Thierry Baribaud
- * @version 1.31
+ * @version 1.42.3
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME,

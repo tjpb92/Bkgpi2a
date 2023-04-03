@@ -1,5 +1,10 @@
-package bkgpi2a;
+package com.anstel.simplifiedrequest;
 
+import bkgpi2a.CallerTicketQueryView;
+import bkgpi2a.Link;
+import bkgpi2a.LinkedEntities;
+import bkgpi2a.Links;
+import bkgpi2a.OtpCategory;
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -9,7 +14,7 @@ import com.fasterxml.jackson.annotation.JsonSetter;
  * Classe décrivant un SimplifiedRequestDetailedView
  *
  * @author Thierry Baribaud
- * @version 1.42.2
+ * @version 1.42.3
  * @see <A href="https://declarimmo-org.github.io/API/#simplifiedrequestdetailedview">SimplifiedRequestDetailedView</A>
  */
 @JsonIgnoreProperties(value = {"seen", "qualified"}, ignoreUnknown = true)

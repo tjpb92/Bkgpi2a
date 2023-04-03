@@ -1,4 +1,4 @@
-package bkgpi2a;
+package com.anstel.simplifiedrequest;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.File;
@@ -11,11 +11,11 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 /**
- * Programme de test de la classe ContactToCallback in the TicketInfos context.
- * It is different from the one from SimplifiedRequest context.
+ * Programme de test de la classe ContactToCallback in the SimplifiedRequest 
+ * context. It is different from the one from TicketInfos context.
  *
  * @author Thierry Baribaud
- * @version 1.42.2
+ * @version 1.42.3
  */
 public class ContactToCallbackTest {
 
@@ -40,11 +40,11 @@ public class ContactToCallbackTest {
      * ContactToCallback.
      */
     @Test
-    public void testContactToCallbackJsonSerialization() {
-        System.out.println("ContactToCallbackJsonSerialization");
+    public void testContactToCallbackFromSimplifiedRequestJsonSerialization() {
+        System.out.println("ContactToCallbackFromSimplifiedJsonSerialization");
 
-        String filename = "ContactToCallback.json";
-        String testFilename = "testContactToCallback.json";
+        String filename = "ContactToCallbackFromSimplifiedRequest.json";
+        String testFilename = "testContactToCallbackFromSimplifiedRequest.json";
         ContactToCallback contactToCallback = null;
         ContactToCallback expContactToCallback = null;
 

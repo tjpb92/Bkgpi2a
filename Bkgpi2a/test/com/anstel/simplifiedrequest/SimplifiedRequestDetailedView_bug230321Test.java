@@ -1,4 +1,4 @@
-package bkgpi2a;
+package com.anstel.simplifiedrequest;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.File;
@@ -17,7 +17,7 @@ import static org.junit.Assert.*;
  * du 21 lars 2023 avec l'objet AgencyAbstract, issue#41.
  *
  * @author Thierry Baribaud
- * @version 1.41
+ * @version 1.42.3
  */
 public class SimplifiedRequestDetailedView_bug230321Test {
 
