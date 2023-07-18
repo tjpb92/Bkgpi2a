@@ -1,7 +1,6 @@
 package bkgpi2a;
 
 import com.anstel.simplifiedrequest.ContactInfoTypeTest;
-import com.anstel.simplifiedrequest.ContactToCallbackTest;
 import com.anstel.simplifiedrequest.MailInfoTest;
 import com.anstel.simplifiedrequest.PhoneInfoTest;
 import com.anstel.simplifiedrequest.SimplifiedRequestDetailedView_bug230321Test;
@@ -18,7 +17,7 @@ import org.junit.runners.Suite;
  * Jeux de tests pour tester toutes les classes du projet
  *
  * @author Thierry Baribaud
- * @version 1.42.3
+ * @version 1.42.5
  */
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
@@ -53,6 +52,7 @@ import org.junit.runners.Suite;
     SimplifiedRequestDetailedView_bug230321Test.class,
     SimplifiedRequestResultViewTest.class, 
     SimplifiedRequestSearchViewTest.class,
+    TicketEventInformationsCorrectedTest.class,
     TicketOpenedTest.class, 
     TicketOpenedV1Test.class, 
     TicketOpenedV2Test.class,
