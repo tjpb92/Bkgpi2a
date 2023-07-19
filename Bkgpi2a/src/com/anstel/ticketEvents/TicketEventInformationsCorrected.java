@@ -1,5 +1,7 @@
-package bkgpi2a;
+package com.anstel.ticketEvents;
 
+import bkgpi2a.Event;
+import bkgpi2a.Operator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import static bkgpi2a.EventType.TICKET_EVENT_INFORMATIONS_CORRECTED;
@@ -9,7 +11,7 @@ import static bkgpi2a.EventType.TICKET_EVENT_INFORMATIONS_CORRECTED;
  * ticket : TicketEventInformationsCorrected, #670
  *
  * @author Thierry Baribaud
- * @version 1.42.5
+ * @version 1.42.6
  * @see
  * <A href="https://declarimmo-org.github.io/API/#A_METTRE_A_JOUR">TicketEventInformationsCorrected</A>
  */

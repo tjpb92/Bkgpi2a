@@ -1,6 +1,8 @@
 package bkgpi2a;
 
 import com.anstel.simplifiedrequest.SimplifiedRequestQualified;
+import com.anstel.ticketEvents.OpeningTicketPurposeCorrected;
+import com.anstel.ticketEvents.TicketEventInformationsCorrected;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
@@ -9,7 +11,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
  * Classe abstraite décrivant un événément.
  *
  * @author Thierry Baribaud
- * @version 1.42.5
+ * @version 1.42.6
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME,
@@ -69,7 +71,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
     @JsonSubTypes.Type(value = AccessRestrictedToTicket.class, name = "AccessRestrictedToTicket"),
 
     @JsonSubTypes.Type(value = TicketEventInformationsCorrected.class, name = "TicketEventInformationsCorrected"),
-//    @JsonSubTypes.Type(value = OpeningTicketPurposeCorrected.class, name = "OpeningTicketPurposeCorrected"),
+    @JsonSubTypes.Type(value = OpeningTicketPurposeCorrected.class, name = "OpeningTicketPurposeCorrected"),
     
     @JsonSubTypes.Type(value = SimplifiedRequestQualified.class, name = "SimplifiedRequestQualified")
     })

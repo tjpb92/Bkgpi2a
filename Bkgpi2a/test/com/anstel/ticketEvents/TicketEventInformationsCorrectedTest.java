@@ -1,5 +1,7 @@
-package bkgpi2a;
+package com.anstel.ticketEvents;
 
+import bkgpi2a.Event;
+import bkgpi2a.TicketOpened;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.File;
 import java.io.IOException;
@@ -11,10 +13,10 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 /**
- * Programme de test de la classe TicketOpened
+ * Programme de test de la classe TicketEventInformationsCorrected
  *
  * @author Thierry Baribaud
- * @version 1.42.5
+ * @version 1.42.6
  */
 public class TicketEventInformationsCorrectedTest {
 
