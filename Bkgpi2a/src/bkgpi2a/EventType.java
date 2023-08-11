@@ -4,7 +4,7 @@ package bkgpi2a;
  * Enumération décrivant les identifiants et libellés des événements.
  *
  * @author Thierry Baribaud
- * @version 1.42.5
+ * @version 1.42.7
  */
 public enum EventType {
 
@@ -68,6 +68,7 @@ public enum EventType {
     ACCESS_RESTRICTED_TO_TICKET("AccessRestrictedToTicket", 665),
     TICKET_EVENT_INFORMATIONS_CORRECTED("TicketEventInformationsCorrected",670),
     OPENING_TICKET_PURPOSE_CORRECTED("OpeningTicketPurposeCorrected", 675),
+    CALLER_CORRECTED("CallerCorrected", 680),
 
     SIMPLIFIED_REQUEST_QUALIFIED("SimplifiedRequestQualified", 805)
     ;
