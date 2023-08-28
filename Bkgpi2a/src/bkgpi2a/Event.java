@@ -4,6 +4,8 @@ import com.anstel.simplifiedrequest.SimplifiedRequestQualified;
 import com.anstel.ticketEvents.OpeningTicketPurposeCorrected;
 import com.anstel.ticketEvents.TicketEventInformationsCorrected;
 import com.anstel.ticketEvents.CallerCorrected;
+import com.anstel.ticketEvents.ProviderContactedChecked;
+import com.anstel.ticketEvents.ProviderIsGoingChecked;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
@@ -12,7 +14,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
  * Classe abstraite décrivant un événément.
  *
  * @author Thierry Baribaud
- * @version 1.42.7
+ * @version 1.42.8
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME,
@@ -74,6 +76,8 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
     @JsonSubTypes.Type(value = TicketEventInformationsCorrected.class, name = "TicketEventInformationsCorrected"),
     @JsonSubTypes.Type(value = OpeningTicketPurposeCorrected.class, name = "OpeningTicketPurposeCorrected"),
     @JsonSubTypes.Type(value = CallerCorrected.class, name = "CallerCorrected"),
+    @JsonSubTypes.Type(value = ProviderIsGoingChecked.class, name = "ProviderIsGoingChecked"),
+    @JsonSubTypes.Type(value = ProviderContactedChecked.class, name = "ProviderContactedChecked"),
     
     @JsonSubTypes.Type(value = SimplifiedRequestQualified.class, name = "SimplifiedRequestQualified")
     })

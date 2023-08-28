@@ -13,7 +13,7 @@ import com.fasterxml.jackson.annotation.JsonTypeName;
  * ATTENTION : Opération non compatible avec Eole2/Zephir2.
  *
  * @author Thierry Baribaud
- * @version 1.42.6
+ * @version 1.42.8
  * @see
  * <A href="https://declarimmo-org.github.io/API/#A_METTRE_A_JOUR">OpeningTicketPurposeCorrected</A>
  */
@@ -91,7 +91,7 @@ public class OpeningTicketPurposeCorrected extends Event {
      */
     @Override
     public String toString() {
-        return "TicketEventInformationsCorrected:{"
+        return "OpeningTicketPurposeCorrected:{"
                 + super.toString()
                 + ", " + getOtpUid()
                 + ", " + getOtpLabel()
