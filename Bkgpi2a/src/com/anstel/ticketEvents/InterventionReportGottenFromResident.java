@@ -3,24 +3,24 @@ package com.anstel.ticketEvents;
 import bkgpi2a.ContactMedium;
 import bkgpi2a.Event;
 import bkgpi2a.Operator;
-import static bkgpi2a.EventType.PROVIDER_IS_GOING_CHECKED;
+import static bkgpi2a.EventType.INTERVENTION_REPORT_GOTTEN_FROM_RESIDENT;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 
 /**
  * Classe décrivant l'événement permettant de A_PRECISER sur un ticket :
- * ProviderIsGoingChecked, #685
+ * InterventionReportGottenFromResident, #690
  *
  * ATTENTION : Opération compatible avec Eole2/Zephir2, à prévoir.
  *
  * @author Thierry Baribaud
  * @version 1.42.9
  * @see
- * <A href="https://declarimmo-org.github.io/API/#A_METTRE_A_JOUR">ProviderIsGoingChecked</A>
+ * <A href="https://declarimmo-org.github.io/API/#A_METTRE_A_JOUR">InterventionReportGottenFromResident</A>
  */
 @JsonIgnoreProperties(value = {"_id", "eventTypeUid"}, ignoreUnknown = true)
-@JsonTypeName("ProviderIsGoingChecked")
-public class ProviderIsGoingChecked extends Event {
+@JsonTypeName("InterventionReportGottenFromResident")
+public class InterventionReportGottenFromResident extends Event {
 
     /**
      * Opérateur ayant géré le ticket
@@ -42,11 +42,11 @@ public class ProviderIsGoingChecked extends Event {
     private ContactMedium medium;
 
     /**
-     * Constructeur de la classe ProviderIsGoingChecked
+     * Constructeur de la classe InterventionReportGottenFromResident
      */
-    public ProviderIsGoingChecked() {
-        setEventTypeUid(PROVIDER_IS_GOING_CHECKED.getUid());
-        setEventType(PROVIDER_IS_GOING_CHECKED.getName());
+    public InterventionReportGottenFromResident() {
+        setEventTypeUid(INTERVENTION_REPORT_GOTTEN_FROM_RESIDENT.getUid());
+        setEventType(INTERVENTION_REPORT_GOTTEN_FROM_RESIDENT.getName());
     }
 
     /**
@@ -108,7 +108,7 @@ public class ProviderIsGoingChecked extends Event {
      */
     @Override
     public String toString() {
-        return "ProviderIsGoingChecked:{"
+        return "InterventionReportGottenFromResident:{"
                 + super.toString()
                 + ", " + getOperator()
                 //                + ", " + getRecipient()

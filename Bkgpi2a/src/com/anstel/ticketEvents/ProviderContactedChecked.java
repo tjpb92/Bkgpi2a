@@ -14,7 +14,7 @@ import com.fasterxml.jackson.annotation.JsonTypeName;
  * ATTENTION : Opération compatible avec Eole2/Zephir2, à prévoir.
  *
  * @author Thierry Baribaud
- * @version 1.42.8
+ * @version 1.42.9
  * @see
  * <A href="https://declarimmo-org.github.io/API/#A_METTRE_A_JOUR">ProviderContactedChecked</A>
  */
@@ -42,7 +42,7 @@ public class ProviderContactedChecked extends Event {
     private ContactMedium medium;
 
     /**
-     * Constructeur de la classe TicketEventInformationsCorrected
+     * Constructeur de la classe ProviderContactedChecked
      */
     public ProviderContactedChecked() {
         setEventTypeUid(PROVIDER_CONTACTED_CHECKED.getUid());
