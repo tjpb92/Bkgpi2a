@@ -8,8 +8,8 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
  * Classe abstraite décrivant un opérateur
  *
  * @author Thierry Baribaud
- * @version October 2016
- * @see http://performanceimmo.github.io/API/#operator
+ * @version 1.42.11
+ * <A href="https://declarimmo-org.github.io/API/#operator">Operator</A>
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME,

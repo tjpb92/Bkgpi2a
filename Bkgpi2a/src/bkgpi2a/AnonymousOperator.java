@@ -7,9 +7,8 @@ import com.fasterxml.jackson.annotation.JsonTypeName;
  * Classe décrivant un opérateur non référencé
  *
  * @author Thierry Baribaud
- * @version 1.37
- * @see
- * <A href="http://performanceimmo.github.io/API/#operator">AnonymousOperator</A>
+ * @version 1.42.11
+ * <A href="https://declarimmo-org.github.io/API/#operator">Operator</A>
  */
 @JsonTypeName("AnonymousOperator")
 public class AnonymousOperator extends Operator {

@@ -7,8 +7,8 @@ import com.fasterxml.jackson.annotation.JsonTypeName;
  * Classe décrivant un utilisateur référencé
  *
  * @author Thierry Baribaud
- * @version Octobre 2016
- * @see http://performanceimmo.github.io/API/#operator
+ * @version 1.42.11
+ * <A href="https://declarimmo-org.github.io/API/#operator">Operator</A>
  */
 @JsonTypeName("ReferencedUser")
 public class ReferencedUser extends Operator {

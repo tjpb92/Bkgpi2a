@@ -4,8 +4,8 @@ package bkgpi2a;
  * Enumération décrivant les types d'opérateur.
  *
  * @author Thierry Baribaud
- * @version 0.41
- * @see http://performanceimmo.github.io/API/#operator
+ * @version 1.42.11
+ * <A href="https://declarimmo-org.github.io/API/#operator">Operator</A>
  */
 public enum OperatorType {
 

@@ -6,8 +6,11 @@ import com.anstel.simplifiedrequest.PhoneInfoTest;
 import com.anstel.simplifiedrequest.SimplifiedRequestDetailedView_bug230321Test;
 import com.anstel.simplifiedrequest.SimplifiedRequestResultViewTest;
 import com.anstel.simplifiedrequest.SimplifiedRequestSearchViewTest;
+import com.anstel.ticketEvents.CallerCorrectedTest;
 import com.anstel.ticketEvents.OpeningTicketPurposeCorrectedTest;
 import com.anstel.ticketEvents.TicketEventInformationsCorrectedTest;
+import com.anstel.tickets.models.ProviderPersonaTest;
+import com.anstel.tickets.models.UnClassifiedPersonaTest;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -19,7 +22,7 @@ import org.junit.runners.Suite;
  * Jeux de tests pour tester toutes les classes du projet
  *
  * @author Thierry Baribaud
- * @version 1.42.6
+ * @version 1.42.11
  */
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
@@ -30,6 +33,7 @@ import org.junit.runners.Suite;
     CivilNameTest.class, 
     bkgpi2a.ContactToCallbackTest.class, 
     com.anstel.simplifiedrequest.ContactToCallbackTest.class, 
+    CallerCorrectedTest.class,
     ContextualCommentTest.class,
     ContactInfoTypeTest.class,
     ContextualCommentDisplayedOnTicketTest.class,
@@ -50,6 +54,7 @@ import org.junit.runners.Suite;
     ProviderContactDissociatedFromPatrimonyTest.class,
     ProviderContactQueryViewTest.class, ProviderContactResultViewTest.class,
     ProviderContactTest.class,
+    ProviderPersonaTest.class,
     ReferencedContactCallerTest.class,
     ReferencedUserCallerTest.class,
     SimplifiedRequestDetailedView_bug230321Test.class,
@@ -61,6 +66,7 @@ import org.junit.runners.Suite;
     TicketOpenedV2Test.class,
     TicketOpenedFromSimplifiedRequestTest.class,
     TicketQualifiedByCriteriaTest.class,
+    UnClassifiedPersonaTest.class,    
     WorkflowAppliedToTicketTest.class
 })
 public class Bkgpi2aSuite {

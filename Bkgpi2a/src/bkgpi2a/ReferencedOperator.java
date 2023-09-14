@@ -7,8 +7,8 @@ import com.fasterxml.jackson.annotation.JsonTypeName;
  * Classe décrivant un opérateur référencé
  *
  * @author Thierry Baribaud
- * @version Octobre 2016
- * @see http://performanceimmo.github.io/API/#operator
+ * @version 1.42.11
+ * <A href="https://declarimmo-org.github.io/API/#operator">Operator</A>
  */
 @JsonTypeName("ReferencedOperator")
 public class ReferencedOperator extends Operator {
@@ -19,7 +19,7 @@ public class ReferencedOperator extends Operator {
     private String operatorUid;
 
     /**
-     * Constructeur principal de la classe ReferencedUser
+     * Constructeur principal de la classe ReferencedOperator
      */
     public ReferencedOperator() {
         setOperatorType(REFERENCED_OPERATOR.getName());
@@ -38,7 +38,7 @@ public class ReferencedOperator extends Operator {
     public void setOperatorUid(String operatorUid) {
         this.operatorUid = operatorUid;
     }
-    
+
     /**
      * @return Retourne l'objet sous forme textuelle
      */
