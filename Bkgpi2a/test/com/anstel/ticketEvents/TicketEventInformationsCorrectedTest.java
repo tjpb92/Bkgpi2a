@@ -16,7 +16,7 @@ import static org.junit.Assert.*;
  * Programme de test de la classe TicketEventInformationsCorrected
  *
  * @author Thierry Baribaud
- * @version 1.42.6
+ * @version 1.42.10
  */
 public class TicketEventInformationsCorrectedTest {
 
@@ -44,7 +44,10 @@ public class TicketEventInformationsCorrectedTest {
     public void testTicketEventInformationsCorrectedJsonSerialization() {
         System.out.println("TicketEventInformationsCorrectedJsonSerialization");
 
-        String filename = "TicketEventInformationsCorrected.json";
+        // version juillet
+        // String filename = "TicketEventInformationsCorrected.json";
+        // version aout
+        String filename = "TicketEventInformationsCorrected2.json";
         String testFilename = "testTicketEventInformationsCorrected.json";
         TicketEventInformationsCorrected ticketEventInformationsCorrected = null;
         TicketEventInformationsCorrected expTicketEventInformationsCorrected = null;
