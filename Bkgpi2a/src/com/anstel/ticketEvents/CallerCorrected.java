@@ -1,7 +1,6 @@
 package com.anstel.ticketEvents;
 
 import bkgpi2a.Caller;
-import bkgpi2a.CallerType;
 import bkgpi2a.Event;
 import bkgpi2a.Operator;
 import static bkgpi2a.EventType.CALLER_CORRECTED;
@@ -15,7 +14,7 @@ import com.fasterxml.jackson.annotation.JsonTypeName;
  * ATTENTION : Opération compatible avec Eole2/Zephir2 à implémenter.
  *
  * @author Thierry Baribaud
- * @version 1.42.7
+ * @version 1.42.12
  * @see
  * <A href="https://declarimmo-org.github.io/API/#A_METTRE_A_JOUR">CallerCorrected</A>
  */
@@ -42,14 +41,14 @@ public class CallerCorrected extends Event {
     }
 
     /**
-     * @return l'UUID du nouveau motif d'appel
+     * @return l'appelant et le moyen de liaison
      */
     public Caller getCaller() {
         return caller;
     }
 
     /**
-     * @param caller définit l'UUID du nouveau motif d'appel
+     * @param caller définit l'appelant et le moyen de liaison
      */
     public void setCaller(Caller caller) {
         this.caller = caller;
