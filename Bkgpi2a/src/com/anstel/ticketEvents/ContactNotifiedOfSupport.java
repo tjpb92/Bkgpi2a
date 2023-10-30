@@ -3,26 +3,25 @@ package com.anstel.ticketEvents;
 import bkgpi2a.ContactMedium;
 import bkgpi2a.Event;
 import bkgpi2a.Operator;
-import static bkgpi2a.EventType.INTERVENTION_REPORT_GOTTEN_FROM_RESIDENT;
+import static bkgpi2a.EventType.CONTACT_NOTIFIED_OF_SUPPORT;
 import com.anstel.tickets.models.Persona;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 
 /**
- * Classe décrivant l'événement permettant de préciser sur un ticket d'un appel
- * de récupération de l'intervention auprès du résident :
- * InterventionReportGottenFromResident, #690
+ * Classe décrivant l'événement permettant de préciser sur un ticket que le
+ * contact est informé de la prise en charge : ContactNotifiedOfSupport, #710
  *
  * ATTENTION : Opération compatible avec Eole2/Zephir2, à prévoir.
  *
  * @author Thierry Baribaud
  * @version 1.42.13
  * @see
- * <A href="https://declarimmo-org.github.io/API/#A_METTRE_A_JOUR">InterventionReportGottenFromResident</A>
+ * <A href="https://declarimmo-org.github.io/API/#A_METTRE_A_JOUR">ContactNotifiedOfSupport</A>
  */
 @JsonIgnoreProperties(value = {"_id", "eventTypeUid"}, ignoreUnknown = true)
-@JsonTypeName("InterventionReportGottenFromResident")
-public class InterventionReportGottenFromResident extends Event {
+@JsonTypeName("ContactNotifiedOfSupport")
+public class ContactNotifiedOfSupport extends Event {
 
     /**
      * Opérateur ayant géré le ticket
@@ -33,6 +32,7 @@ public class InterventionReportGottenFromResident extends Event {
      * Le destinataire
      */
     private Persona recipient;
+
     /**
      * Commentaire
      */
@@ -44,11 +44,11 @@ public class InterventionReportGottenFromResident extends Event {
     private ContactMedium medium;
 
     /**
-     * Constructeur de la classe InterventionReportGottenFromResident
+     * Constructeur de la classe ContactNotifiedOfSupport
      */
-    public InterventionReportGottenFromResident() {
-        setEventTypeUid(INTERVENTION_REPORT_GOTTEN_FROM_RESIDENT.getUid());
-        setEventType(INTERVENTION_REPORT_GOTTEN_FROM_RESIDENT.getName());
+    public ContactNotifiedOfSupport() {
+        setEventTypeUid(CONTACT_NOTIFIED_OF_SUPPORT.getUid());
+        setEventType(CONTACT_NOTIFIED_OF_SUPPORT.getName());
     }
 
     /**
@@ -112,7 +112,7 @@ public class InterventionReportGottenFromResident extends Event {
      */
     @Override
     public String toString() {
-        return "InterventionReportGottenFromResident:{"
+        return "ContactNotifiedOfSupport:{"
                 + super.toString()
                 + ", " + getOperator()
                 + ", " + getRecipient()

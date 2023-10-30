@@ -4,17 +4,18 @@ import bkgpi2a.ContactMedium;
 import bkgpi2a.Event;
 import bkgpi2a.Operator;
 import static bkgpi2a.EventType.PROVIDER_IS_GOING_CHECKED;
+import com.anstel.tickets.models.Persona;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 
 /**
- * Classe décrivant l'événement permettant de A_PRECISER sur un ticket :
- * ProviderIsGoingChecked, #685
+ * Classe décrivant l'événement permettant de préciser sur un ticket que le
+ * déplacement du prestataire a été vérifié : ProviderIsGoingChecked, #685
  *
  * ATTENTION : Opération compatible avec Eole2/Zephir2, à prévoir.
  *
  * @author Thierry Baribaud
- * @version 1.42.9
+ * @version 1.42.13
  * @see
  * <A href="https://declarimmo-org.github.io/API/#A_METTRE_A_JOUR">ProviderIsGoingChecked</A>
  */
@@ -30,7 +31,7 @@ public class ProviderIsGoingChecked extends Event {
     /**
      * Le destinataire
      */
-//    private Persona recipient;
+    private Persona recipient;
     /**
      * Commentaire
      */
@@ -66,15 +67,17 @@ public class ProviderIsGoingChecked extends Event {
     /**
      * @return le destinataire
      */
-//    public Persona getRecipient() {
-//        return recipient;
-//    }
+    public Persona getRecipient() {
+        return recipient;
+    }
+
     /**
      * @param recipient définit le destinataire
      */
-//    public void setRecipient(Persona recipient) {
-//        this.recipient = recipient;
-//    }
+    public void setRecipient(Persona recipient) {
+        this.recipient = recipient;
+    }
+
     /**
      * @return le commentaire
      */
@@ -111,7 +114,7 @@ public class ProviderIsGoingChecked extends Event {
         return "ProviderIsGoingChecked:{"
                 + super.toString()
                 + ", " + getOperator()
-                //                + ", " + getRecipient()
+                + ", " + getRecipient()
                 + ", comment:" + getComment()
                 + ", " + getMedium()
                 + "}";
