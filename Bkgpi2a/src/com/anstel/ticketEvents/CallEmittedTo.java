@@ -1,21 +1,28 @@
-package bkgpi2a;
+package com.anstel.ticketEvents;
 
+import bkgpi2a.Event;
+import bkgpi2a.Operator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import static bkgpi2a.EventType.CALL_EMITTED_TO;
+import com.fasterxml.jackson.annotation.JsonInclude;
 
 /**
  * Classe décrivant un comment ajouté au journal d'un ticket : CallEmittedTo,
  * #580
  *
- * ATTENTION : à finaliser
+ * ATTENTION : à finaliser avec recipient et medium.
+ * 
+ * ATTENTION : à ne pas confondre avec son homologue dans 
+ * <A href="https://performanceimmo.github.io/API/#journaleventdata">JournalEventData</A>
+ * 
  *
  * @author Thierry Baribaud
- * @version 1.37
+ * @version 1.42.15
  * @see
  * <A href="http://performanceimmo.github.io/API/#ticketevent">CallEmittedTo</A>
  */
-@JsonIgnoreProperties({"_id", "date", "eventTypeUid", "recipient", "medium"})
+@JsonIgnoreProperties({"_id", "eventTypeUid", "recipient", "medium"})
 @JsonTypeName("CallEmittedTo")
 public class CallEmittedTo extends Event {
 
@@ -27,6 +34,7 @@ public class CallEmittedTo extends Event {
     /**
      * Commentaire ajouté au ticket
      */
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private String comment;
 
     /**

@@ -1,6 +1,7 @@
 package bkgpi2a;
 
 import com.anstel.simplifiedrequest.SimplifiedRequestQualified;
+import com.anstel.ticketEvents.CallEmittedTo;
 import com.anstel.ticketEvents.OpeningTicketPurposeCorrected;
 import com.anstel.ticketEvents.TicketEventInformationsCorrected;
 import com.anstel.ticketEvents.CallerCorrected;

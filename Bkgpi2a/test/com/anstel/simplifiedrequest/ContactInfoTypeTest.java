@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.anstel.simplifiedrequest;
 
 import org.junit.After;
@@ -16,7 +11,7 @@ import static org.junit.Assert.*;
  * Programme de test de la classe ContactInfoType
  *
  * @author Thierry Baribaud
- * @version 1.42.3
+ * @version 1.42.15
  */
 public class ContactInfoTypeTest {
 
