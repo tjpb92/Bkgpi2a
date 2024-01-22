@@ -1,6 +1,8 @@
 package bkgpi2a;
 
 import com.anstel.simplifiedrequest.SimplifiedRequestQualified;
+import com.anstel.ticketEvents.AssigneeIdentified;
+import com.anstel.ticketEvents.BackupAssigneeIdentified;
 import com.anstel.ticketEvents.CallEmittedTo;
 import com.anstel.ticketEvents.OpeningTicketPurposeCorrected;
 import com.anstel.ticketEvents.TicketEventInformationsCorrected;
@@ -14,12 +16,13 @@ import com.anstel.ticketEvents.InterventionReportGottenFromProvider;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import java.util.Objects;
 
 /**
  * Classe abstraite décrivant un événément.
  *
  * @author Thierry Baribaud
- * @version 1.42.13
+ * @version 1.42.16
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME,
@@ -87,6 +90,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
     @JsonSubTypes.Type(value = InterventionReportGottenFromProvider.class, name = "InterventionReportGottenFromProvider"),
     @JsonSubTypes.Type(value = ContactToCallbackCorrected.class, name = "ContactToCallbackCorrected"),    
     @JsonSubTypes.Type(value = ContactNotifiedOfSupport.class, name = "ContactNotifiedOfSupport"),    
+    @JsonSubTypes.Type(value = BackupAssigneeIdentified.class, name = "BackupAssigneeIdentified"),
 
     @JsonSubTypes.Type(value = SimplifiedRequestQualified.class, name = "SimplifiedRequestQualified")
     })

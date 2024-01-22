@@ -12,17 +12,17 @@ import com.fasterxml.jackson.annotation.JsonInclude;
  * #580
  *
  * ATTENTION : à finaliser avec recipient et medium.
- * 
- * ATTENTION : à ne pas confondre avec son homologue dans 
+ *
+ * ATTENTION : à ne pas confondre avec son homologue dans
  * <A href="https://performanceimmo.github.io/API/#journaleventdata">JournalEventData</A>
- * 
+ *
  *
  * @author Thierry Baribaud
- * @version 1.42.15
+ * @version 1.42.16
  * @see
  * <A href="http://performanceimmo.github.io/API/#ticketevent">CallEmittedTo</A>
  */
-@JsonIgnoreProperties({"_id", "eventTypeUid", "recipient", "medium"})
+@JsonIgnoreProperties(value = {"_id", "eventTypeUid", "recipient", "medium"}, ignoreUnknown = true)
 @JsonTypeName("CallEmittedTo")
 public class CallEmittedTo extends Event {
 

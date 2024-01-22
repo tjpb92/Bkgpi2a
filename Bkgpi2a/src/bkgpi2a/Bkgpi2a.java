@@ -1,5 +1,6 @@
 package bkgpi2a;
 
+import com.anstel.ticketEvents.AssigneeIdentified;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mongodb.BasicDBObject;
 import com.mongodb.MongoClient;

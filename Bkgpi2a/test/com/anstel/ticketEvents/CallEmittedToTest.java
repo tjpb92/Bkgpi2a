@@ -16,7 +16,7 @@ import static org.junit.Assert.*;
  * Programme de test de la classe CallEmittedTo
  *
  * @author Thierry Baribaud
- * @version 1.42.15
+ * @version 1.42.16
  */
 public class CallEmittedToTest {
 
@@ -38,7 +38,7 @@ public class CallEmittedToTest {
 
     /**
      * Test of serialization from and to a file in Json format, of class
-     * TicketOpened.
+     * CallEmittedTo.
      */
     @Test
     public void testCallEmittedToJsonSerialization() {

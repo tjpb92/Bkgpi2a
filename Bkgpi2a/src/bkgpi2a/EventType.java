@@ -4,7 +4,7 @@ package bkgpi2a;
  * Enumération décrivant les identifiants et libellés des événements.
  *
  * @author Thierry Baribaud
- * @version 1.42.13
+ * @version 1.42.16
  */
 public enum EventType {
 
@@ -75,6 +75,7 @@ public enum EventType {
     INTERVENTION_REPORT_GOTTEN_FROM_PROVIDER("InterventionReportGottenFromProvider", 700),
     CONTACT_TO_CALLBACK_CORRECTED("ContactToCallbackCorrected", 705),
     CONTACT_NOTIFIED_OF_SUPPORT("ContactNotifiedOfSupport", 710),
+    BACKUP_ASSIGNEE_IDENTIFIED("BackupAssigneeIdentified", 715),
     
     SIMPLIFIED_REQUEST_QUALIFIED("SimplifiedRequestQualified", 805)
     ;

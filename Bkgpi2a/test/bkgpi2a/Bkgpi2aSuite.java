@@ -6,6 +6,9 @@ import com.anstel.simplifiedrequest.PhoneInfoTest;
 import com.anstel.simplifiedrequest.SimplifiedRequestDetailedView_bug230321Test;
 import com.anstel.simplifiedrequest.SimplifiedRequestResultViewTest;
 import com.anstel.simplifiedrequest.SimplifiedRequestSearchViewTest;
+import com.anstel.ticketEvents.AssigneeIdentifiedTest;
+import com.anstel.ticketEvents.BackupAssigneeIdentifiedTest;
+import com.anstel.ticketEvents.CallEmittedToTest;
 import com.anstel.ticketEvents.CallerCorrectedTest;
 import com.anstel.ticketEvents.OpeningTicketPurposeCorrectedTest;
 import com.anstel.ticketEvents.TicketEventInformationsCorrectedTest;
@@ -22,14 +25,17 @@ import org.junit.runners.Suite;
  * Jeux de tests pour tester toutes les classes du projet
  *
  * @author Thierry Baribaud
- * @version 1.42.11
+ * @version 1.42.16
  */
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
     AccessRestrictedToTicketTest.class,
     AgencyAbstractV1Test.class,
     AgencyAbstractV2Test.class,
+    AssigneeIdentifiedTest.class,
+    BackupAssigneeIdentifiedTest.class,
     Bug200910TOTest.class,
+    CallEmittedToTest.class,
     CivilNameTest.class, 
     bkgpi2a.ContactToCallbackTest.class, 
     com.anstel.simplifiedrequest.ContactToCallbackTest.class, 

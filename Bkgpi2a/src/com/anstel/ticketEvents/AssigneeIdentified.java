@@ -1,5 +1,8 @@
-package bkgpi2a;
+package com.anstel.ticketEvents;
 
+import bkgpi2a.Event;
+import bkgpi2a.Operator;
+import bkgpi2a.TicketAssignee;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import static bkgpi2a.EventType.ASSIGNEE_IDENTIFIED;
@@ -14,11 +17,11 @@ import com.fasterxml.jackson.annotation.JsonSetter;
  * 2018.
  *
  * @author Thierry Baribaud
- * @version 1.37
+ * @version 1.42.16
  * @see
  * <A href="http://performanceimmo.github.io/API/#ticketevent">AssigneeIdentified</A>
  */
-@JsonIgnoreProperties({"_id", "eventTypeUid"})
+@JsonIgnoreProperties(value = {"_id", "eventTypeUid"}, ignoreUnknown = true)
 @JsonTypeName("AssigneeIdentified")
 public class AssigneeIdentified extends Event {
 
@@ -104,5 +107,4 @@ public class AssigneeIdentified extends Event {
                 + ", commentaire:" + getComment()
                 + "}";
     }
-
 }
