@@ -5,18 +5,18 @@ import bkgpi2a.Operator;
 import bkgpi2a.TicketAssignee;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonTypeName;
-import static bkgpi2a.EventType.ASSIGNEE_IDENTIFIED;
+import static bkgpi2a.EventType.BACKUP_ASSIGNEE_IDENTIFIED;
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSetter;
 
 /**
- * Classe décrivant l'affectation d'un individu (le backuup) à un ticket :
- * BackupAssigneeIdentified, #515.
+ * Classe décrivant l'affectation d'un individu (le renfort) à un ticket :
+ * BackupAssigneeIdentified, #715.
  *
  * @author Thierry Baribaud
- * @version 1.42.16
+ * @version 1.42.18
  * @see
  * <A href="https://declarimmo-org.github.io/API/#A_METTRE_A_JOUR">BackupAssigneeIdentified</A>
  */
@@ -33,8 +33,8 @@ public class BackupAssigneeIdentified extends Event {
     /**
      * Individu courant sur l'essai
      */
-    @JsonProperty("assignee")
-    private TicketAssignee ticketAssignee;
+//    @JsonProperty("assignee")
+    private TicketAssignee assignee;
 
     /**
      * Commentaire ajouté au ticket (optionnel)
@@ -43,11 +43,11 @@ public class BackupAssigneeIdentified extends Event {
     private String comment;
 
     /**
-     * Constructeur de la classe AssigneeIdentified
+     * Constructeur de la classe BackupAssigneeIdentified
      */
     public BackupAssigneeIdentified() {
-        setEventTypeUid(ASSIGNEE_IDENTIFIED.getUid());
-        setEventType(ASSIGNEE_IDENTIFIED.getName());
+        setEventTypeUid(BACKUP_ASSIGNEE_IDENTIFIED.getUid());
+        setEventType(BACKUP_ASSIGNEE_IDENTIFIED.getName());
     }
 
     /**
@@ -67,17 +67,17 @@ public class BackupAssigneeIdentified extends Event {
     /**
      * @return l'individu courant si présent
      */
-    @JsonGetter("assignee")
-    public TicketAssignee getTicketAssignee() {
-        return ticketAssignee;
+//    @JsonGetter("assignee")
+    public TicketAssignee getAssignee() {
+        return assignee;
     }
 
     /**
-     * @param ticketAssignee définit l'individu courant
+     * @param assignee définit l'individu courant
      */
-    @JsonSetter("assignee")
-    public void setTicketAssignee(TicketAssignee ticketAssignee) {
-        this.ticketAssignee = ticketAssignee;
+//    @JsonSetter("assignee")
+    public void setAssignee(TicketAssignee assignee) {
+        this.assignee = assignee;
     }
 
     /**
@@ -102,7 +102,7 @@ public class BackupAssigneeIdentified extends Event {
         return "BackupAssigneeIdentified:{"
                 + super.toString()
                 + ", " + getOperator()
-                + ", " + getTicketAssignee()
+                + ", " + getAssignee()
                 + ", commentaire:" + getComment()
                 + "}";
     }

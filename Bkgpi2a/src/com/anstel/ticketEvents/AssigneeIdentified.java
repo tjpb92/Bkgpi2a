@@ -6,10 +6,7 @@ import bkgpi2a.TicketAssignee;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import static bkgpi2a.EventType.ASSIGNEE_IDENTIFIED;
-import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonSetter;
 
 /**
  * Classe décrivant l'affectation d'un individu à un ticket :
@@ -17,7 +14,7 @@ import com.fasterxml.jackson.annotation.JsonSetter;
  * 2018.
  *
  * @author Thierry Baribaud
- * @version 1.42.16
+ * @version 1.42.18
  * @see
  * <A href="http://performanceimmo.github.io/API/#ticketevent">AssigneeIdentified</A>
  */
@@ -34,8 +31,8 @@ public class AssigneeIdentified extends Event {
     /**
      * Individu courant sur l'essai
      */
-    @JsonProperty("assignee")
-    private TicketAssignee ticketAssignee;
+//    @JsonProperty("assignee")
+    private TicketAssignee assignee;
 
     /**
      * Commentaire ajouté au ticket (optionnel)
@@ -68,17 +65,17 @@ public class AssigneeIdentified extends Event {
     /**
      * @return l'individu courant si présent
      */
-    @JsonGetter("assignee")
-    public TicketAssignee getTicketAssignee() {
-        return ticketAssignee;
+//    @JsonGetter("assignee")
+    public TicketAssignee getAssignee() {
+        return assignee;
     }
 
     /**
-     * @param ticketAssignee définit l'individu courant
+     * @param assignee définit l'individu courant
      */
-    @JsonSetter("assignee")
-    public void setTicketAssignee(TicketAssignee ticketAssignee) {
-        this.ticketAssignee = ticketAssignee;
+//    @JsonSetter("assignee")
+    public void setAssignee(TicketAssignee assignee) {
+        this.assignee = assignee;
     }
 
     /**
@@ -103,7 +100,7 @@ public class AssigneeIdentified extends Event {
         return "AssigneeIdentified:{"
                 + super.toString()
                 + ", " + getOperator()
-                + ", " + getTicketAssignee()
+                + ", " + getAssignee()
                 + ", commentaire:" + getComment()
                 + "}";
     }

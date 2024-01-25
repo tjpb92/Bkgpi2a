@@ -36,7 +36,7 @@ import utils.DBServerException;
  * proc_pi.sql.
  *
  * @author Thierry Baribaud.
- * @version 1.42.17
+ * @version 1.42.18
  */
 public class Bkgpi2a {
 
@@ -1653,7 +1653,7 @@ public class Bkgpi2a {
 
                 preparedStatement = informixConnection.prepareStatement("{call addLogTrial(?, ?, ?, ?, ?, ?, ?, ?)}");
                 preparedStatement.setString(1, assigneeIdentified.getAggregateUid());
-                ticketAssignee = assigneeIdentified.getTicketAssignee();
+                ticketAssignee = assigneeIdentified.getAssignee();
                 if (ticketAssignee instanceof ReferencedProviderContact) {
                     preparedStatement.setString(2, ((ReferencedProviderContact) ticketAssignee).getProviderContactUid());
                 } else {
@@ -1754,6 +1754,8 @@ public class Bkgpi2a {
         resultSet = null;
         preparedStatement = null;
         retcode = 0;
+        
+//        System.out.println("%%processBackupAssigneeIdentified : entering, comment:"+assigneeIdentified.getComment());
 
         if (assigneeIdentified.getOperator() instanceof ReferencedUser) {
             try {
@@ -1761,7 +1763,7 @@ public class Bkgpi2a {
 
                 preparedStatement = informixConnection.prepareStatement("{call addLogTrial(?, ?, ?, ?, ?, ?, ?, ?)}");
                 preparedStatement.setString(1, assigneeIdentified.getAggregateUid());
-                ticketAssignee = assigneeIdentified.getTicketAssignee();
+                ticketAssignee = assigneeIdentified.getAssignee();
                 if (ticketAssignee instanceof ReferencedProviderContact) {
                     preparedStatement.setString(2, ((ReferencedProviderContact) ticketAssignee).getProviderContactUid());
                 } else {
@@ -1770,13 +1772,17 @@ public class Bkgpi2a {
                 preparedStatement.setInt(3, 22);
                 comment = assigneeIdentified.getComment();
                 if (comment == null) {
+//                    System.out.println("%%processBackupAssigneeIdentified : branch null, comment:"+assigneeIdentified.getComment());
                     preparedStatement.setNull(4, java.sql.Types.CHAR);
                 } else if ("comment".equals(comment)) {
+//                    System.out.println("%%processBackupAssigneeIdentified : branch comment, comment:"+assigneeIdentified.getComment());
                     preparedStatement.setNull(4, java.sql.Types.CHAR);
                 } else {
                     if (comment.toLowerCase().contains("renfort")) {
+//                        System.out.println("%%processBackupAssigneeIdentified : branch renfort présent, comment:"+assigneeIdentified.getComment());
                         preparedStatement.setString(4, comment);
                     } else {
+//                        System.out.println("%%processBackupAssigneeIdentified : branch renfort absent, comment:"+assigneeIdentified.getComment());
                         preparedStatement.setString(4, comment + " en renfort");
                     }
                 }
@@ -1840,7 +1846,7 @@ public class Bkgpi2a {
             retcode = -3;
         }
 
-        System.out.println("      AssigneeIdentified:{retcode:" + retcode + ", nbTrials:" + nbTrials + "}");
+        System.out.println("      BackupAssigneeIdentified:{retcode:" + retcode + ", nbTrials:" + nbTrials + "}");
 
         return retcode;
     }
