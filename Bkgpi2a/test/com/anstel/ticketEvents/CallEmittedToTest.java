@@ -44,7 +44,7 @@ public class CallEmittedToTest {
     public void testCallEmittedToJsonSerialization() {
         System.out.println("CallEmittedToJsonSerialization");
 
-        String filename = "CallEmittedTo.json";
+        String filename = "CallEmittedTo_2.json";
         String testFilename = "testCallEmittedTo.json";
         CallEmittedTo callEmittedTo = null;
         CallEmittedTo expCallEmittedTo = null;

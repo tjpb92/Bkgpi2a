@@ -4,11 +4,11 @@ package bkgpi2a;
  * Enumération décrivant les identifiants et libellés des événements.
  *
  * @author Thierry Baribaud
- * @version 1.42.16
+ * @version 1.42.19
  */
 public enum EventType {
 
-    PROVIDER_CONTACT_ASSOCIATED_WITH_PATRIMONY("ProviderContactAssociatedWithPatrimony ", 470),
+    PROVIDER_CONTACT_ASSOCIATED_WITH_PATRIMONY("ProviderContactAssociatedWithPatrimony", 470),
     PROVIDER_CONTACT_DISSOCIATED_FROM_PATRIMONY("ProviderContactDissociatedFromPatrimony", 475),
 
     TICKET_OPENED("TicketOpened", 500),

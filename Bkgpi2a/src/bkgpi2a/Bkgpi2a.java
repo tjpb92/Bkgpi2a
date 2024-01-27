@@ -20,6 +20,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.bson.Document;
 import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.format.ISODateTimeFormat;
@@ -36,7 +37,7 @@ import utils.DBServerException;
  * proc_pi.sql.
  *
  * @author Thierry Baribaud.
- * @version 1.42.18
+ * @version 1.42.19
  */
 public class Bkgpi2a {
 
@@ -520,6 +521,7 @@ public class Bkgpi2a {
         String comment;
         int nbTrials = 0;
         SqlResults sqlResults = null;
+        String className = closedBeyondCallCenterScope.getClass().getSimpleName();
 
         int retcode = 0;
 
@@ -553,11 +555,11 @@ public class Bkgpi2a {
                 retcode = -1;
             }
         } else {
-            System.out.println("    ERREUR : événement rejeté, raison : généré par Anstel");
+            System.out.println("    " + className + " ERREUR : événement rejeté, raison : généré par Anstel");
             retcode = -3;
         }
 
-        System.out.println("      ClosedBeyondCallCenterScope:{retcode:" + retcode + ", nbTrials:" + nbTrials + "}");
+        System.out.println("      " + className + ":{retcode:" + retcode + ", nbTrials:" + nbTrials + "}");
 
         return retcode;
     }
@@ -632,6 +634,7 @@ public class Bkgpi2a {
         DateTime dateTime;
         int nbTrials = 0;
         SqlResults sqlResults;
+        String className = interventionStarted.getClass().getSimpleName();
 
         int retcode = 0;
 
@@ -661,11 +664,11 @@ public class Bkgpi2a {
                 retcode = -1;
             }
         } else {
-            System.out.println("    ERREUR : événement rejeté, raison : généré par Anstel");
+            System.out.println("    " + className + " ERREUR : événement rejeté, raison : généré par Anstel");
             retcode = -3;
         }
 
-        System.out.println("      InterventionStarted:{retcode:" + retcode + ", nbTrials:" + nbTrials + "}");
+        System.out.println("      " + className + ":{retcode:" + retcode + ", nbTrials:" + nbTrials + "}");
 
         return retcode;
     }
@@ -688,6 +691,7 @@ public class Bkgpi2a {
         String ref;
         int nbTrials = 0;
         SqlResults sqlResults;
+        String className = formalNoticeForProviderReported.getClass().getSimpleName();
 
         int retcode = 0;
 
@@ -728,11 +732,11 @@ public class Bkgpi2a {
             }
 
         } else {
-            System.out.println("    ERREUR : événement rejeté, raison : généré par Anstel");
+            System.out.println("    " + className + " ERREUR : événement rejeté, raison : généré par Anstel");
             retcode = -3;
         }
 
-        System.out.println("      FormalNoticeForProviderReported:{retcode:" + retcode + ", nbTrials:" + nbTrials + "}");
+        System.out.println("      " + className + ":{retcode:" + retcode + ", nbTrials:" + nbTrials + "}");
 
         return retcode;
     }
@@ -753,6 +757,7 @@ public class Bkgpi2a {
         DateTimeFormatter ddmmyy = DateTimeFormat.forPattern("dd/MM/YY");
         int nbTrials = 0;
         SqlResults sqlResults;
+        String className = interventionDeadlineDefined.getClass().getSimpleName();
 
         int retcode = 0;
 
@@ -788,11 +793,11 @@ public class Bkgpi2a {
             }
 
         } else {
-            System.out.println("    ERREUR : événement rejeté, raison : généré par Anstel");
+            System.out.println("    " + className + "ERREUR : événement rejeté, raison : généré par Anstel");
             retcode = -3;
         }
 
-        System.out.println("      InterventionDeadlineDefined:{retcode:" + retcode + ", nbTrials:" + nbTrials + "}");
+        System.out.println("      " + className + ":{retcode:" + retcode + ", nbTrials:" + nbTrials + "}");
 
         return retcode;
     }
@@ -813,6 +818,7 @@ public class Bkgpi2a {
         DateTimeFormatter ddmmyy = DateTimeFormat.forPattern("dd/MM/YY");
         int nbTrials = 0;
         SqlResults sqlResults;
+        String className = sendingServiceOrderReported.getClass().getSimpleName();
 
         int retcode = 0;
 
@@ -849,11 +855,11 @@ public class Bkgpi2a {
             }
 
         } else {
-            System.out.println("    ERREUR : événement rejeté, raison : généré par Anstel");
+            System.out.println("    " + className + " ERREUR : événement rejeté, raison : généré par Anstel");
             retcode = -3;
         }
 
-        System.out.println("      SendingServiceOrderReported:{retcode:" + retcode + ", nbTrials:" + nbTrials + "}");
+        System.out.println("      " + className + ":{retcode:" + retcode + ", nbTrials:" + nbTrials + "}");
 
         return retcode;
     }
@@ -871,6 +877,7 @@ public class Bkgpi2a {
         DateTime dateTime;
         int nbTrials = 0;
         SqlResults sqlResults;
+        String className = interventionFinished.getClass().getSimpleName();
 
         int retcode = 0;
 
@@ -901,11 +908,11 @@ public class Bkgpi2a {
                 retcode = -1;
             }
         } else {
-            System.out.println("    ERREUR : événement rejeté, raison : généré par Anstel");
+            System.out.println("    " + className + " ERREUR : événement rejeté, raison : généré par Anstel");
             retcode = -3;
         }
 
-        System.out.println("      InterventionFinished:{retcode:" + retcode + ", nbTrials:" + nbTrials + "}");
+        System.out.println("      " + className + ":{retcode:" + retcode + ", nbTrials:" + nbTrials + "}");
 
         return retcode;
     }
@@ -966,6 +973,7 @@ public class Bkgpi2a {
         int isam = 0;
         String errmsg = null;
         SqlResults sqlResults = null;
+        String className = permanentlyFixed.getClass().getSimpleName();
 
         int retcode = 0;
 
@@ -1034,11 +1042,11 @@ public class Bkgpi2a {
                 retcode = -1;
             }
         } else {
-            System.out.println("    ERREUR : événement rejeté, raison : généré par Anstel");
+            System.out.println("    " + className + " ERREUR : événement rejeté, raison : généré par Anstel");
             retcode = -3;
         }
 
-        System.out.println("      PermanentlyFixed:{retcode:" + retcode + ", nbTrials:" + nbTrials + "}");
+        System.out.println("      " + className + ":{retcode:" + retcode + ", nbTrials:" + nbTrials + "}");
 
         return retcode;
     }
@@ -1060,6 +1068,7 @@ public class Bkgpi2a {
         int nbTrials = 0;
         SqlResults sqlResults = null;
         EndOfMission endOfMission;
+        String className = partiallyFixed.getClass().getSimpleName();
 
         int retcode = 0;
 
@@ -1134,11 +1143,11 @@ public class Bkgpi2a {
             }
 
         } else {
-            System.out.println("    ERREUR : événement rejeté, raison : généré par Anstel");
+            System.out.println("    " + className + " ERREUR : événement rejeté, raison : généré par Anstel");
             retcode = -3;
         }
 
-        System.out.println("      PartiallyFixed:{retcode:" + retcode + ", nbTrials:" + nbTrials + "}");
+        System.out.println("      " + className + ":{retcode:" + retcode + ", nbTrials:" + nbTrials + "}");
 
         return retcode;
     }
@@ -1158,6 +1167,7 @@ public class Bkgpi2a {
         String stillOnSite;
         int nbTrials = 0;
         SqlResults sqlResults = null;
+        String className = ticketClosedImpossibleRepair.getClass().getSimpleName();
 
         int retcode = 0;
 
@@ -1227,11 +1237,11 @@ public class Bkgpi2a {
             }
 
         } else {
-            System.out.println("    ERREUR : événement rejeté, raison : généré par Anstel");
+            System.out.println("    " + className + " ERREUR : événement rejeté, raison : généré par Anstel");
             retcode = -3;
         }
 
-        System.out.println("      TicketClosedImpossibleRepair:{retcode:" + retcode + ", nbTrials:" + nbTrials + "}");
+        System.out.println("      " + className + ":{retcode:" + retcode + ", nbTrials:" + nbTrials + "}");
 
         return retcode;
     }
@@ -1251,6 +1261,7 @@ public class Bkgpi2a {
         String stillOnSite;
         int nbTrials = 0;
         SqlResults sqlResults = null;
+        String className = postponedFix.getClass().getSimpleName();
 
         int retcode = 0;
 
@@ -1320,11 +1331,11 @@ public class Bkgpi2a {
             }
 
         } else {
-            System.out.println("    ERREUR : événement rejeté, raison : généré par Anstel");
+            System.out.println("    " + className + " ERREUR : événement rejeté, raison : généré par Anstel");
             retcode = -3;
         }
 
-        System.out.println("      PostponedFix:{retcode:" + retcode + ", nbTrials:" + nbTrials + "}");
+        System.out.println("      " + className + ":{retcode:" + retcode + ", nbTrials:" + nbTrials + "}");
 
         return retcode;
     }
@@ -1346,6 +1357,7 @@ public class Bkgpi2a {
         DateTimeFormatter ddmmyy_hhmm = DateTimeFormat.forPattern("dd/MM/YY HH:mm");
         int nbTrials = 0;
         SqlResults sqlResults;
+        String className = missionScheduled.getClass().getSimpleName();
 
         int retcode = 0;
 
@@ -1380,11 +1392,11 @@ public class Bkgpi2a {
             }
 
         } else {
-            System.out.println("    ERREUR : événement rejeté, raison : généré par Anstel");
+            System.out.println("    " + className + " ERREUR : événement rejeté, raison : généré par Anstel");
             retcode = -3;
         }
 
-        System.out.println("      MissionScheduled:{retcode:" + retcode + ", nbTrials:" + nbTrials + "}");
+        System.out.println("      " + className + ":{retcode:" + retcode + ", nbTrials:" + nbTrials + "}");
 
         return retcode;
     }
@@ -1403,6 +1415,7 @@ public class Bkgpi2a {
         Provider provider;
         int nbTrials = 0;
         SqlResults sqlResults;
+        String className = missionAccepted.getClass().getSimpleName();
 
         int retcode = 0;
 
@@ -1436,11 +1449,11 @@ public class Bkgpi2a {
                 retcode = -1;
             }
         } else {
-            System.out.println("    ERREUR : événement rejeté, raison : généré par Anstel");
+            System.out.println("    " + className + "ERREUR : événement rejeté, raison : généré par Anstel");
             retcode = -3;
         }
 
-        System.out.println("      MissionAccepted:{retcode:" + retcode + ", nbTrials:" + nbTrials + "}");
+        System.out.println("      " + className + ":{retcode:" + retcode + ", nbTrials:" + nbTrials + "}");
 
         return retcode;
     }
@@ -1459,6 +1472,7 @@ public class Bkgpi2a {
         ReferencedProviderContact referencedProviderContact;
         int nbTrials = 0;
         SqlResults sqlResults;
+        String className = interventionAccepted.getClass().getSimpleName();
 
         int retcode = 0;
 
@@ -1492,11 +1506,11 @@ public class Bkgpi2a {
                 retcode = -1;
             }
         } else {
-            System.out.println("    ERREUR : événement rejeté, raison : généré par Anstel");
+            System.out.println("    " + className + " ERREUR : événement rejeté, raison : généré par Anstel");
             retcode = -3;
         }
 
-        System.out.println("      InterventionAccepted:{retcode:" + retcode + ", nbTrials:" + nbTrials + "}");
+        System.out.println("      " + className + ":{retcode:" + retcode + ", nbTrials:" + nbTrials + "}");
 
         return retcode;
     }
@@ -1514,6 +1528,7 @@ public class Bkgpi2a {
         DateTime dateTime;
         int nbTrials = 0;
         SqlResults sqlResults;
+        String className = messageAdded.getClass().getSimpleName();
 
         int retcode = 0;
 
@@ -1543,11 +1558,11 @@ public class Bkgpi2a {
             }
 
         } else {
-            System.out.println("    ERREUR : événement rejeté, raison : généré par Anstel");
+            System.out.println("    " + className + " ERREUR : événement rejeté, raison : généré par Anstel");
             retcode = -3;
         }
 
-        System.out.println("      MessageAdded:{retcode:" + retcode + ", nbTrials:" + nbTrials + "}");
+        System.out.println("      " + className + ":{retcode:" + retcode + ", nbTrials:" + nbTrials + "}");
 
         return retcode;
     }
@@ -1567,9 +1582,10 @@ public class Bkgpi2a {
         Provider provider;
         ProviderAssignationPurpose providerAssignationPurpose;
         String comment;
+        SqlResults sqlResults;
+        String className = providerAssigned.getClass().getSimpleName();
 
         int retcode = 0;
-        SqlResults sqlResults;
 
         if (providerAssigned.getOperator() instanceof ReferencedUser) {
             try {
@@ -1616,11 +1632,11 @@ public class Bkgpi2a {
             }
 
         } else {
-            System.out.println("    ERREUR : événement rejeté, raison : généré par Anstel");
+            System.out.println("    " + className + " ERREUR : événement rejeté, raison : généré par Anstel");
             retcode = -3;
         }
 
-        System.out.println("      ProviderAssigned:{retcode:" + retcode + ", nbTrials:" + nbTrials + "}");
+        System.out.println("      " + className + ":{retcode:" + retcode + ", nbTrials:" + nbTrials + "}");
 
         return retcode;
     }
@@ -1640,6 +1656,7 @@ public class Bkgpi2a {
         TicketAssignee ticketAssignee;
         String comment;
         SqlResults sqlResults;
+        String className = assigneeIdentified.getClass().getSimpleName();
 
         int retcode;
 
@@ -1724,11 +1741,11 @@ public class Bkgpi2a {
             }
 
         } else {
-            System.out.println("    ERREUR : événement rejeté, raison : généré par Anstel");
+            System.out.println("    " + className + " ERREUR : événement rejeté, raison : généré par Anstel");
             retcode = -3;
         }
 
-        System.out.println("      AssigneeIdentified:{retcode:" + retcode + ", nbTrials:" + nbTrials + "}");
+        System.out.println("      " + className + ":{retcode:" + retcode + ", nbTrials:" + nbTrials + "}");
 
         return retcode;
     }
@@ -1748,15 +1765,15 @@ public class Bkgpi2a {
         TicketAssignee ticketAssignee;
         String comment;
         SqlResults sqlResults;
+        String className = assigneeIdentified.getClass().getSimpleName();
 
         int retcode;
 
         resultSet = null;
         preparedStatement = null;
         retcode = 0;
-        
-//        System.out.println("%%processBackupAssigneeIdentified : entering, comment:"+assigneeIdentified.getComment());
 
+//        System.out.println("%%processBackupAssigneeIdentified : entering, comment:"+assigneeIdentified.getComment());
         if (assigneeIdentified.getOperator() instanceof ReferencedUser) {
             try {
                 informixConnection.setAutoCommit(false);
@@ -1842,11 +1859,11 @@ public class Bkgpi2a {
             }
 
         } else {
-            System.out.println("    ERREUR : événement rejeté, raison : généré par Anstel");
+            System.out.println("    " + className + " ERREUR : événement rejeté, raison : généré par Anstel");
             retcode = -3;
         }
 
-        System.out.println("      BackupAssigneeIdentified:{retcode:" + retcode + ", nbTrials:" + nbTrials + "}");
+        System.out.println("      " + className + ":{retcode:" + retcode + ", nbTrials:" + nbTrials + "}");
 
         return retcode;
     }
@@ -1866,6 +1883,7 @@ public class Bkgpi2a {
         ProviderAssignationPurpose providerAssignationPurpose;
         String comment;
         SqlResults sqlResults;
+        String className = ticketCancelled.getClass().getSimpleName();
 
         int retcode;
 
@@ -1946,11 +1964,11 @@ public class Bkgpi2a {
             }
 
         } else {
-            System.out.println("    ERREUR : événement rejeté, raison : généré par Anstel");
+            System.out.println("    " + className + " ERREUR : événement rejeté, raison : généré par Anstel");
             retcode = -3;
         }
 
-        System.out.println("      TicketCanceled:{retcode:" + retcode + ", nbTrials:" + nbTrials + "}");
+        System.out.println("      " + className + ":{retcode:" + retcode + ", nbTrials:" + nbTrials + "}");
 
         return retcode;
     }
@@ -2170,5 +2188,37 @@ public class Bkgpi2a {
      */
     public boolean getTestMode() {
         return (testMode);
+    }
+
+    /**
+     * Méthode retournant la meilleure date pour un événement. Le choix se fait
+     * entre date et sentDate qui peuvent être définis ou pas, initialisé ou
+     * pas, existant ou pas. Le choix de prendre la date courante UTC dans le
+     * cas ou aucune des dates n'est connue est discutable. Il faudra monitorer
+     * ce cas de figure dans dailyMonitor.
+     *
+     * @param event événement portant les dates
+     * @return la date UTC à prendre en compte pour l'événement
+     */
+    public static String patchEventDate(Event event) {
+        String date;
+//        DateTime dateTime;
+
+        date = event.getDate();
+//        System.out.println("%patchEventDate : getDate():" + date);
+        if (date == null) {
+            date = event.getSentDate();
+//            System.out.println("%patchEventDate : getSentDate():" + date);
+            System.out.println("WARNING : date is null in " + event.getClass().getSimpleName() + ", date set to sentDate");
+            if (date == null) {
+//                dateTime = new DateTime();
+//                date = dateTime.toString(isoDateTimeFormat2);
+                date = new DateTime(DateTimeZone.UTC).toString();
+//                System.out.println("%patchEventDate : now()UTC:" + date);
+                System.out.println("ERROR : date/sentDate both null in " + event.getClass().getSimpleName() + ", date set to current UTC date");
+            }
+        }
+
+        return date;
     }
 }

@@ -25,7 +25,7 @@ import org.junit.runners.Suite;
  * Jeux de tests pour tester toutes les classes du projet
  *
  * @author Thierry Baribaud
- * @version 1.42.16
+ * @version 1.42.19
  */
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
@@ -36,9 +36,10 @@ import org.junit.runners.Suite;
     BackupAssigneeIdentifiedTest.class,
     Bug200910TOTest.class,
     CallEmittedToTest.class,
-    CivilNameTest.class, 
-    bkgpi2a.ContactToCallbackTest.class, 
-    com.anstel.simplifiedrequest.ContactToCallbackTest.class, 
+    CivilNameTest.class,
+    ClassNameTest.class,
+    bkgpi2a.ContactToCallbackTest.class,
+    com.anstel.simplifiedrequest.ContactToCallbackTest.class,
     CallerCorrectedTest.class,
     ContextualCommentTest.class,
     ContactInfoTypeTest.class,
@@ -54,6 +55,7 @@ import org.junit.runners.Suite;
     NotificationForInterventionAcceptedRequestedTest.class,
     OpeningTicketPurposeCorrectedTest.class,
     OtpCategoryTest.class,
+    PatchEventDateTest.class,
     PatrimonyAbstractTest.class, PoorNameTest.class,
     PhoneInfoTest.class,
     ProviderCompanyInContactTest.class, ProviderContactActivityTest.class,
@@ -64,15 +66,15 @@ import org.junit.runners.Suite;
     ReferencedContactCallerTest.class,
     ReferencedUserCallerTest.class,
     SimplifiedRequestDetailedView_bug230321Test.class,
-    SimplifiedRequestResultViewTest.class, 
+    SimplifiedRequestResultViewTest.class,
     SimplifiedRequestSearchViewTest.class,
     TicketEventInformationsCorrectedTest.class,
-    TicketOpenedTest.class, 
-    TicketOpenedV1Test.class, 
+    TicketOpenedTest.class,
+    TicketOpenedV1Test.class,
     TicketOpenedV2Test.class,
     TicketOpenedFromSimplifiedRequestTest.class,
     TicketQualifiedByCriteriaTest.class,
-    UnClassifiedPersonaTest.class,    
+    UnClassifiedPersonaTest.class,
     WorkflowAppliedToTicketTest.class
 })
 public class Bkgpi2aSuite {
