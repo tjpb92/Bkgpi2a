@@ -13,16 +13,16 @@ import com.anstel.ticketEvents.ProviderContactedChecked;
 import com.anstel.ticketEvents.ProviderIsGoingChecked;
 import com.anstel.ticketEvents.InterventionReportGottenFromResident;
 import com.anstel.ticketEvents.InterventionReportGottenFromProvider;
+import com.anstel.ticketEvents.TicketUpdated;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import java.util.Objects;
 
 /**
  * Classe abstraite décrivant un événément.
  *
  * @author Thierry Baribaud
- * @version 1.42.16
+ * @version 1.42.20
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME,

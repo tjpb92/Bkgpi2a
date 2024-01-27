@@ -12,6 +12,7 @@ import com.anstel.ticketEvents.CallEmittedToTest;
 import com.anstel.ticketEvents.CallerCorrectedTest;
 import com.anstel.ticketEvents.OpeningTicketPurposeCorrectedTest;
 import com.anstel.ticketEvents.TicketEventInformationsCorrectedTest;
+import com.anstel.ticketEvents.TicketUpdatedTest;
 import com.anstel.tickets.models.ProviderPersonaTest;
 import com.anstel.tickets.models.UnClassifiedPersonaTest;
 import org.junit.After;
@@ -25,7 +26,7 @@ import org.junit.runners.Suite;
  * Jeux de tests pour tester toutes les classes du projet
  *
  * @author Thierry Baribaud
- * @version 1.42.19
+ * @version 1.42.20
  */
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
@@ -74,6 +75,7 @@ import org.junit.runners.Suite;
     TicketOpenedV2Test.class,
     TicketOpenedFromSimplifiedRequestTest.class,
     TicketQualifiedByCriteriaTest.class,
+    TicketUpdatedTest.class,
     UnClassifiedPersonaTest.class,
     WorkflowAppliedToTicketTest.class
 })
