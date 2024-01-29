@@ -1,5 +1,9 @@
-package bkgpi2a;
+package com.anstel.ticketEvents;
 
+import bkgpi2a.Event;
+import bkgpi2a.LocationReference;
+import bkgpi2a.Operator;
+import bkgpi2a.TicketInfos;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import static bkgpi2a.EventType.TICKET_OPENED;
@@ -9,11 +13,11 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * Classe décrivant l'événement ouverture de ticket : TicketOpened, #500
  *
  * @author Thierry Baribaud
- * @version 1.34
+ * @version 1.42.22
  * @see
- * <A href="http://performanceimmo.github.io/API/#ticketevent">TicketOpenedFromSimplifiedRequest</A>
+ * <A href="https://declarimmo-org.github.io/#ticketevent">TicketOpened</A>
  */
-@JsonIgnoreProperties({"_id", "date", "eventTypeUid"})
+@JsonIgnoreProperties(value = {"_id", "date", "eventTypeUid"}, ignoreUnknown = true)
 @JsonTypeName("TicketOpened")
 public class TicketOpened extends Event {
 
@@ -32,6 +36,11 @@ public class TicketOpened extends Event {
      */
     @JsonProperty("ticket")
     private TicketInfos ticketInfos;
+
+    /**
+     * Date de saisie du ticket
+     */
+    private String OpenedDate;
 
     /**
      * Constructeur de la classe TicketOpened
@@ -87,14 +96,16 @@ public class TicketOpened extends Event {
      * @return la date à laquelle l'événement a eu lieu
      */
     public String getOpenedDate() {
-        return getDate();
+//        return getDate();
+        return this.OpenedDate;
     }
 
     /**
      * @param openedDate définit la date à laquelle l'événement a eu lieu
      */
     public void setOpenedDate(String openedDate) {
-        setDate(openedDate);
+//        setDate(openedDate);
+        this.OpenedDate = openedDate;
     }
 
     /**

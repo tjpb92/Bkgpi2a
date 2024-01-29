@@ -14,11 +14,14 @@ import com.fasterxml.jackson.annotation.JsonSetter;
 /**
  * Classe décrivant l'événement de mise à jour du ticket : TicketUpdated, #510
  *
+ * ATTENTION : ne pas masquer l'attribut date ni l'altérer via SetOpenedDate().
+ *
  * @author Thierry Baribaud
- * @version 1.42.20
- * @see <A href="https://declarimmo-org.github.io/#ticketevent">TicketUpdated</A>
+ * @version 1.42.22
+ * @see
+ * <A href="https://declarimmo-org.github.io/#ticketevent">TicketUpdated</A>
  */
-@JsonIgnoreProperties(value={"_id", "eventTypeUid"}, ignoreUnknown = true)
+@JsonIgnoreProperties(value = {"_id", "eventTypeUid"}, ignoreUnknown = true)
 @JsonTypeName("TicketUpdated")
 public class TicketUpdated extends Event {
 
@@ -37,6 +40,11 @@ public class TicketUpdated extends Event {
      */
     @JsonProperty("ticket")
     private TicketInfos ticketInfos;
+
+    /**
+     * Date de saisie du ticket
+     */
+    private String OpenedDate;
 
     /**
      * Constructeur de la classe MessageAdded
@@ -94,14 +102,16 @@ public class TicketUpdated extends Event {
      * @return la date à laquelle l'événement a eu lieu
      */
     public String getOpenedDate() {
-        return getDate();
+//        return getDate();
+        return this.OpenedDate;
     }
 
     /**
      * @param openedDate définit la date à laquelle l'événement a eu lieu
      */
     public void setOpenedDate(String openedDate) {
-        setDate(openedDate);
+//        setDate(openedDate);
+        this.OpenedDate = openedDate;
     }
 
     /**

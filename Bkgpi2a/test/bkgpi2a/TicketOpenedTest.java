@@ -1,5 +1,6 @@
 package bkgpi2a;
 
+import com.anstel.ticketEvents.TicketOpened;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.File;
 import java.io.IOException;
@@ -14,7 +15,7 @@ import static org.junit.Assert.*;
  * Programme de test de la classe TicketOpened
  *
  * @author Thierry Baribaud
- * @version 1.42.1
+ * @version 1.42.22
  */
 public class TicketOpenedTest {
 
@@ -59,6 +60,10 @@ public class TicketOpenedTest {
             System.out.println("expTicketOpened:" + expTicketOpened);
             assertNotNull(ticketOpened);
             assertNotNull(expTicketOpened);
+            
+            assertNotNull(expTicketOpened.getOpenedDate());
+            assertNull(expTicketOpened.getDate());
+            
             assertEquals(ticketOpened.toString(), expTicketOpened.toString());
         } catch (IOException ex) {
             Logger.getLogger(TicketOpened.class.getName()).log(Level.SEVERE, null, ex);

@@ -158,7 +158,7 @@ public class PatchEventDateTest {
             orderBy = new BasicDBObject("aggregateUid", 1).append("sentDate", 1);
 //            cursor = collection.find(filter1).sort(orderBy).iterator();
             cursor = collection.find().sort(orderBy).iterator();
-            while (cursor.hasNext() && nbEvent < 1000) {
+            while (cursor.hasNext() && nbEvent < 2000) {
                 nbEvent++;
                 event = objectMapper.readValue(cursor.next().toJson(), Event.class);
                 patchedDate = Bkgpi2a.patchEventDate(event);

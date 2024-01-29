@@ -1,7 +1,6 @@
 package com.anstel.ticketEvents;
 
 import bkgpi2a.Event;
-import bkgpi2a.TicketOpened;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.File;
 import java.io.IOException;
@@ -44,7 +43,8 @@ public class TicketUpdatedTest {
     public void testTicketUpdatedJsonSerialization() {
         System.out.println("TicketUpdatedJsonSerialization");
 
-        String filename = "TicketUpdated.json";
+//        String filename = "TicketUpdated.json";
+        String filename = "TicketUpdated_3.json";
         String testFilename = "testTicketUpdated.json";
         TicketUpdated ticketUpdated = null;
         TicketUpdated expTicketUpdated = null;

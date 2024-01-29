@@ -1,5 +1,6 @@
 package bkgpi2a;
 
+import com.anstel.ticketEvents.TicketOpened;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.File;
 import java.io.IOException;
