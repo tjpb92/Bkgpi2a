@@ -11,7 +11,7 @@ import org.junit.runners.Suite;
  * Jeux de tests pour tester toutes les classes des événements relatifs aux tickets
  *
  * @author Thierry Baribaud
- * @version 1.42.20
+ * @version 1.42.21
  */
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
@@ -21,7 +21,8 @@ import org.junit.runners.Suite;
     CallerCorrectedTest.class,
     OpeningTicketPurposeCorrectedTest.class, 
     TicketEventInformationsCorrectedTest.class,
-    TicketUpdated.class
+    TicketReopenedTest.class,
+    TicketUpdatedTest.class
 })
 public class TicketEventsSuite {
 
