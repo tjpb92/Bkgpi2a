@@ -2,6 +2,8 @@ package bkgpi2a;
 
 import com.anstel.ticketEvents.AssigneeIdentified;
 import com.anstel.ticketEvents.BackupAssigneeIdentified;
+import com.anstel.ticketEvents.MissionFinished;
+import com.anstel.ticketEvents.TicketOpened;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mongodb.BasicDBObject;
 import com.mongodb.MongoClient;
@@ -37,7 +39,7 @@ import utils.DBServerException;
  * proc_pi.sql.
  *
  * @author Thierry Baribaud.
- * @version 1.42.19
+ * @version 1.42.23
  */
 public class Bkgpi2a {
 
@@ -2206,6 +2208,14 @@ public class Bkgpi2a {
 
         date = event.getDate();
 //        System.out.println("%patchEventDate : getDate():" + date);
+
+//      Cas particuliers
+        if (event instanceof MissionFinished) { 
+            date = ((MissionFinished)event).getEndMissionDate();
+        } else if (event instanceof TicketOpened) {
+            date = ((TicketOpened)event).getOpenedDate();
+        }
+        
         if (date == null) {
             date = event.getSentDate();
 //            System.out.println("%patchEventDate : getSentDate():" + date);

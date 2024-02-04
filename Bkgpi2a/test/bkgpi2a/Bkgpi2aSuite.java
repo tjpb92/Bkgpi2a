@@ -10,6 +10,7 @@ import com.anstel.ticketEvents.AssigneeIdentifiedTest;
 import com.anstel.ticketEvents.BackupAssigneeIdentifiedTest;
 import com.anstel.ticketEvents.CallEmittedToTest;
 import com.anstel.ticketEvents.CallerCorrectedTest;
+import com.anstel.ticketEvents.MissionFinishedTest;
 import com.anstel.ticketEvents.OpeningTicketPurposeCorrectedTest;
 import com.anstel.ticketEvents.TicketEventInformationsCorrectedTest;
 import com.anstel.ticketEvents.TicketReopenedTest;
@@ -54,6 +55,7 @@ import org.junit.runners.Suite;
     GooglePlaceIdCheckerTest.class, ItemAbstractTest.class,
     InstructionsForAssigneeDefinedTest.class, ItemAbstractWithRefTest.class,
     MailInfoTest.class,
+    MissionFinishedTest.class,
     NotificationForInterventionAcceptedRequestedTest.class,
     OpeningTicketPurposeCorrectedTest.class,
     OtpCategoryTest.class,
